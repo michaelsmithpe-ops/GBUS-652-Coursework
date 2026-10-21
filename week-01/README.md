@@ -4,7 +4,7 @@ Materials and coursework for Week 1 of GBUS 652: AI & LLM Foundations.
 
 ## Tic-Tac-Toe
 
-[`index.html`](index.html) is a single-page browser game of Tic-Tac-Toe against the computer, built with plain HTML, CSS, and JavaScript (no dependencies). Open the file in any modern browser to play.
+[`Tic-Tac-Toe.html`](Tic-Tac-Toe.html) is a single-page browser game of Tic-Tac-Toe against the computer, built with plain HTML, CSS, and JavaScript (no dependencies). Open the file in any modern browser to play.
 
 - **You are X, the computer is O.** The first move alternates each round.
 - **Three difficulty levels:**
