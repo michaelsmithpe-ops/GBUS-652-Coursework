@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tic-Tac-Toe</title>
+<style>
+  :root {
+    --bg1: #eef2f7;
+    --bg2: #dbe3ef;
+    --card: #ffffff;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --tile: #f4f6fa;
+    --tile-hover: #e9edf4;
+    --x: #f25f5c;
+    --o: #2a9d8f;
+    --accent: #4f46e5;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 20% 10%, #ffffff 0, var(--bg1) 40%, var(--bg2) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .app {
+    width: min(440px, 100%);
+    background: var(--card);
+    border-radius: 28px;
+    box-shadow: 0 24px 60px rgba(31, 41, 55, .12), 0 2px 6px rgba(31, 41, 55, .06);
+    padding: 26px 26px 20px;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.45rem;
+    letter-spacing: -.02em;
+  }
+  h1 .x { color: var(--x); }
+  h1 .o { color: var(--o); }
+
+  .icon-btn {
+    border: none;
+    background: var(--tile);
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background .15s, transform .15s;
+  }
+  .icon-btn:hover { background: var(--tile-hover); }
+  .icon-btn:active { transform: scale(.94); }
+
+  /* Scoreboard */
+  .scores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .score {
+    background: var(--tile);
+    border-radius: 14px;
+    padding: 10px 6px 8px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: border-color .25s, background .25s;
+  }
+  .score .label {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .score .value {
+    font-size: 1.65rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+  .score.you .value { color: var(--x); }
+  .score.cpu .value { color: var(--o); }
+  .score.you.active { border-color: var(--x); background: #fff5f5; }
+  .score.cpu.active { border-color: var(--o); background: #f0faf8; }
+  .score.bump .value { animation: bump .45s ease; }
+
+  /* Status line */
+  .status {
+    text-align: center;
+    font-weight: 650;
+    min-height: 1.6em;
+    margin-bottom: 14px;
+    color: var(--ink);
+    transition: color .2s;
+  }
+  .status.win  { color: var(--x); }
+  .status.lose { color: var(--o); }
+  .status .dots::after {
+    content: "";
+    animation: dots 1.2s steps(4, end) infinite;
+  }
+
+  /* Board */
+  .board-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 18px;
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+  }
+  .cell {
+    position: relative;
+    border: none;
+    padding: 0;
+    border-radius: 18px;
+    background: var(--tile);
+    cursor: pointer;
+    transition: background .15s, transform .15s, box-shadow .2s;
+  }
+  .cell:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .board:not(.locked) .cell:not(.filled):hover { background: var(--tile-hover); }
+  .board:not(.locked) .cell:not(.filled):active { transform: scale(.95); }
+  .board.locked .cell, .cell.filled { cursor: default; }
+  .board.over .cell { cursor: pointer; }
+
+  /* Faint preview of your X on hover */
+  .board:not(.locked) .cell:not(.filled):hover .ghost { opacity: .18; }
+  .ghost { opacity: 0; transition: opacity .15s; }
+  .ghost path { stroke: var(--x); }
+
+  .cell svg {
+    position: absolute;
+    inset: 18%;
+    width: 64%;
+    height: 64%;
+    overflow: visible;
+    transition: opacity .3s;
+  }
+  .cell svg path {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+  }
+  .mark path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw .32s ease-out forwards;
+  }
+  .mark.x path { stroke: var(--x); }
+  .mark.x path:nth-child(2) { animation-delay: .14s; }
+  .mark.o path { stroke: var(--o); animation-duration: .42s; }
+
+  .board.over .cell:not(.win) svg.mark { opacity: .28; }
+  .board.draw .cell svg.mark { opacity: .5; }
+  .cell.win { animation: pulse .6s ease .35s; }
+  .cell.win.x { background: #fff0f0; }
+  .cell.win.o { background: #eaf7f5; }
+
+  .win-line {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .win-line path {
+    fill: none;
+    stroke-width: 9;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  .win-line.show path {
+    opacity: .9;
+    animation: draw .45s ease-out .2s forwards;
+  }
+
+  /* Difficulty selector */
+  .segmented {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--tile);
+    border-radius: 14px;
+    padding: 4px;
+    margin-bottom: 12px;
+  }
+  .segmented button {
+    border: none;
+    background: transparent;
+    padding: 9px 0;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 650;
+    font-size: .9rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background .2s, color .2s, box-shadow .2s;
+  }
+  .segmented button[aria-pressed="true"] {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(31, 41, 55, .12);
+  }
+
+  /* Actions */
+  .actions {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+  }
+  .btn {
+    border: none;
+    border-radius: 14px;
+    padding: 12px 0;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s, background .2s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.primary {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn.primary:hover { background: #111827; }
+  .btn.primary.ready { animation: glow 1.6s ease-in-out infinite; }
+  .btn.ghost {
+    background: var(--tile);
+    color: var(--muted);
+  }
+  .btn.ghost:hover { background: var(--tile-hover); color: var(--ink); }
+  button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .hint {
+    margin: 14px 0 0;
+    text-align: center;
+    font-size: .78rem;
+    color: var(--muted);
+  }
+  kbd {
+    font-family: inherit;
+    font-size: .72rem;
+    background: var(--tile);
+    border-radius: 5px;
+    padding: 1px 5px;
+    border: 1px solid #e3e7ee;
+  }
+
+  /* Animations */
+  @keyframes draw  { to { stroke-dashoffset: 0; } }
+  @keyframes bump  { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  @keyframes glow  { 0%, 100% { box-shadow: 0 0 0 0 rgba(31, 41, 55, .35); } 50% { box-shadow: 0 0 0 6px rgba(31, 41, 55, 0); } }
+  @keyframes dots  { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+
+  @media (max-width: 420px) {
+    body { padding: 12px; }
+    .app { padding: 20px 16px 16px; border-radius: 22px; }
+    .board { gap: 8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-delay: 0s !important;
+      animation-iteration-count: 1 !important;
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Tic-<span class="x">Tac</span>-<span class="o">Toe</span></h1>
+      <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound">🔊</button>
+    </header>
+
+    <section class="scores" aria-label="Scoreboard">
+      <div class="score you" id="scoreYou">
+        <div class="label">You (X)</div>
+        <div class="value">0</div>
+      </div>
+      <div class="score draw" id="scoreDraw">
+        <div class="label">Draws</div>
+        <div class="value">0</div>
+      </div>
+      <div class="score cpu" id="scoreCpu">
+        <div class="label">Computer (O)</div>
+        <div class="value">0</div>
+      </div>
+    </section>
+
+    <div class="status" id="status" aria-live="polite"></div>
+
+    <div class="board-wrap">
+      <div class="board" id="board" role="grid" aria-label="Tic-tac-toe board"></div>
+      <svg class="win-line" id="winLine" viewBox="0 0 300 300" aria-hidden="true">
+        <path pathLength="1" d="" />
+      </svg>
+    </div>
+
+    <div class="segmented" role="group" aria-label="Difficulty">
+      <button type="button" data-level="easy">Easy</button>
+      <button type="button" data-level="medium">Medium</button>
+      <button type="button" data-level="hard">Hard</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="newRound" type="button">New round</button>
+      <button class="btn ghost" id="resetScore" type="button">Reset score</button>
+    </div>
+
+    <p class="hint">Press <kbd>1</kbd>–<kbd>9</kbd> to play a square, <kbd>N</kbd> for a new round.</p>
+  </main>
+
+<script>
+(() => {
+  const HUMAN = 'X';
+  const CPU = 'O';
+  const LINES = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],   // rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],   // columns
+    [0, 4, 8], [2, 4, 6]               // diagonals
+  ];
+  const CORNERS = [0, 2, 6, 8];
+  const SIDES = [1, 3, 5, 7];
+  const OPPOSITE_CORNER = { 0: 8, 2: 6, 6: 2, 8: 0 };
+  const STORAGE_KEY = 'gbus652-tictactoe';
+
+  const X_PATHS = '<path pathLength="1" d="M18 18 L82 82"/><path pathLength="1" d="M82 18 L18 82"/>';
+  const O_PATH = '<path pathLength="1" d="M50 16 A34 34 0 1 1 49.99 16"/>';
+
+  // ---------- State ----------
+  const state = {
+    board: Array(9).fill(null),
+    turn: HUMAN,
+    starter: HUMAN,
+    over: false,
+    round: 0,
+    cpuTimer: null,
+    difficulty: 'medium',
+    sound: true,
+    scores: { you: 0, draw: 0, cpu: 0 }
+  };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (saved) {
+      Object.assign(state.scores, saved.scores);
+      if (['easy', 'medium', 'hard'].includes(saved.difficulty)) state.difficulty = saved.difficulty;
+      if (typeof saved.sound === 'boolean') state.sound = saved.sound;
+    }
+  } catch (e) { /* ignore corrupt storage */ }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        scores: state.scores, difficulty: state.difficulty, sound: state.sound
+      }));
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  // ---------- DOM ----------
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const winLineEl = document.getElementById('winLine');
+  const winPath = winLineEl.querySelector('path');
+  const newRoundBtn = document.getElementById('newRound');
+  const resetBtn = document.getElementById('resetScore');
+  const soundBtn = document.getElementById('soundBtn');
+  const levelBtns = document.querySelectorAll('.segmented button');
+  const scoreEls = {
+    you: document.getElementById('scoreYou'),
+    draw: document.getElementById('scoreDraw'),
+    cpu: document.getElementById('scoreCpu')
+  };
+
+  const cells = [];
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = 'cell';
+    cell.setAttribute('role', 'gridcell');
+    cell.addEventListener('click', () => onCellClick(i));
+    boardEl.appendChild(cell);
+    cells.push(cell);
+  }
+
+  // ---------- Board helpers ----------
+  function getWinner(b) {
+    for (const line of LINES) {
+      const [a, c, d] = line;
+      if (b[a] && b[a] === b[c] && b[a] === b[d]) return { player: b[a], line };
+    }
+    return null;
+  }
+
+  const emptyCells = b => b.reduce((acc, v, i) => (v ? acc : (acc.push(i), acc)), []);
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const other = p => (p === HUMAN ? CPU : HUMAN);
+
+  // Squares where `player` would complete a line right now.
+  function winningMoves(b, player) {
+    return emptyCells(b).filter(i => {
+      b[i] = player;
+      const w = getWinner(b);
+      b[i] = null;
+      return !!w;
+    });
+  }
+
+  // Number of lines where `player` has two marks and the third square is open.
+  function threatCount(b, player) {
+    return LINES.filter(line => {
+      const marks = line.map(i => b[i]);
+      return marks.filter(m => m === player).length === 2 && marks.includes(null);
+    }).length;
+  }
+
+  // Squares that would give `player` two simultaneous threats (a fork).
+  function forkMoves(b, player) {
+    return emptyCells(b).filter(i => {
+      b[i] = player;
+      const n = threatCount(b, player);
+      b[i] = null;
+      return n >= 2;
+    });
+  }
+
+  // ---------- Computer strategy ----------
+  // Classic rule-based play: win, block, fork, center, opposite corner,
+  // corner, side. It deliberately doesn't defend against forks, so a
+  // player who sets one up can beat it.
+  function strategicMove(b) {
+    let moves = winningMoves(b, CPU);
+    if (moves.length) return pick(moves);
+
+    moves = winningMoves(b, HUMAN);
+    if (moves.length) return pick(moves);
+
+    moves = forkMoves(b, CPU);
+    if (moves.length) return pick(moves);
+
+    if (!b[4]) return 4;
+
+    moves = CORNERS.filter(c => b[c] === HUMAN && !b[OPPOSITE_CORNER[c]]).map(c => OPPOSITE_CORNER[c]);
+    if (moves.length) return pick(moves);
+
+    moves = CORNERS.filter(c => !b[c]);
+    if (moves.length) return pick(moves);
+
+    return pick(SIDES.filter(s => !b[s]));
+  }
+
+  // Full-depth minimax: never loses. Prefers quicker wins and slower losses.
+  function minimax(b, player, depth) {
+    const w = getWinner(b);
+    if (w) return w.player === CPU ? 10 - depth : depth - 10;
+    const open = emptyCells(b);
+    if (!open.length) return 0;
+
+    let best = player === CPU ? -Infinity : Infinity;
+    for (const i of open) {
+      b[i] = player;
+      const score = minimax(b, other(player), depth + 1);
+      b[i] = null;
+      best = player === CPU ? Math.max(best, score) : Math.min(best, score);
+    }
+    return best;
+  }
+
+  function perfectMove(b) {
+    let bestScore = -Infinity;
+    let bestMoves = [];
+    for (const i of emptyCells(b)) {
+      b[i] = CPU;
+      const score = minimax(b, HUMAN, 1);
+      b[i] = null;
+      if (score > bestScore) { bestScore = score; bestMoves = [i]; }
+      else if (score === bestScore) bestMoves.push(i);
+    }
+    return pick(bestMoves);
+  }
+
+  function chooseMove() {
+    const b = state.board.slice();
+
+    if (state.difficulty === 'hard') return perfectMove(b);
+
+    if (state.difficulty === 'medium') {
+      // Vary the opening so games don't feel scripted.
+      if (emptyCells(b).length === 9) return pick([4, ...CORNERS]);
+      return strategicMove(b);
+    }
+
+    // Easy: takes wins, usually blocks, otherwise favors good squares.
+    let moves = winningMoves(b, CPU);
+    if (moves.length) return pick(moves);
+    moves = winningMoves(b, HUMAN);
+    if (moves.length && Math.random() < 0.6) return pick(moves);
+    const open = emptyCells(b);
+    const preferred = open.filter(i => i === 4 || CORNERS.includes(i));
+    return pick(preferred.length && Math.random() < 0.7 ? preferred : open);
+  }
+
+  // ---------- Sound ----------
+  let audioCtx = null;
+  function tone(freq, { dur = 0.12, type = 'sine', when = 0, vol = 0.07 } = {}) {
+    if (!state.sound) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const t = audioCtx.currentTime + when;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(vol, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + dur + 0.05);
+    } catch (e) { /* audio unavailable */ }
+  }
+  const sounds = {
+    human: () => tone(660, { type: 'triangle' }),
+    cpu:   () => tone(440, { type: 'triangle' }),
+    win:   () => [523, 659, 784, 1047].forEach((f, i) => tone(f, { when: i * 0.09, dur: 0.22, type: 'triangle' })),
+    lose:  () => [392, 330, 262].forEach((f, i) => tone(f, { when: i * 0.13, dur: 0.25, type: 'sine' })),
+    draw:  () => [440, 440].forEach((f, i) => tone(f, { when: i * 0.14, dur: 0.15, type: 'sine' }))
+  };
+
+  // ---------- Rendering ----------
+  function setStatus(html, cls = '') {
+    statusEl.className = 'status ' + cls;
+    statusEl.innerHTML = html;
+  }
+
+  function renderScores() {
+    for (const key of Object.keys(scoreEls)) {
+      scoreEls[key].querySelector('.value').textContent = state.scores[key];
+    }
+  }
+
+  function bumpScore(key) {
+    const el = scoreEls[key];
+    el.classList.remove('bump');
+    void el.offsetWidth; // restart animation
+    el.classList.add('bump');
+  }
+
+  function renderTurn() {
+    const humanTurn = !state.over && state.turn === HUMAN;
+    const cpuTurn = !state.over && state.turn === CPU;
+    scoreEls.you.classList.toggle('active', humanTurn);
+    scoreEls.cpu.classList.toggle('active', cpuTurn);
+    boardEl.classList.toggle('locked', !humanTurn && !state.over);
+
+    if (humanTurn) setStatus('Your move');
+    else if (cpuTurn) setStatus('Computer is thinking<span class="dots"></span>');
+  }
+
+  function cellLabel(i) {
+    const v = state.board[i];
+    const who = v === HUMAN ? 'X, yours' : v === CPU ? 'O, computer' : 'empty';
+    return `Square ${i + 1}, ${who}`;
+  }
+
+  function renderDifficulty() {
+    levelBtns.forEach(btn => btn.setAttribute('aria-pressed', btn.dataset.level === state.difficulty));
+  }
+
+  function renderSound() {
+    soundBtn.textContent = state.sound ? '🔊' : '🔇';
+    soundBtn.setAttribute('aria-pressed', state.sound);
+  }
+
+  function drawWinLine(line, player) {
+    const pos = i => ({ x: [48, 150, 252][i % 3], y: [48, 150, 252][Math.floor(i / 3)] });
+    const a = pos(line[0]);
+    const b = pos(line[2]);
+    const len = Math.hypot(b.x - a.x, b.y - a.y);
+    const ux = (b.x - a.x) / len;
+    const uy = (b.y - a.y) / len;
+    const ext = 26;
+    winPath.setAttribute('d', `M${a.x - ux * ext} ${a.y - uy * ext} L${b.x + ux * ext} ${b.y + uy * ext}`);
+    winPath.style.stroke = player === HUMAN ? 'var(--x)' : 'var(--o)';
+    winLineEl.classList.add('show');
+  }
+
+  // ---------- Game flow ----------
+  function newRound(alternate = true) {
+    clearTimeout(state.cpuTimer);
+    state.round++;
+    if (alternate && state.round > 1) state.starter = other(state.starter);
+    state.board = Array(9).fill(null);
+    state.over = false;
+    state.turn = state.starter;
+
+    cells.forEach((cell, i) => {
+      cell.className = 'cell';
+      cell.innerHTML = `<svg class="ghost" viewBox="0 0 100 100" aria-hidden="true">${X_PATHS}</svg>`;
+      cell.setAttribute('aria-label', cellLabel(i));
+    });
+    boardEl.classList.remove('over', 'draw');
+    winLineEl.classList.remove('show');
+    winPath.setAttribute('d', '');
+    newRoundBtn.classList.remove('ready');
+
+    renderTurn();
+    if (state.turn === CPU) {
+      setStatus('Computer goes first<span class="dots"></span>');
+      scheduleCpu();
+    } else if (state.round > 1) {
+      setStatus('Your turn to start');
+    }
+  }
+
+  function placeMark(i, player) {
+    state.board[i] = player;
+    const cell = cells[i];
+    cell.classList.add('filled');
+    cell.innerHTML = player === HUMAN
+      ? `<svg class="mark x" viewBox="0 0 100 100" aria-hidden="true">${X_PATHS}</svg>`
+      : `<svg class="mark o" viewBox="0 0 100 100" aria-hidden="true">${O_PATH}</svg>`;
+    cell.setAttribute('aria-label', cellLabel(i));
+    (player === HUMAN ? sounds.human : sounds.cpu)();
+
+    const win = getWinner(state.board);
+    if (win) return endRound(win);
+    if (state.board.every(Boolean)) return endRound(null);
+
+    state.turn = other(player);
+    renderTurn();
+    if (state.turn === CPU) scheduleCpu();
+  }
+
+  function scheduleCpu() {
+    const round = state.round;
+    state.cpuTimer = setTimeout(() => {
+      if (round !== state.round || state.over) return;
+      placeMark(chooseMove(), CPU);
+    }, 450 + Math.random() * 350);
+  }
+
+  function endRound(win) {
+    state.over = true;
+    boardEl.classList.add('over');
+    boardEl.classList.remove('locked');
+    scoreEls.you.classList.remove('active');
+    scoreEls.cpu.classList.remove('active');
+
+    let key;
+    if (!win) {
+      key = 'draw';
+      boardEl.classList.add('draw');
+      setStatus("It's a draw. Well played!");
+      setTimeout(sounds.draw, 250);
+    } else {
+      const cls = win.player === HUMAN ? 'x' : 'o';
+      win.line.forEach(i => cells[i].classList.add('win', cls));
+      drawWinLine(win.line, win.player);
+      if (win.player === HUMAN) {
+        key = 'you';
+        setStatus('You win! 🎉', 'win');
+        setTimeout(sounds.win, 250);
+      } else {
+        key = 'cpu';
+        setStatus('Computer wins this one.', 'lose');
+        setTimeout(sounds.lose, 250);
+      }
+    }
+
+    state.scores[key]++;
+    renderScores();
+    bumpScore(key);
+    save();
+    newRoundBtn.classList.add('ready');
+  }
+
+  function onCellClick(i) {
+    if (state.over) return newRound();
+    if (state.turn !== HUMAN || state.board[i]) return;
+    placeMark(i, HUMAN);
+  }
+
+  // ---------- Controls ----------
+  newRoundBtn.addEventListener('click', () => newRound());
+
+  resetBtn.addEventListener('click', () => {
+    state.scores = { you: 0, draw: 0, cpu: 0 };
+    renderScores();
+    save();
+    state.round = 0;
+    state.starter = HUMAN;
+    newRound();
+  });
+
+  soundBtn.addEventListener('click', () => {
+    state.sound = !state.sound;
+    renderSound();
+    save();
+  });
+
+  levelBtns.forEach(btn => btn.addEventListener('click', () => {
+    if (state.difficulty === btn.dataset.level) return;
+    state.difficulty = btn.dataset.level;
+    renderDifficulty();
+    save();
+    // Restart the round only if no moves have been made yet.
+    if (state.board.every(v => v === null)) newRound(false);
+  }));
+
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (/^[1-9]$/.test(e.key)) {
+      onCellClick(Number(e.key) - 1);
+    } else if (e.key === 'n' || e.key === 'N') {
+      newRound();
+    }
+  });
+
+  // ---------- Start ----------
+  renderScores();
+  renderDifficulty();
+  renderSound();
+  newRound();
+})();
+</script>
+</body>
+</html>
