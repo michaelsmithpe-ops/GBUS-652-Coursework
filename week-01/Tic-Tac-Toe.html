@@ -19,6 +19,7 @@
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html, body { height: 100%; }
 
   body {
@@ -112,8 +113,8 @@
     color: var(--ink);
     transition: color .2s;
   }
-  .status.win  { color: var(--x); }
-  .status.lose { color: var(--o); }
+  .status.x { color: var(--x); }
+  .status.o { color: var(--o); }
   .status .dots::after {
     content: "";
     animation: dots 1.2s steps(4, end) infinite;
@@ -148,10 +149,13 @@
   .board.locked .cell, .cell.filled { cursor: default; }
   .board.over .cell { cursor: pointer; }
 
-  /* Faint preview of your X on hover */
+  /* Faint preview of the current player's mark on hover */
   .board:not(.locked) .cell:not(.filled):hover .ghost { opacity: .18; }
   .ghost { opacity: 0; transition: opacity .15s; }
-  .ghost path { stroke: var(--x); }
+  .ghost.x path { stroke: var(--x); }
+  .ghost.o path { stroke: var(--o); }
+  .board:not(.turn-o) .ghost.o,
+  .board.turn-o .ghost.x { display: none; }
 
   .cell svg {
     position: absolute;
@@ -209,6 +213,10 @@
     border-radius: 14px;
     padding: 4px;
     margin-bottom: 12px;
+  }
+  .segmented.mode {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 16px;
   }
   .segmented button {
     border: none;
@@ -302,6 +310,11 @@
       <button class="icon-btn" id="soundBtn" type="button" aria-label="Toggle sound">🔊</button>
     </header>
 
+    <div class="segmented mode" id="modeSelect" role="group" aria-label="Game mode">
+      <button type="button" data-mode="cpu">vs Computer</button>
+      <button type="button" data-mode="pvp">2 Players</button>
+    </div>
+
     <section class="scores" aria-label="Scoreboard">
       <div class="score you" id="scoreYou">
         <div class="label">You (X)</div>
@@ -326,7 +339,7 @@
       </svg>
     </div>
 
-    <div class="segmented" role="group" aria-label="Difficulty">
+    <div class="segmented" id="difficulty" role="group" aria-label="Difficulty">
       <button type="button" data-level="easy">Easy</button>
       <button type="button" data-level="medium">Medium</button>
       <button type="button" data-level="hard">Hard</button>
@@ -365,15 +378,26 @@
     over: false,
     round: 0,
     cpuTimer: null,
+    mode: 'cpu',          // 'cpu' = vs computer, 'pvp' = two players
     difficulty: 'medium',
     sound: true,
-    scores: { you: 0, draw: 0, cpu: 0 }
+    // Separate scoreboards per mode. Keys: you = X, cpu = O.
+    scores: {
+      cpu: { you: 0, draw: 0, cpu: 0 },
+      pvp: { you: 0, draw: 0, cpu: 0 }
+    }
   };
 
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved) {
-      Object.assign(state.scores, saved.scores);
+      if (saved.scores && 'you' in saved.scores) {
+        Object.assign(state.scores.cpu, saved.scores);   // older single-mode save
+      } else if (saved.scores) {
+        Object.assign(state.scores.cpu, saved.scores.cpu);
+        Object.assign(state.scores.pvp, saved.scores.pvp);
+      }
+      if (['cpu', 'pvp'].includes(saved.mode)) state.mode = saved.mode;
       if (['easy', 'medium', 'hard'].includes(saved.difficulty)) state.difficulty = saved.difficulty;
       if (typeof saved.sound === 'boolean') state.sound = saved.sound;
     }
@@ -382,10 +406,13 @@
   function save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        scores: state.scores, difficulty: state.difficulty, sound: state.sound
+        scores: state.scores, mode: state.mode, difficulty: state.difficulty, sound: state.sound
       }));
     } catch (e) { /* storage unavailable */ }
   }
+
+  const vsCpu = () => state.mode === 'cpu';
+  const isCpuTurn = () => vsCpu() && state.turn === CPU;
 
   // ---------- DOM ----------
   const boardEl = document.getElementById('board');
@@ -395,7 +422,9 @@
   const newRoundBtn = document.getElementById('newRound');
   const resetBtn = document.getElementById('resetScore');
   const soundBtn = document.getElementById('soundBtn');
-  const levelBtns = document.querySelectorAll('.segmented button');
+  const difficultyEl = document.getElementById('difficulty');
+  const levelBtns = difficultyEl.querySelectorAll('button');
+  const modeBtns = document.querySelectorAll('#modeSelect button');
   const scoreEls = {
     you: document.getElementById('scoreYou'),
     draw: document.getElementById('scoreDraw'),
@@ -564,9 +593,17 @@
   }
 
   function renderScores() {
+    const scores = state.scores[state.mode];
     for (const key of Object.keys(scoreEls)) {
-      scoreEls[key].querySelector('.value').textContent = state.scores[key];
+      scoreEls[key].querySelector('.value').textContent = scores[key];
     }
+  }
+
+  function renderMode() {
+    modeBtns.forEach(btn => btn.setAttribute('aria-pressed', btn.dataset.mode === state.mode));
+    scoreEls.you.querySelector('.label').textContent = vsCpu() ? 'You (X)' : 'Player X';
+    scoreEls.cpu.querySelector('.label').textContent = vsCpu() ? 'Computer (O)' : 'Player O';
+    difficultyEl.hidden = !vsCpu();
   }
 
   function bumpScore(key) {
@@ -577,19 +614,25 @@
   }
 
   function renderTurn() {
-    const humanTurn = !state.over && state.turn === HUMAN;
-    const cpuTurn = !state.over && state.turn === CPU;
-    scoreEls.you.classList.toggle('active', humanTurn);
-    scoreEls.cpu.classList.toggle('active', cpuTurn);
-    boardEl.classList.toggle('locked', !humanTurn && !state.over);
+    const playing = !state.over;
+    scoreEls.you.classList.toggle('active', playing && state.turn === HUMAN);
+    scoreEls.cpu.classList.toggle('active', playing && state.turn === CPU);
+    boardEl.classList.toggle('locked', playing && isCpuTurn());
+    boardEl.classList.toggle('turn-o', state.turn === CPU);
 
-    if (humanTurn) setStatus('Your move');
-    else if (cpuTurn) setStatus('Computer is thinking<span class="dots"></span>');
+    if (!playing) return;
+    if (vsCpu()) {
+      if (state.turn === HUMAN) setStatus('Your move');
+      else setStatus('Computer is thinking<span class="dots"></span>');
+    } else {
+      setStatus(`${state.turn}'s turn`, state.turn.toLowerCase());
+    }
   }
 
   function cellLabel(i) {
     const v = state.board[i];
-    const who = v === HUMAN ? 'X, yours' : v === CPU ? 'O, computer' : 'empty';
+    let who = 'empty';
+    if (v) who = vsCpu() ? (v === HUMAN ? 'X, yours' : 'O, computer') : v;
     return `Square ${i + 1}, ${who}`;
   }
 
@@ -626,7 +669,9 @@
 
     cells.forEach((cell, i) => {
       cell.className = 'cell';
-      cell.innerHTML = `<svg class="ghost" viewBox="0 0 100 100" aria-hidden="true">${X_PATHS}</svg>`;
+      cell.innerHTML =
+        `<svg class="ghost x" viewBox="0 0 100 100" aria-hidden="true">${X_PATHS}</svg>` +
+        `<svg class="ghost o" viewBox="0 0 100 100" aria-hidden="true">${O_PATH}</svg>`;
       cell.setAttribute('aria-label', cellLabel(i));
     });
     boardEl.classList.remove('over', 'draw');
@@ -635,7 +680,9 @@
     newRoundBtn.classList.remove('ready');
 
     renderTurn();
-    if (state.turn === CPU) {
+    if (!vsCpu()) {
+      setStatus(`${state.turn} goes first`, state.turn.toLowerCase());
+    } else if (state.turn === CPU) {
       setStatus('Computer goes first<span class="dots"></span>');
       scheduleCpu();
     } else if (state.round > 1) {
@@ -659,13 +706,13 @@
 
     state.turn = other(player);
     renderTurn();
-    if (state.turn === CPU) scheduleCpu();
+    if (isCpuTurn()) scheduleCpu();
   }
 
   function scheduleCpu() {
     const round = state.round;
     state.cpuTimer = setTimeout(() => {
-      if (round !== state.round || state.over) return;
+      if (round !== state.round || state.over || !isCpuTurn()) return;
       placeMark(chooseMove(), CPU);
     }, 450 + Math.random() * 350);
   }
@@ -687,18 +734,20 @@
       const cls = win.player === HUMAN ? 'x' : 'o';
       win.line.forEach(i => cells[i].classList.add('win', cls));
       drawWinLine(win.line, win.player);
-      if (win.player === HUMAN) {
-        key = 'you';
-        setStatus('You win! 🎉', 'win');
+      key = win.player === HUMAN ? 'you' : 'cpu';
+      if (!vsCpu()) {
+        setStatus(`${win.player} wins! 🎉`, cls);
+        setTimeout(sounds.win, 250);
+      } else if (win.player === HUMAN) {
+        setStatus('You win! 🎉', cls);
         setTimeout(sounds.win, 250);
       } else {
-        key = 'cpu';
-        setStatus('Computer wins this one.', 'lose');
+        setStatus('Computer wins this one.', cls);
         setTimeout(sounds.lose, 250);
       }
     }
 
-    state.scores[key]++;
+    state.scores[state.mode][key]++;
     renderScores();
     bumpScore(key);
     save();
@@ -707,21 +756,35 @@
 
   function onCellClick(i) {
     if (state.over) return newRound();
-    if (state.turn !== HUMAN || state.board[i]) return;
-    placeMark(i, HUMAN);
+    if (isCpuTurn() || state.board[i]) return;
+    placeMark(i, state.turn);
+  }
+
+  // Start fresh with X going first (used on reset and mode change).
+  function restart() {
+    state.round = 0;
+    state.starter = HUMAN;
+    newRound();
   }
 
   // ---------- Controls ----------
   newRoundBtn.addEventListener('click', () => newRound());
 
   resetBtn.addEventListener('click', () => {
-    state.scores = { you: 0, draw: 0, cpu: 0 };
+    state.scores[state.mode] = { you: 0, draw: 0, cpu: 0 };
     renderScores();
     save();
-    state.round = 0;
-    state.starter = HUMAN;
-    newRound();
+    restart();
   });
+
+  modeBtns.forEach(btn => btn.addEventListener('click', () => {
+    if (state.mode === btn.dataset.mode) return;
+    state.mode = btn.dataset.mode;
+    renderMode();
+    renderScores();
+    save();
+    restart();
+  }));
 
   soundBtn.addEventListener('click', () => {
     state.sound = !state.sound;
@@ -748,6 +811,7 @@
   });
 
   // ---------- Start ----------
+  renderMode();
   renderScores();
   renderDifficulty();
   renderSound();
