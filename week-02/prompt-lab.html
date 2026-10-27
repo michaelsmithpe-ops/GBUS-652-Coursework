@@ -193,7 +193,7 @@
 </div>
 
 <script>
-  const MODEL = "claude-sonnet-5";
+  const MODEL = "claude-sonnet-5-5";
   const MAX_TOKENS = 16000;
   const API_URL = "https://api.anthropic.com/v1/messages";
 
@@ -319,7 +319,9 @@
     const youEntry = addEntry("you", "You", text, { meta: `${timeNow()} · sent with ${context}` });
 
     const outgoing = [...messages, { role: "user", content: text }];
-    const body = { model: MODEL, max_tokens: MAX_TOKENS, messages: outgoing };
+    // fallbacks: "default" lets the API re-run a declined request on another
+    // model instead of returning a refusal (needs the beta header below).
+    const body = { model: MODEL, max_tokens: MAX_TOKENS, fallbacks: "default", messages: outgoing };
     if (system) body.system = system;
 
     promptEl.value = "";
@@ -333,6 +335,7 @@
           "content-type": "application/json",
           "x-api-key": key,
           "anthropic-version": "2023-06-01",
+          "anthropic-beta": "server-side-fallback-2026-07-01",
           // Required for calling the API directly from a browser page (CORS).
           "anthropic-dangerous-direct-browser-access": "true"
         },
@@ -360,6 +363,9 @@
       waiting.remove();
       const usage = data.usage ? ` · ${data.usage.input_tokens} in / ${data.usage.output_tokens} out tokens` : "";
       const claudeEntry = addEntry("claude", "Claude", reply || "(empty reply)", { meta: timeNow() + usage });
+      if (data.model && data.model !== MODEL) {
+        addNote(claudeEntry, `Answered by ${data.model} (automatic fallback after ${MODEL} declined).`);
+      }
       if (data.stop_reason === "max_tokens") {
         addNote(claudeEntry, `Reply was cut off at the ${MAX_TOKENS}-token limit.`);
       }
