@@ -16,4 +16,4 @@ Materials and coursework for Week 2 of GBUS 652: AI & LLM Foundations.
 
 ### Sample export
 
-[`prompt-lab-2026-10-27-1147.md`](prompt-lab-2026-10-27-1147.md) is a three-turn test conversation exported from Prompt Lab. The last turn ("What did I just ask you to do?") shows that each prompt is sent with the conversation so far, so Claude can recall earlier messages.
+[`prompt-lab-Initial-test 2026-10-27-1147.md`](prompt-lab-Initial-test%202026-10-27-1147.md) is a three-turn test conversation exported from Prompt Lab. The last turn ("What did I just ask you to do?") shows that each prompt is sent with the conversation so far, so Claude can recall earlier messages.
