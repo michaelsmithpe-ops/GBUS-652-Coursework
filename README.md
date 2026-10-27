@@ -8,3 +8,4 @@ This repository contains course materials and coursework for UMW's GBUS 652: AI 
 ## Weekly Materials
 
 1. [week-01](week-01/): Tic-Tac-Toe browser game ([play online](https://michaelsmithpe-ops.github.io/GBUS-652-Coursework/week-01/Tic-Tac-Toe.html))
+2. [week-02](week-02/): Prompt Lab web app for testing prompts against Claude, built with Claude Code

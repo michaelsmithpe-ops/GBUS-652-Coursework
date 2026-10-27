@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Lab</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --panel: #ffffff;
+    --border: #d7dbe0;
+    --text: #1f2328;
+    --muted: #656d76;
+    --accent: #c15f3c;
+    --accent-dark: #a24e30;
+    --system-bg: #f1f0fb;
+    --system-bar: #6e5cc4;
+    --you-bg: #eef5fd;
+    --you-bar: #2f6fbd;
+    --claude-bg: #fdf4ee;
+    --claude-bar: #c15f3c;
+    --error-bg: #fdeeee;
+    --error-bar: #c62828;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .app {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 16px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 100vh;
+  }
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  h1 { margin: 0; font-size: 1.6rem; }
+  .model-badge {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.85rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 10px;
+    color: var(--muted);
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .hint { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+  input[type="password"], textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #fff;
+    color: var(--text);
+  }
+  input[type="password"] { font-family: Consolas, "Courier New", monospace; }
+  textarea { resize: vertical; line-height: 1.4; }
+  input:focus, textarea:focus {
+    outline: 2px solid rgba(193, 95, 60, 0.35);
+    border-color: var(--accent);
+  }
+  #log {
+    flex: 1;
+    min-height: 280px;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .empty {
+    color: var(--muted);
+    text-align: center;
+    margin: auto;
+    font-size: 0.95rem;
+  }
+  .msg {
+    border-left: 4px solid;
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+  .msg.system { background: var(--system-bg); border-color: var(--system-bar); }
+  .msg.you    { background: var(--you-bg);    border-color: var(--you-bar); }
+  .msg.claude { background: var(--claude-bg); border-color: var(--claude-bar); }
+  .msg.error  { background: var(--error-bg);  border-color: var(--error-bar); }
+  .msg.failed { opacity: 0.6; }
+  .msg-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  .role { font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+  .msg.system .role { color: var(--system-bar); }
+  .msg.you .role    { color: var(--you-bar); }
+  .msg.claude .role { color: var(--claude-bar); }
+  .msg.error .role  { color: var(--error-bar); }
+  .meta { color: var(--muted); }
+  .msg-body {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.45;
+  }
+  .note { margin-top: 6px; font-size: 0.8rem; color: var(--muted); font-style: italic; }
+  .waiting .msg-body { color: var(--muted); }
+  .dots span { animation: blink 1.4s infinite both; }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: center;
+  }
+  .controls .spacer { flex: 1; }
+  button {
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+  }
+  button:hover:not(:disabled) { background: #f0f1f3; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover:not(:disabled) { background: var(--accent-dark); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .shortcut { font-size: 0.8rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Prompt Lab</h1>
+    <span class="model-badge" id="modelBadge"></span>
+  </header>
+
+  <!-- Not inside a <form>, so browsers are less likely to offer to save the key. -->
+  <div class="panel">
+    <label for="apiKey">Anthropic API key <span class="hint">(kept in memory only and cleared when you close or reload the page)</span></label>
+    <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+  </div>
+
+  <div class="panel">
+    <label for="systemPrompt">System prompt <span class="hint">(optional; stays in the box after you send)</span></label>
+    <textarea id="systemPrompt" rows="3" placeholder="e.g. You are a concise tutor for an MBA course."></textarea>
+  </div>
+
+  <div class="panel" id="log" aria-live="polite"></div>
+
+  <div class="panel">
+    <label for="prompt">Prompt</label>
+    <textarea id="prompt" rows="4" placeholder="Type your prompt..."></textarea>
+    <div class="controls">
+      <button class="primary" id="sendBtn">Send</button>
+      <span class="shortcut">Ctrl+Enter to send</span>
+      <span class="spacer"></span>
+      <button id="newBtn">New Conversation</button>
+      <button id="exportBtn">Export</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const MODEL = "claude-sonnet-5";
+  const MAX_TOKENS = 16000;
+  const API_URL = "https://api.anthropic.com/v1/messages";
+
+  const apiKeyEl = document.getElementById("apiKey");
+  const systemEl = document.getElementById("systemPrompt");
+  const promptEl = document.getElementById("prompt");
+  const logEl = document.getElementById("log");
+  const sendBtn = document.getElementById("sendBtn");
+  const newBtn = document.getElementById("newBtn");
+  const exportBtn = document.getElementById("exportBtn");
+  document.getElementById("modelBadge").textContent = MODEL;
+
+  // State (in memory only; nothing is ever saved to disk or browser storage)
+  let messages = [];         // the conversation history sent to the API: {role, content}
+  let transcript = [];       // what Export writes: {role: "System"|"You"|"Claude", text}
+  let activeSystem = null;   // system prompt used for the last request (null = none sent yet)
+  let busy = false;
+
+  // ---------- Log rendering ----------
+  function showEmptyState() {
+    logEl.innerHTML = "";
+    const p = document.createElement("p");
+    p.className = "empty";
+    p.textContent = "No messages yet. Enter your API key, type a prompt, and press Send.";
+    logEl.appendChild(p);
+  }
+
+  function addEntry(kind, label, text, { meta = "", note = "" } = {}) {
+    const empty = logEl.querySelector(".empty");
+    if (empty) empty.remove();
+
+    const div = document.createElement("div");
+    div.className = "msg " + kind;
+
+    const head = document.createElement("div");
+    head.className = "msg-head";
+    const role = document.createElement("span");
+    role.className = "role";
+    role.textContent = label;
+    const metaEl = document.createElement("span");
+    metaEl.className = "meta";
+    metaEl.textContent = meta;
+    head.append(role, metaEl);
+
+    const body = document.createElement("div");
+    body.className = "msg-body";
+    body.textContent = text;   // plain text only; CSS keeps the line breaks
+
+    div.append(head, body);
+    if (note) addNote(div, note);
+    logEl.appendChild(div);
+    logEl.scrollTop = logEl.scrollHeight;
+    return div;
+  }
+
+  function addNote(entry, text) {
+    const n = document.createElement("div");
+    n.className = "note";
+    n.textContent = text;
+    entry.appendChild(n);
+  }
+
+  function addWaiting() {
+    const div = addEntry("claude waiting", "Claude", "");
+    const body = div.querySelector(".msg-body");
+    body.innerHTML = 'Waiting for Claude<span class="dots"><span>.</span><span>.</span><span>.</span></span>';
+    return div;
+  }
+
+  function timeNow() {
+    return new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  }
+
+  function setBusy(on) {
+    busy = on;
+    sendBtn.disabled = on;
+    newBtn.disabled = on;
+    exportBtn.disabled = on;
+  }
+
+  // ---------- Sending ----------
+  async function send() {
+    if (busy) return;
+    const key = apiKeyEl.value.trim();
+    const text = promptEl.value;
+    if (!key) {
+      addEntry("error", "Error", "Please paste your Anthropic API key first.");
+      apiKeyEl.focus();
+      return;
+    }
+    if (!text.trim()) {
+      promptEl.focus();
+      return;
+    }
+
+    // Log the system prompt at the start, or note a change mid-conversation.
+    // The API's system prompt applies to the whole conversation, so a change
+    // means Claude now reads every earlier message under the new instructions.
+    const system = systemEl.value.trim();
+    let systemEntry = null;
+    if (activeSystem === null) {
+      if (system) {
+        systemEntry = addEntry("system", "System", system, { meta: timeNow() });
+      }
+    } else if (system !== activeSystem) {
+      const note = messages.length
+        ? "System prompt changed mid-conversation. From now on Claude reads the whole conversation with this system prompt."
+        : "";
+      systemEntry = system
+        ? addEntry("system", "System", system, { meta: timeNow(), note })
+        : addEntry("system", "System", "(system prompt removed)", {
+            meta: timeNow(),
+            note: "System prompt removed mid-conversation. Claude now sees no system prompt."
+          });
+    }
+
+    // Show exactly what goes to Claude with this prompt.
+    const earlier = messages.length;
+    const context = [
+      system ? "system prompt" : "no system prompt",
+      earlier ? `${earlier} earlier message${earlier === 1 ? "" : "s"}` : "no earlier messages"
+    ].join(" + ");
+    const youEntry = addEntry("you", "You", text, { meta: `${timeNow()} · sent with ${context}` });
+
+    const outgoing = [...messages, { role: "user", content: text }];
+    const body = { model: MODEL, max_tokens: MAX_TOKENS, messages: outgoing };
+    if (system) body.system = system;
+
+    promptEl.value = "";
+    setBusy(true);
+    const waiting = addWaiting();
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+          // Required for calling the API directly from a browser page (CORS).
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify(body)
+      });
+
+      let data;
+      try { data = await res.json(); } catch { data = null; }
+
+      if (!res.ok) {
+        const detail = data && data.error ? `${data.error.type}: ${data.error.message}` : res.statusText;
+        throw new Error(`HTTP ${res.status} (${detail})`);
+      }
+
+      if (data.stop_reason === "refusal") {
+        const cat = data.stop_details && data.stop_details.category ? ` (category: ${data.stop_details.category})` : "";
+        throw new Error(`Claude declined to respond to this request${cat}.`);
+      }
+
+      const reply = (data.content || [])
+        .filter(b => b.type === "text")
+        .map(b => b.text)
+        .join("");
+
+      waiting.remove();
+      const usage = data.usage ? ` · ${data.usage.input_tokens} in / ${data.usage.output_tokens} out tokens` : "";
+      const claudeEntry = addEntry("claude", "Claude", reply || "(empty reply)", { meta: timeNow() + usage });
+      if (data.stop_reason === "max_tokens") {
+        addNote(claudeEntry, `Reply was cut off at the ${MAX_TOKENS}-token limit.`);
+      }
+
+      // Success: commit this turn to the conversation.
+      messages = [...outgoing, { role: "assistant", content: reply }];
+      if (systemEntry) transcript.push({ role: "System", text: system || "(system prompt removed)" });
+      transcript.push({ role: "You", text });
+      transcript.push({ role: "Claude", text: reply });
+      activeSystem = system;
+    } catch (err) {
+      waiting.remove();
+      // Failed turns are not added to the conversation, so the next send
+      // doesn't include them. Put the prompt back so it's easy to retry.
+      youEntry.classList.add("failed");
+      addNote(youEntry, "Not delivered. This message was not added to the conversation.");
+      if (systemEntry) {
+        systemEntry.classList.add("failed");
+        addNote(systemEntry, "Not applied yet; it will take effect on your next successful send.");
+      }
+      const msg = err instanceof TypeError
+        ? "Could not reach the Anthropic API. Check your internet connection. (" + err.message + ")"
+        : err.message;
+      addEntry("error", "Error", msg, { meta: timeNow() });
+      if (!promptEl.value) promptEl.value = text;
+    } finally {
+      setBusy(false);
+      promptEl.focus();
+    }
+  }
+
+  // ---------- New conversation ----------
+  function newConversation() {
+    if (busy) return;
+    messages = [];
+    transcript = [];
+    activeSystem = null;
+    showEmptyState();
+    promptEl.focus();
+  }
+
+  // ---------- Export ----------
+  function exportMarkdown() {
+    if (!transcript.length) {
+      addEntry("error", "Error", "Nothing to export yet.");
+      return;
+    }
+    const lines = [`Model: ${MODEL}`, ""];
+    for (const m of transcript) {
+      lines.push(`### ${m.role}`, "", m.text, "");
+    }
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+    const d = new Date();
+    const pad = n => String(n).padStart(2, "0");
+    const name = `prompt-lab-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}.md`;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  // ---------- Wiring ----------
+  sendBtn.addEventListener("click", send);
+  newBtn.addEventListener("click", newConversation);
+  exportBtn.addEventListener("click", exportMarkdown);
+  promptEl.addEventListener("keydown", e => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      send();
+    }
+  });
+
+  showEmptyState();
+</script>
+</body>
+</html>
