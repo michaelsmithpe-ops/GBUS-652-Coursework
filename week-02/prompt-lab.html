@@ -193,7 +193,7 @@
 </div>
 
 <script>
-  const MODEL = "claude-sonnet-5-5";
+  const MODEL = "claude-sonnet-5";
   const MAX_TOKENS = 16000;
   const API_URL = "https://api.anthropic.com/v1/messages";
 
@@ -208,7 +208,7 @@
 
   // State (in memory only; nothing is ever saved to disk or browser storage)
   let messages = [];         // the conversation history sent to the API: {role, content}
-  let transcript = [];       // what Export writes: {role: "System"|"You"|"Claude", text}
+  let transcript = [];       // what Export writes: {role: "System"|"MikeSmith"|"Claude", text}
   let activeSystem = null;   // system prompt used for the last request (null = none sent yet)
   let busy = false;
 
@@ -373,7 +373,7 @@
       // Success: commit this turn to the conversation.
       messages = [...outgoing, { role: "assistant", content: reply }];
       if (systemEntry) transcript.push({ role: "System", text: system || "(system prompt removed)" });
-      transcript.push({ role: "You", text });
+      transcript.push({ role: "MikeSmith", text });
       transcript.push({ role: "Claude", text: reply });
       activeSystem = system;
     } catch (err) {
