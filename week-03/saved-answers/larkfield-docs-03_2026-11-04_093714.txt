@@ -1,0 +1,21 @@
+QUESTION
+Question 2: A member needs a replacement debit card quickly. What does rush delivery cost?
+
+Top 4 retrieved chunks:
+  #1  similarity 0.615  consumer-fee-schedule.html
+      Section: ATM and debit card fees
+      Withdrawals at Larkfield ATMs and at CO-OP network ATMs are free. A withdrawal at any other ATM costs $2, and the ATM's owner may charge its own fee a...
+  #2  similarity 0.583  card-dispute-procedure.html
+      Section: How much the member may have to pay
+      A member's share of the loss from unauthorized debit card transactions depends on how quickly they report it. If the member reports a lost or stolen c...
+  #3  similarity 0.481  card-dispute-procedure.html
+      Section: When a member reports a transaction they did not make
+      When a member says a debit card transaction on their account was not made or authorized by them, freeze the card right away in the card system, then o...
+  #4  similarity 0.461  consumer-fee-schedule.html
+      Section: Overdraft and returned item fees
+      When Larkfield pays a check, debit card purchase, or automatic payment that overdraws a member's checking account, the overdraft fee is $29 per item p...
+
+ANSWER
+Rush delivery for a replacement debit card costs $30 [consumer-fee-schedule.html].
+
+Note the exception: if the old card was reported lost or stolen because of fraud, the replacement card is free [consumer-fee-schedule.html] — the sources don't specify whether this fraud exception also waives the rush delivery charge itself, so if that situation applies, you may want to confirm separately whether rush delivery would still incur the $30 fee.

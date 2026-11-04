@@ -1,0 +1,23 @@
+QUESTION
+Question 4: Can I refund the outgoing international wire transfer fee for a member without approval from a manager?
+
+Top 4 retrieved chunks:
+  #1  similarity 0.630  consumer-fee-schedule.html
+      Section: Wire transfers
+      - Incoming domestic wire transfer: $10. - Incoming international wire transfer: $15. - Outgoing domestic wire transfer: $25. - Outgoing international ...
+  #2  similarity 0.575  fee-refund-guide.html
+      Section: Refunds that need a branch manager
+      A refund needs the branch manager's approval when the fee is more than $30, when the member has already had a refund in the last 90 days, or when the ...
+  #3  similarity 0.536  fee-refund-guide.html
+      Section: What a member service representative can approve
+      A member service representative may approve a refund of a single fee of $30 or less without anyone else's approval. A representative may approve only ...
+  #4  similarity 0.497  fee-refund-guide.html
+      Section: Refunds that need the Member Services Director
+      Refunds of more than $150 in total for one member in any 90-day period need the Member Services Director's approval. So does any refund for a business...
+
+ANSWER
+No. The outgoing international wire transfer fee is $45 [consumer-fee-schedule.html]. A member service representative can only approve refunds of a single fee of $30 or less without further approval [fee-refund-guide.html]. Since $45 exceeds that threshold, the refund needs branch manager approval [fee-refund-guide.html].
+
+Additional conditions that could change the required approval level:
+- If the member has already had a refund in the last 90 days, or is asking for several fees to be refunded at once, branch manager approval is also required (which it already is here) [fee-refund-guide.html].
+- If the total refunds for that member in a 90-day period exceed $150, or if the account is a business account, approval from the Member Services Director is needed instead of the branch manager [fee-refund-guide.html].

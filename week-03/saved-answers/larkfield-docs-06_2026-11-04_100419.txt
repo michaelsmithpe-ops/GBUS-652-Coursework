@@ -1,0 +1,21 @@
+QUESTION
+Question 5: A member deposited a ,000 paycheck at a branch today. How much of it can they use on the next business day?
+
+Top 4 retrieved chunks:
+  #1  similarity 0.522  funds-availability-policy.html
+      Section: Mobile check deposits
+      Checks deposited with the Larkfield mobile app follow the same availability as checks deposited at a branch. A member can deposit up to $5,000 per bus...
+  #2  similarity 0.508  funds-availability-policy.html
+      Section: Check deposits
+      For checks deposited at a branch or a Larkfield ATM, the first $275 of the day's check deposits is available on the next business day. The rest of the...
+  #3  similarity 0.424  funds-availability-policy.html
+      Section: Business days and cutoff times
+      A business day is Monday through Friday, except federal holidays. A deposit made before 5 p.m. on a business day is received that day. A deposit made ...
+  #4  similarity 0.418  card-dispute-procedure.html
+      Section: How much the member may have to pay
+      A member's share of the loss from unauthorized debit card transactions depends on how quickly they report it. If the member reports a lost or stolen c...
+
+ANSWER
+Based on the policy, for checks deposited at a branch, the first $275 of the day's check deposits is available on the next business day, with the remainder available on the second business day after the deposit [funds-availability-policy.html]. So regardless of the paycheck being $1,000, the member can use **$275** of it on the next business day.
+
+One condition to note: this assumes the deposit was made before 5 p.m. on a business day. If it was deposited after 5 p.m., or on a weekend/holiday, it is treated as received the next business day, which would push back the "next business day" availability date by one day [funds-availability-policy.html].

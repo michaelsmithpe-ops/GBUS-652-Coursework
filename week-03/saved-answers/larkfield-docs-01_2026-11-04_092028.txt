@@ -1,0 +1,25 @@
+QUESTION
+Question 1: How much is the fee when a member overdraws their checking account?
+
+Top 4 retrieved chunks:
+  #1  similarity 0.717  consumer-fee-schedule.html
+      Section: Overdraft and returned item fees
+      When Larkfield pays a check, debit card purchase, or automatic payment that overdraws a member's checking account, the overdraft fee is $29 per item p...
+  #2  similarity 0.704  consumer-fee-schedule-v7.html
+      Section: Overdraft and returned item fees
+      When Larkfield pays a check, debit card purchase, or automatic payment that overdraws a member's checking account, the overdraft fee is $35 per item p...
+  #3  similarity 0.591  consumer-fee-schedule.html
+      Section: Checking account monthly fees
+      Everyday Checking has no monthly service fee. Plus Checking has a monthly service fee of $8. The Plus Checking fee is waived for any month in which th...
+  #4  similarity 0.587  consumer-fee-schedule-v7.html
+      Section: Checking account monthly fees
+      Everyday Checking has no monthly service fee. Plus Checking has a monthly service fee of $8. The Plus Checking fee is waived for any month in which th...
+
+ANSWER
+The overdraft fee is $29 per item paid when Larkfield pays a check, debit card purchase, or automatic payment that overdraws a member's checking account, and the returned item fee is also $29 per item returned [consumer-fee-schedule.html].
+
+A few conditions affect this:
+- No more than three overdraft or returned item fees are charged to one account in a single business day [consumer-fee-schedule.html].
+- No overdraft fee is charged if the account is overdrawn by $10 or less at the end of the business day [consumer-fee-schedule.html].
+- An overdraft transfer from a linked savings account is free, so no fee applies if the member uses that option [consumer-fee-schedule.html].
+

@@ -1,0 +1,16 @@
+Top 4 retrieved chunks:
+  #1  similarity 0.493  travel-expense-policy.html
+      Section: Airfare
+      Book economy class through the company travel portal at least 14 days before departure whenever possible. Business class is reimbursable only for a si...
+  #2  similarity 0.463  travel-expense-policy-v3-2.html
+      Section: Airfare
+      Book economy class through the company travel portal. Business class is not reimbursable....
+  #3  similarity 0.401  travel-expense-policy.html
+      Section: Alcohol
+      Alcohol is not reimbursable during ordinary business travel. The only exception is client entertainment approved in advance by your department directo...
+  #4  similarity 0.356  travel-expense-policy-v3-2.html
+      Section: Ground transportation
+      Licensed taxis are reimbursable for trips between the airport and your hotel. Rideshare services are not reimbursable. Rental cars require your manage...
+
+ANSWER
+Yes, but only under a specific condition: business class is reimbursable for a single flight segment longer than 6 hours, and it requires your vice president's approval [travel-expense-policy.html]. Seat upgrades and in-flight purchases are considered personal expenses and are not covered [travel-expense-policy.html]. So the answer depends on flight segment length and whether VP approval is obtained—without meeting both, business class is not reimbursable.

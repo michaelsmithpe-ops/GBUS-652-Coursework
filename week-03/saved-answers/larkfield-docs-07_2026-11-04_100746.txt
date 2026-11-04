@@ -1,0 +1,19 @@
+QUESTION
+Question 6: What is the current rate on a 30-year fixed mortgage?
+
+Top 4 retrieved chunks:
+  #1  similarity 0.272  consumer-fee-schedule.html
+      Section: Stop payments
+      A stop payment on a check costs $30 per request. One request can cover a single check or a series of checks with consecutive numbers. A stop payment s...
+  #2  similarity 0.271  share-certificates.html
+      Section: Dividend rates
+      - 6-month share certificate: 3.05% annual percentage yield (APY). - 12-month share certificate: 3.40% APY. - 24-month share certificate: 3.55% APY. - ...
+  #3  similarity 0.228  consumer-fee-schedule.html
+      Section: Checking account monthly fees
+      Everyday Checking has no monthly service fee. Plus Checking has a monthly service fee of $8. The Plus Checking fee is waived for any month in which th...
+  #4  similarity 0.197  consumer-fee-schedule.html
+      Section: Wire transfers
+      - Incoming domestic wire transfer: $10. - Incoming international wire transfer: $15. - Outgoing domestic wire transfer: $25. - Outgoing international ...
+
+ANSWER
+The provided documents don't answer this question. The sources cover stop payments, share certificate dividend rates, checking account fees, and wire transfer fees, but none mention mortgage rates [consumer-fee-schedule.html][share-certificates.html].
