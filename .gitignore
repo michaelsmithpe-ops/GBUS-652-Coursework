@@ -221,3 +221,4 @@ __marimo__/
 
 # Week 3 RAG tool: local Chroma vector database (rebuild with ask.py --rebuild)
 week-03/chroma_db/
+week-04/chroma_db/

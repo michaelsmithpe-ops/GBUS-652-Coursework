@@ -13,3 +13,4 @@ This repository contains course materials and coursework for UMW's GBUS 652: AI 
    [![Run Prompt Lab](https://img.shields.io/badge/%E2%96%B6%20Run-Prompt%20Lab-c15f3c?style=for-the-badge&logo=claude&logoColor=white)](https://michaelsmithpe-ops.github.io/GBUS-652-Coursework/week-02/prompt-lab.html)
 
 3. [week-03](week-03/): RAG tool that answers questions from Copperline Manufacturing's finance documents, built with Claude Code
+4. [week-04](week-04/): AI agent that prepares replies to HR emails using tools from an MCP server, built with Claude Code
