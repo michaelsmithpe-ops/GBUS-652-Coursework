@@ -1,0 +1,35 @@
+From:    Logan Brooks <logan.brooks@ridgelinehotels.example>
+Subject: Days off
+Email:   week-04/ridgeline-hotels/sample-emails/07-logan-seasonal.eml
+Org:     ridgeline-hotels (Ridgeline Hotels)
+Model:   claude-sonnet-5
+Run at:  2026-11-13 09:35
+
+Tools offered: search_policy, get_leave_balance, save_reply
+
+Step 1: get_leave_balance
+  inputs: {}
+  result (error): Error executing tool get_leave_balance: No employee record matches 'logan.brooks@ridgelinehotels.example'. Do NOT state, estimate or guess any leave balance. Tell the sender their record could not be found and that a person from the HR team will follow up.
+
+Step 2: save_reply
+  inputs: {"reply_text": "Hi Logan,\n\nThanks for reaching out. I tried to look up your PTO balance, but I wasn't able to find an employee record matching your email address in our system. I don't want to guess or share incorrect information, so I've flagged this for a member of the People and Culture team to look into and follow up with you directly with your correct PTO balance.\n\nThanks for your patience!\n\nPeople and Culture", "needs_human_review": true}
+  result: Draft saved to week-04/drafts/ridgeline-hotels/07-logan-seasonal-20261113-093522.txt. It was not sent.
+
+----------------------------------------------------------------------
+Stopped: The draft was saved with save_reply.
+Tool calls: 2
+
+Saved as a local draft (not sent): week-04/drafts/ridgeline-hotels/07-logan-seasonal-20261113-093522.txt
+To: Logan Brooks <logan.brooks@ridgelinehotels.example>
+Subject: [NEEDS HR REVIEW] Re: Days off
+DRAFT
+Hi Logan,
+
+Thanks for reaching out. I tried to look up your PTO balance, but I wasn't able to find an employee record matching your email address in our system. I don't want to guess or share incorrect information, so I've flagged this for a member of the People and Culture team to look into and follow up with you directly with your correct PTO balance.
+
+Thanks for your patience!
+
+People and Culture
+Needs human review: true
+
+Tokens: 3,253 input, 260 output (3,513 total)

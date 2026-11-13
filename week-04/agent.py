@@ -2,11 +2,20 @@
 
 Usage (run from the top of the repository):
     .venv\\Scripts\\python.exe week-04\\agent.py --email week-04\\hartwell-hr\\sample-emails\\01-dana-vacation.eml
+    .venv\\Scripts\\python.exe week-04\\agent.py --org week-04\\ridgeline-hotels --email week-04\\ridgeline-hotels\\sample-emails\\01-jenna-pto.eml --save week-04\\runs\\ridgeline-01.txt
     .venv\\Scripts\\python.exe week-04\\agent.py --inbox
     .venv\\Scripts\\python.exe week-04\\agent.py --inbox --save run-log.txt
 
+Organization:
+  --org FOLDER  The organization folder to use: its hr-docs, employees.csv and
+                system_prompt.txt (see hr_org.py). A path, or a folder name inside
+                week-04. Default: week-04/hartwell-hr. Its policy database must
+                be built first:  week-04\\hr_search.py --org FOLDER --rebuild
+
 Modes:
-  --email FILE  Handle one .eml file. save_reply writes a draft to week-04/drafts/.
+  --email FILE  Handle one .eml file. save_reply writes a draft to the
+                organization's own folder, week-04/drafts/<org>/ (for example
+                drafts/hartwell-hr/ or drafts/ridgeline-hotels/).
   --inbox       Sign in to the Gmail sandbox with IMAP (login from Agent-Email.txt
                 in the folder above the repository) and handle each unread inbox
                 email as its own separate agent run. Each email is marked as read
@@ -32,22 +41,25 @@ Modes:
                   kept as a starred, tagged draft. Claude has no send tool.
                 - At most 5 replies are sent; then it stops. Ctrl+C also stops it.
   --save FILE   Also write everything printed to FILE (UTF-8), relative to the
-                current folder.
+                current folder. Works with every mode; missing folders are created.
 
 --email and --inbox only read email and create drafts; only --watch can send,
 and only under the rules above.
 
 How each agent run works:
-  1. The sender's address comes from the email's From line.
-  2. week-04/hr_mcp_server.py is started with --as-employee <sender>, so
-     get_leave_balance can only return the sender's own balance.
+  1. The sender and subject are printed first. The sender's address comes from
+     the email's From line.
+  2. week-04/hr_mcp_server.py is started with --org <org> --as-employee <sender>,
+     so get_leave_balance can only return the sender's own balance.
   3. Claude gets that server's tools (search_policy, get_leave_balance) plus
-     save_reply, and the system prompt from hartwell-hr/system_prompt.txt
-     (read fresh on every run).
+     save_reply, and the system prompt from <org>/system_prompt.txt (read fresh
+     on every run).
   4. Each tool call is printed with its inputs and the first 300 characters of
      its result. The run stops when the draft is saved, after 10 tool calls, or
-     on any reply that isn't a tool request, and says why. Then the draft and
-     the input and output tokens are printed.
+     on any reply that isn't a tool request, and says why. Then the draft is
+     printed: a line containing only DRAFT, the reply text, and a line
+     "Needs human review: true" or "Needs human review: false". Last come the
+     input and output tokens.
 
 Secrets: the Anthropic API key (API-Key.txt) and the Gmail login
 (Agent-Email.txt) are read at run time only. The password and API key are
@@ -61,7 +73,6 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import csv
 import datetime
 import email.policy
 import imaplib
@@ -79,12 +90,17 @@ import anthropic
 from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
+import hr_org
 import load_inbox  # shared Gmail login reader (read_login) and IMAP settings
 
 HERE = Path(__file__).resolve().parent                  # .../GBUS-652-Coursework/week-04
 SERVER = HERE / "hr_mcp_server.py"
-SYSTEM_PROMPT_FILE = HERE / "hartwell-hr" / "system_prompt.txt"
-DRAFTS_DIR = HERE / "drafts"
+
+# The organization folder; set by use_org() from --org.
+ORG_DIR = hr_org.DEFAULT_ORG.resolve()
+SYSTEM_PROMPT_FILE = ORG_DIR / "system_prompt.txt"
+EMPLOYEES_CSV = ORG_DIR / "employees.csv"
+DRAFTS_DIR = HERE / "drafts" / ORG_DIR.name             # one drafts folder per organization
 KEY_FILE = HERE.parents[1] / "API-Key.txt"              # folder that contains the repo
 SERVER_LOG = HERE / ".mcp-server.log"                   # git-ignored (*.log)
 
@@ -96,7 +112,6 @@ REVIEW_TAG = "[NEEDS HR REVIEW]"
 
 # --watch settings
 ALLOWLIST_FILE = load_inbox.LOGIN_FILE.parent / "Agent-Allowlist.txt"   # beside Agent-Email.txt
-EMPLOYEES_CSV = HERE / "hartwell-hr" / "employees.csv"
 WATCH_INTERVAL_SECONDS = 30
 MAX_SENT_REPLIES = 5
 SMTP_HOST = "smtp.gmail.com"
@@ -165,6 +180,19 @@ def fail(message: str) -> None:
     sys.exit(1)
 
 
+def use_org(value: str | None) -> None:
+    """Point the agent at an organization folder (--org); hartwell-hr when value is None."""
+    global ORG_DIR, SYSTEM_PROMPT_FILE, EMPLOYEES_CSV, DRAFTS_DIR
+    try:
+        ORG_DIR = hr_org.resolve(value)
+        hr_org.EmployeeFile(ORG_DIR / "employees.csv")      # fail early if its columns can't be read
+    except hr_org.OrgError as exc:
+        fail(str(exc))
+    SYSTEM_PROMPT_FILE = ORG_DIR / "system_prompt.txt"
+    EMPLOYEES_CSV = ORG_DIR / "employees.csv"
+    DRAFTS_DIR = HERE / "drafts" / ORG_DIR.name     # e.g. drafts/hartwell-hr, drafts/ridgeline-hotels
+
+
 # ---------------------------------------------------------------------------
 # Inputs
 # ---------------------------------------------------------------------------
@@ -224,6 +252,13 @@ def reply_subject(em: dict, needs_review: bool) -> str:
     return f"{REVIEW_TAG} {subject}" if needs_review else subject
 
 
+def draft_block(reply_text: str, needs_review: bool) -> str:
+    """The reply as printed and saved: a line with only DRAFT, the reply, then the review flag."""
+    return ("DRAFT\n"
+            + reply_text.strip() + "\n"
+            + f"Needs human review: {'true' if needs_review else 'false'}\n")
+
+
 def preview(text: str) -> str:
     one_line = " ".join(text.split())
     return one_line if len(one_line) <= PREVIEW_CHARS else one_line[:PREVIEW_CHARS] + "..."
@@ -233,26 +268,28 @@ def preview(text: str) -> str:
 # Where drafts go: a local file (--email) or a Gmail draft (--inbox)
 # ---------------------------------------------------------------------------
 
+# Each save() returns (message for Claude, header printed above the DRAFT block).
+
 class LocalDrafts:
-    """--email mode: write the draft to week-04/drafts/. Saves only; never sends."""
+    """--email mode: write the draft to week-04/drafts/<org>/. Saves only; never sends."""
 
     def __init__(self, email_path: Path):
         self.email_path = email_path
 
     def save(self, em: dict, reply_text: str, needs_review: bool) -> tuple[str, str]:
-        DRAFTS_DIR.mkdir(exist_ok=True)
+        DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
         stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         path = DRAFTS_DIR / f"{self.email_path.stem}-{stamp}.txt"
-        text = ("DRAFT - NOT SENT\n"
-                f"To: {em['from_name']} <{em['from_address']}>\n"
-                f"Subject: {reply_subject(em, needs_review)}\n"
-                f"Needs human review: {'YES' if needs_review else 'no'}\n"
-                f"Source email: {self.email_path.name}\n"
-                f"Model: {MODEL}\n"
-                "\n" + reply_text.strip() + "\n")
-        path.write_text(text, encoding="utf-8")
+        header = (f"To: {em['from_name']} <{em['from_address']}>\n"
+                  f"Subject: {reply_subject(em, needs_review)}\n")
+        path.write_text("Not sent. Saved for review.\n"
+                        f"Organization: {ORG_DIR.name}\n"
+                        f"Source email: {self.email_path.name}\n"
+                        f"Model: {MODEL}\n"
+                        + header + "\n" + draft_block(reply_text, needs_review), encoding="utf-8")
         where = path.relative_to(HERE.parent).as_posix()
-        return f"Draft saved to {where}. It was not sent.", f"Draft ({where}):\n{text}"
+        return (f"Draft saved to {where}. It was not sent.",
+                f"Saved as a local draft (not sent): {where}\n{header}")
 
 
 class GmailDrafts:
@@ -290,13 +327,11 @@ class GmailDrafts:
             raise RuntimeError(f"Gmail did not accept the draft: {detail}")
         thread_note = "" if em["message_id"] else " (the original had no Message-ID, so it may not join the thread)"
         star_note = ", starred" if needs_review else ""
-        shown = ("GMAIL DRAFT - NOT SENT\n"
-                 f"To: {msg['To']}\n"
-                 f"Subject: {msg['Subject']}\n"
-                 f"Needs human review: {'YES (starred)' if needs_review else 'no'}\n"
-                 "\n" + reply_text.strip() + "\n")
+        header = (f"Saved as a Gmail draft (not sent) in {self.drafts_mailbox}{star_note}{thread_note}\n"
+                  f"To: {msg['To']}\n"
+                  f"Subject: {msg['Subject']}\n")
         return (f"Gmail draft created in {self.drafts_mailbox}{star_note}{thread_note}. It was not sent.",
-                f"Gmail draft ({self.drafts_mailbox}){thread_note}:\n{shown}")
+                header)
 
 
 class WatchReplies:
@@ -312,8 +347,8 @@ class WatchReplies:
         if needs_review:
             return self.drafts.save(em, reply_text, True)
         if self.sent >= MAX_SENT_REPLIES:
-            text, shown = self.drafts.save(em, reply_text, False)
-            return (text, f"Send limit ({MAX_SENT_REPLIES}) reached, so kept as a draft.\n{shown}")
+            text, header = self.drafts.save(em, reply_text, False)
+            return (text, f"Send limit ({MAX_SENT_REPLIES}) reached, so kept as a draft.\n{header}")
 
         msg = self.drafts.build(em, reply_text, False)
         msg["Auto-Submitted"] = "auto-replied"   # RFC 3834: tells other systems not to auto-answer it
@@ -321,16 +356,15 @@ class WatchReplies:
         try:
             send_smtp(msg, em["reply_address"])
         except Exception as exc:
-            text, shown = self.drafts.save(em, reply_text, False)
+            text, header = self.drafts.save(em, reply_text, False)
             return (f"Sending failed, so it was kept as a draft instead. {text}",
-                    f"SEND FAILED ({type(exc).__name__}: {exc}) - kept as a draft.\n{shown}")
+                    f"SEND FAILED ({type(exc).__name__}: {exc}) - kept as a draft.\n{header}")
         self.sent += 1
-        shown = ("SENT with Gmail SMTP (needs_human_review was false)\n"
-                 f"To: {msg['To']}\n"
-                 f"Subject: {msg['Subject']}\n"
-                 "\n" + reply_text.strip() + "\n")
-        return ("The program sent this reply to the employee.",
-                f"Reply sent ({self.sent} of {MAX_SENT_REPLIES} allowed):\n{shown}")
+        header = (f"SENT with Gmail SMTP ({self.sent} of {MAX_SENT_REPLIES} allowed; "
+                  "needs_human_review was false)\n"
+                  f"To: {msg['To']}\n"
+                  f"Subject: {msg['Subject']}\n")
+        return ("The program sent this reply to the employee.", header)
 
 
 def send_smtp(msg: EmailMessage, to_address: str) -> None:
@@ -367,15 +401,21 @@ def find_drafts_mailbox(imap: imaplib.IMAP4_SSL) -> str:
 # One agent run (one email)
 # ---------------------------------------------------------------------------
 
-async def run_agent(client: anthropic.AsyncAnthropic, em: dict, drafts) -> dict:
+async def run_agent(client: anthropic.AsyncAnthropic, em: dict, drafts,
+                    details: list[str] | None = None) -> dict:
     system_prompt = SYSTEM_PROMPT_FILE.read_text(encoding="utf-8").strip()
+    # The sender and subject always come first.
     print(f"From:    {em['from_name']} <{em['from_address']}>")
     print(f"Subject: {em['subject']}")
-    print(f"Model:   {MODEL}\n")
+    for line in details or []:
+        print(line)
+    print(f"Org:     {ORG_DIR.name} ({hr_org.display_name(ORG_DIR)})")
+    print(f"Model:   {MODEL}")
+    print(f"Run at:  {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
 
     server = StdioServerParameters(
         command=sys.executable,
-        args=[str(SERVER), "--as-employee", em["from_address"]],
+        args=[str(SERVER), "--org", str(ORG_DIR), "--as-employee", em["from_address"]],
         cwd=str(HERE.parent))
 
     result = {"in": 0, "out": 0, "tool_calls": 0, "draft": None, "stop": "", "needs_review": None}
@@ -449,7 +489,8 @@ async def run_agent(client: anthropic.AsyncAnthropic, em: dict, drafts) -> dict:
                                                   "needs_human_review (true or false)."), True
                             else:
                                 try:
-                                    text, result["draft"] = drafts.save(em, reply, review)
+                                    text, header = drafts.save(em, reply, review)
+                                    result["draft"] = header + draft_block(reply, review)
                                     result["needs_review"] = review
                                 except Exception as exc:
                                     text, is_error = f"Could not save the draft: {exc}", True
@@ -495,8 +536,11 @@ async def run_one_file(email_path: Path) -> None:
     if em is None:
         fail(f"Could not find a sender address in the From line of {email_path}")
     client = anthropic.AsyncAnthropic(api_key=load_api_key())
-    print(f"Email:   {email_path}")
-    await run_agent(client, em, LocalDrafts(email_path))
+    try:
+        shown = email_path.relative_to(HERE.parent).as_posix()
+    except ValueError:
+        shown = str(email_path)
+    await run_agent(client, em, LocalDrafts(email_path), [f"Email:   {shown}"])
 
 
 async def run_inbox() -> None:
@@ -593,8 +637,7 @@ EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+'-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 
 
 def load_employee_names() -> dict[str, str]:
-    with EMPLOYEES_CSV.open(encoding="utf-8-sig", newline="") as f:
-        return {row["email"].strip().lower(): row["name"].strip() for row in csv.DictReader(f)}
+    return hr_org.EmployeeFile(EMPLOYEES_CSV).names_by_email()
 
 
 def read_allowlist(employees: dict[str, str]) -> dict[str, str]:
@@ -611,7 +654,7 @@ def read_allowlist(employees: dict[str, str]) -> dict[str, str]:
             continue
         real, sep, employee = (part.strip().lower() for part in line.partition("="))
         if not sep or not EMAIL_RE.match(real) or not EMAIL_RE.match(employee):
-            problems.append(f"line {n}: expected  real.address@gmail.com = employee@hartwellfoods.example")
+            problems.append(f"line {n}: expected  real.address@gmail.com = employee.work@address")
         elif employee not in employees:
             problems.append(f"line {n}: the employee address is not in employees.csv")
         elif real in allow:
@@ -810,6 +853,7 @@ def open_save_file(name: str):
     if path in protected:
         fail("--save cannot write to a secrets file.")
     try:
+        path.parent.mkdir(parents=True, exist_ok=True)
         return open(path, "w", encoding="utf-8"), path
     except OSError as exc:
         fail(f"Could not open {name} for writing: {exc.strerror}")
@@ -821,7 +865,10 @@ def main() -> None:
 
     ap = argparse.ArgumentParser(description="Prepare replies to HR emails. Only --watch can send.")
     mode = ap.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--email", metavar="FILE", help="handle one .eml email file; draft goes to week-04/drafts/")
+    ap.add_argument("--org", metavar="FOLDER",
+                    help="organization folder with hr-docs, employees.csv and system_prompt.txt "
+                         "(default: week-04/hartwell-hr); a bare name means a folder inside week-04")
+    mode.add_argument("--email", metavar="FILE", help="handle one .eml email file; draft goes to week-04/drafts/<org>/")
     mode.add_argument("--inbox", action="store_true",
                       help="handle each unread email in the Gmail sandbox inbox; drafts go to Gmail")
     mode.add_argument("--watch", action="store_true",
@@ -834,7 +881,10 @@ def main() -> None:
     if args.save:
         OUT.file, save_path = open_save_file(args.save)
     try:
-        print(f"HR email agent - {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
+        use_org(args.org)
+        if not args.email:   # --email prints the sender and subject first, so no banner there
+            print(f"HR email agent - {datetime.datetime.now():%Y-%m-%d %H:%M} - "
+                  f"organization: {ORG_DIR.name}\n")
         if args.watch:
             try:
                 asyncio.run(run_watch())

@@ -1,0 +1,33 @@
+From:    Danielle Price <danielle.price@ridgelinehotels.example>
+Subject: A guest
+Email:   week-04/ridgeline-hotels/sample-emails/06-danielle-guest.eml
+Org:     ridgeline-hotels (Ridgeline Hotels)
+Model:   claude-sonnet-5
+Run at:  2026-11-13 09:31
+
+Tools offered: search_policy, get_leave_balance, save_reply
+
+Step 1: save_reply
+  inputs: {"reply_text": "Hi Danielle,\n\nThank you for reaching out, and I'm so sorry you're experiencing this. What you've described is not okay, and no one should have to feel unsafe or uncomfortable at work.\n\nThis is something that needs to be handled directly by a person on our People and Culture team, so I'm flagging your message for them to follow up with you as soon as possible. Please don't hesitate to reach out again in the meantime if anything else happens or if you need support.\n\nThank you for your patience, and we'll be in touch soon.\n\nPeople and Culture", "needs_human_review": true}
+  result: Draft saved to week-04/drafts/ridgeline-hotels/06-danielle-guest-20261113-093153.txt. It was not sent.
+
+----------------------------------------------------------------------
+Stopped: The draft was saved with save_reply.
+Tool calls: 1
+
+Saved as a local draft (not sent): week-04/drafts/ridgeline-hotels/06-danielle-guest-20261113-093153.txt
+To: Danielle Price <danielle.price@ridgelinehotels.example>
+Subject: [NEEDS HR REVIEW] Re: A guest
+DRAFT
+Hi Danielle,
+
+Thank you for reaching out, and I'm so sorry you're experiencing this. What you've described is not okay, and no one should have to feel unsafe or uncomfortable at work.
+
+This is something that needs to be handled directly by a person on our People and Culture team, so I'm flagging your message for them to follow up with you as soon as possible. Please don't hesitate to reach out again in the meantime if anything else happens or if you need support.
+
+Thank you for your patience, and we'll be in touch soon.
+
+People and Culture
+Needs human review: true
+
+Tokens: 1,616 input, 427 output (2,043 total)

@@ -1,0 +1,52 @@
+From:    Brittany Cole <brittany.cole@ridgelinehotels.example>
+Subject: Honeymoon
+Email:   week-04/ridgeline-hotels/sample-emails/03-brittany-honeymoon.eml
+Org:     ridgeline-hotels (Ridgeline Hotels)
+Model:   claude-sonnet-5
+Run at:  2026-11-13 09:22
+
+Tools offered: search_policy, get_leave_balance, save_reply
+
+Step 1: get_leave_balance
+  inputs: {}
+  result: { "Email Address": "brittany.cole@ridgelinehotels.example", "Employee Name": "Brittany Cole", "Hotel": "Ridgeline Taos", "Role": "Server", "Supervisor": "Amanda Ross", "PTO Days Remaining": 4, "Sick Days Remaining": 3, "note": "This is the record of Brittany Cole (brittany.cole@ridgelinehotels.examp...
+
+Step 2: search_policy
+  inputs: {"query": "requesting consecutive PTO days, insufficient PTO balance options"}
+  result: { "results": [ { "source_file": "pto-policy.html", "document": "Paid Time Off (PTO) Policy", "section": "Borrowing PTO you haven't earned yet", "similarity": 0.615, "text": "Paid Time Off (PTO) Policy - Borrowing PTO you haven't earned yet\nSource: pto-policy.html | Effective this year. Owner: Peopl...
+
+Step 3: save_reply
+  inputs: {"reply_text": "Hi Brittany,\n\nCongratulations on your upcoming wedding! I'm happy to help you plan your honeymoon time off.\n\nHere's where things stand: you currently have 4 PTO days remaining, and a 6-day consecutive trip would require 6 days, so you'd be short by 2 days.\n\nThe good news is that Ridgeline's PTO policy allows you to borrow up to 3 PTO days from what you'll earn in the next six months, which would cover the gap. A few things to keep in mind:\n\n- Borrowed days need approval from your general manager.\n- The request must be submitted at least 30 days before your time off begins.\n- If you were to leave Ridgeline before earning the borrowed days back, their value would be deducted from your final paycheck.\n\nAlso, since you're requesting 5 or more consecutive days off, your supervisor's approval is needed at least 30 days in advance (this is separate from the general manager approval for borrowed days). Since your honeymoon is about two months away, you have plenty of time to submit the request through your hotel's scheduling system.\n\n(Source: Paid Time Off (PTO) Policy, \"Borrowing PTO you haven't earned yet\" and \"Requesting PTO\" sections, pto-policy.html)\n\nLet us know if you'd like help getting the request started, and congratulations again!\n\nBest,\nPeople and Culture", "needs_human_review": false}
+  result: Draft saved to week-04/drafts/ridgeline-hotels/03-brittany-honeymoon-20261113-092250.txt. It was not sent.
+
+----------------------------------------------------------------------
+Stopped: The draft was saved with save_reply.
+Tool calls: 3
+
+Saved as a local draft (not sent): week-04/drafts/ridgeline-hotels/03-brittany-honeymoon-20261113-092250.txt
+To: Brittany Cole <brittany.cole@ridgelinehotels.example>
+Subject: Re: Honeymoon
+DRAFT
+Hi Brittany,
+
+Congratulations on your upcoming wedding! I'm happy to help you plan your honeymoon time off.
+
+Here's where things stand: you currently have 4 PTO days remaining, and a 6-day consecutive trip would require 6 days, so you'd be short by 2 days.
+
+The good news is that Ridgeline's PTO policy allows you to borrow up to 3 PTO days from what you'll earn in the next six months, which would cover the gap. A few things to keep in mind:
+
+- Borrowed days need approval from your general manager.
+- The request must be submitted at least 30 days before your time off begins.
+- If you were to leave Ridgeline before earning the borrowed days back, their value would be deducted from your final paycheck.
+
+Also, since you're requesting 5 or more consecutive days off, your supervisor's approval is needed at least 30 days in advance (this is separate from the general manager approval for borrowed days). Since your honeymoon is about two months away, you have plenty of time to submit the request through your hotel's scheduling system.
+
+(Source: Paid Time Off (PTO) Policy, "Borrowing PTO you haven't earned yet" and "Requesting PTO" sections, pto-policy.html)
+
+Let us know if you'd like help getting the request started, and congratulations again!
+
+Best,
+People and Culture
+Needs human review: false
+
+Tokens: 4,409 input, 821 output (5,230 total)

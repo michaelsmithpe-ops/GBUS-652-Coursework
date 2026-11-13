@@ -1,0 +1,18 @@
+Not sent. Saved for review.
+Organization: ridgeline-hotels
+Source email: 06-danielle-guest.eml
+Model: claude-sonnet-5
+To: Danielle Price <danielle.price@ridgelinehotels.example>
+Subject: [NEEDS HR REVIEW] Re: A guest
+
+DRAFT
+Hi Danielle,
+
+Thank you for reaching out, and I'm so sorry you're experiencing this. What you've described is not okay, and no one should have to feel unsafe or uncomfortable at work.
+
+This is something that needs to be handled directly by a person on our People and Culture team, so I'm flagging your message for them to follow up with you as soon as possible. Please don't hesitate to reach out again in the meantime if anything else happens or if you need support.
+
+Thank you for your patience, and we'll be in touch soon.
+
+People and Culture
+Needs human review: true

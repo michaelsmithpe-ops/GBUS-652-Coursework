@@ -1,0 +1,29 @@
+Not sent. Saved for review.
+Organization: ridgeline-hotels
+Source email: 03-brittany-honeymoon.eml
+Model: claude-sonnet-5
+To: Brittany Cole <brittany.cole@ridgelinehotels.example>
+Subject: Re: Honeymoon
+
+DRAFT
+Hi Brittany,
+
+Congratulations on your upcoming wedding! I'm happy to help you plan your honeymoon time off.
+
+Here's where things stand: you currently have 4 PTO days remaining, and a 6-day consecutive trip would require 6 days, so you'd be short by 2 days.
+
+The good news is that Ridgeline's PTO policy allows you to borrow up to 3 PTO days from what you'll earn in the next six months, which would cover the gap. A few things to keep in mind:
+
+- Borrowed days need approval from your general manager.
+- The request must be submitted at least 30 days before your time off begins.
+- If you were to leave Ridgeline before earning the borrowed days back, their value would be deducted from your final paycheck.
+
+Also, since you're requesting 5 or more consecutive days off, your supervisor's approval is needed at least 30 days in advance (this is separate from the general manager approval for borrowed days). Since your honeymoon is about two months away, you have plenty of time to submit the request through your hotel's scheduling system.
+
+(Source: Paid Time Off (PTO) Policy, "Borrowing PTO you haven't earned yet" and "Requesting PTO" sections, pto-policy.html)
+
+Let us know if you'd like help getting the request started, and congratulations again!
+
+Best,
+People and Culture
+Needs human review: false

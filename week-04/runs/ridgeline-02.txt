@@ -1,0 +1,45 @@
+From:    Kevin Walsh <kevin.walsh@ridgelinehotels.example>
+Subject: Time off for a funeral
+Email:   week-04/ridgeline-hotels/sample-emails/02-kevin-bereavement.eml
+Org:     ridgeline-hotels (Ridgeline Hotels)
+Model:   claude-sonnet-5
+Run at:  2026-11-13 09:15
+
+Tools offered: search_policy, get_leave_balance, save_reply
+
+Step 1: search_policy
+  inputs: {"query": "bereavement leave grandparent funeral paid"}
+  result: { "results": [ { "source_file": "bereavement-and-family-leave.html", "document": "Bereavement and Family Leave", "section": "Bereavement leave", "similarity": 0.713, "text": "Bereavement and Family Leave - Bereavement leave\nSource: bereavement-and-family-leave.html | Effective this year. Owner: Peo...
+
+Step 2: get_leave_balance
+  inputs: {}
+  result: { "Email Address": "kevin.walsh@ridgelinehotels.example", "Employee Name": "Kevin Walsh", "Hotel": "Ridgeline Durango", "Role": "Maintenance Technician", "Supervisor": "Scott Bailey", "PTO Days Remaining": 10, "Sick Days Remaining": 6, "note": "This is the record of Kevin Walsh (kevin.walsh@ridgelin...
+
+Step 3: save_reply
+  inputs: {"reply_text": "Hi Kevin,\n\nI'm very sorry for the loss of your grandmother.\n\nUnder our Bereavement and Family Leave policy, after the death of a grandparent you're entitled to up to 3 paid days off. These days don't need to be taken consecutively, but should be used within 60 days. This leave is paid separately and does not reduce your PTO or sick balances (bereavement-and-family-leave.html).\n\nTo use this leave, just let your supervisor (Scott Bailey) know as soon as you can — no documentation is required.\n\nFor reference, if you need additional time beyond the 3 bereavement days, you currently have 10 PTO days remaining that you could use as well.\n\nWishing you and your family comfort during this time.\n\nPeople and Culture", "needs_human_review": false}
+  result: Draft saved to week-04/drafts/ridgeline-hotels/02-kevin-bereavement-20261113-091557.txt. It was not sent.
+
+----------------------------------------------------------------------
+Stopped: The draft was saved with save_reply.
+Tool calls: 3
+
+Saved as a local draft (not sent): week-04/drafts/ridgeline-hotels/02-kevin-bereavement-20261113-091557.txt
+To: Kevin Walsh <kevin.walsh@ridgelinehotels.example>
+Subject: Re: Time off for a funeral
+DRAFT
+Hi Kevin,
+
+I'm very sorry for the loss of your grandmother.
+
+Under our Bereavement and Family Leave policy, after the death of a grandparent you're entitled to up to 3 paid days off. These days don't need to be taken consecutively, but should be used within 60 days. This leave is paid separately and does not reduce your PTO or sick balances (bereavement-and-family-leave.html).
+
+To use this leave, just let your supervisor (Scott Bailey) know as soon as you can — no documentation is required.
+
+For reference, if you need additional time beyond the 3 bereavement days, you currently have 10 PTO days remaining that you could use as well.
+
+Wishing you and your family comfort during this time.
+
+People and Culture
+Needs human review: false
+
+Tokens: 4,172 input, 452 output (4,624 total)

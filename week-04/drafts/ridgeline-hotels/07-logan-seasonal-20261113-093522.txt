@@ -1,0 +1,16 @@
+Not sent. Saved for review.
+Organization: ridgeline-hotels
+Source email: 07-logan-seasonal.eml
+Model: claude-sonnet-5
+To: Logan Brooks <logan.brooks@ridgelinehotels.example>
+Subject: [NEEDS HR REVIEW] Re: Days off
+
+DRAFT
+Hi Logan,
+
+Thanks for reaching out. I tried to look up your PTO balance, but I wasn't able to find an employee record matching your email address in our system. I don't want to guess or share incorrect information, so I've flagged this for a member of the People and Culture team to look into and follow up with you directly with your correct PTO balance.
+
+Thanks for your patience!
+
+People and Culture
+Needs human review: true
