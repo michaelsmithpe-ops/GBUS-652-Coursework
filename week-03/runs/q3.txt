@@ -1,0 +1,21 @@
+QUESTION
+Question 3: A member lost their wallet and called us the same day. How much of any fraudulent spending on their debit card could they be on the hook for?
+
+Top 4 retrieved chunks:
+  #1  similarity 0.689  card-dispute-procedure.html
+      Section: How much the member may have to pay
+      A member's share of the loss from unauthorized debit card transactions depends on how quickly they report it. If the member reports a lost or stolen c...
+  #2  similarity 0.536  card-dispute-procedure.html
+      Section: When a member reports a transaction they did not make
+      When a member says a debit card transaction on their account was not made or authorized by them, freeze the card right away in the card system, then o...
+  #3  similarity 0.488  card-dispute-procedure.html
+      Section: Provisional credit
+      Larkfield investigates every dispute. If the investigation is not finished within 10 business days, the member receives a provisional credit for the d...
+  #4  similarity 0.468  card-dispute-procedure.html
+      Section: The dispute form
+      The member must sign a dispute form listing each transaction they are disputing. The form can be signed at a branch or electronically through online b...
+
+ANSWER
+Since the member reported the loss the same day (within two business days of learning about it), they pay no more than $50 of the loss from unauthorized transactions [card-dispute-procedure.html].
+
+Note: this $50 cap applies to prompt loss/theft reporting. If unauthorized transactions later show up on a statement and the member fails to report those within 60 days after the statement was sent, they could become liable in full for transactions occurring after that 60-day window [card-dispute-procedure.html].
