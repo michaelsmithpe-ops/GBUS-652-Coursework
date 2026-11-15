@@ -1,10 +1,12 @@
-"""Load the Hartwell sample emails into a Gmail sandbox inbox over IMAP.
+"""Load an organization's sample emails into a Gmail sandbox inbox over IMAP.
 
 Usage (run from the top of the repository):
-    .venv\\Scripts\\python.exe week-04\\load_inbox.py             # load all sample emails
+    .venv\\Scripts\\python.exe week-04\\load_inbox.py             # load the Hartwell sample emails
+    .venv\\Scripts\\python.exe week-04\\load_inbox.py --org ridgeline-hotels   # load Ridgeline's instead
     .venv\\Scripts\\python.exe week-04\\load_inbox.py --dry-run   # show what would be loaded; no sign-in
 
-Each .eml file in week-04/hartwell-hr/sample-emails is placed directly in the
+--org takes the same values as agent.py --org (default: week-04/hartwell-hr).
+Each .eml file in <org>/sample-emails is placed directly in the
 INBOX with IMAP APPEND, as an unread message dated now. Nothing is sent: no
 SMTP is used and no message leaves the mailbox. Running it twice loads the
 emails twice.
@@ -33,7 +35,7 @@ from email.utils import formatdate, make_msgid
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent                  # .../GBUS-652-Coursework/week-04
-EMAILS_DIR = HERE / "hartwell-hr" / "sample-emails"
+DEFAULT_ORG_DIR = HERE / "hartwell-hr"
 LOGIN_FILE = HERE.parents[1] / "Agent-Email.txt"         # folder that contains the repo
 IMAP_HOST = "imap.gmail.com"
 IMAP_PORT = 993
@@ -160,7 +162,7 @@ def login_error_text(exc: Exception, address: str) -> str:
     return re.sub(re.escape(address), "[sandbox account]", str(text), flags=re.IGNORECASE)
 
 
-def build_message(path: Path) -> bytes:
+def build_message(path: Path, msgid_domain: str = "hartwellfoods.example") -> bytes:
     """Add today's Date and a fresh Message-ID; use CRLF line endings as IMAP expects."""
     raw = path.read_bytes().replace(b"\r\n", b"\n")
     header_end = raw.find(b"\n\n")
@@ -168,7 +170,7 @@ def build_message(path: Path) -> bytes:
     kept = [h for h in headers.split(b"\n")
             if not re.match(rb"(?i)^(date|message-id):", h)]
     new_headers = [f"Date: {formatdate(localtime=True)}".encode(),
-                   f"Message-ID: {make_msgid(domain='hartwellfoods.example')}".encode()]
+                   f"Message-ID: {make_msgid(domain=msgid_domain)}".encode()]
     return (b"\n".join(new_headers + kept) + body).replace(b"\n", b"\r\n")
 
 
@@ -184,16 +186,29 @@ def main() -> None:
                     help="list what would be loaded without signing in or reading Agent-Email.txt")
     ap.add_argument("--check", action="store_true",
                     help="check Agent-Email.txt's layout without showing its contents or signing in")
+    ap.add_argument("--org", metavar="FOLDER",
+                    help="organization folder whose sample-emails to load (default: week-04/hartwell-hr); "
+                         "a bare name means a folder inside week-04")
     args = ap.parse_args()
 
     if args.check:
         check_login_file()
         return
 
-    files = sorted(EMAILS_DIR.glob("*.eml"))
+    if args.org:
+        given = Path(args.org).expanduser()
+        org_dir = (given if given.is_dir() else HERE / args.org).resolve()
+    else:
+        org_dir = DEFAULT_ORG_DIR
+    emails_dir = org_dir / "sample-emails"
+    if not emails_dir.is_dir():
+        sys.exit(f"No sample-emails folder found in {org_dir}")
+    files = sorted(emails_dir.glob("*.eml"))
     if not files:
-        sys.exit(f"No .eml files found in {EMAILS_DIR}")
-    messages = [(f, build_message(f)) for f in files]
+        sys.exit(f"No .eml files found in {emails_dir}")
+    domain = "hartwellfoods.example" if org_dir == DEFAULT_ORG_DIR else f"{org_dir.name}.example"
+    messages = [(f, build_message(f, domain)) for f in files]
+    print(f"Organization: {org_dir.name}")
 
     if args.dry_run:
         print(f"Dry run: {len(messages)} emails would be placed in {MAILBOX} as unread, dated now:")
