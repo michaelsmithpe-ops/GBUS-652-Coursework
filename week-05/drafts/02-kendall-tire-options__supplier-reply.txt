@@ -1,0 +1,28 @@
+To: Lisa Moreno <l.moreno@kendalltire.example> (Kendall Tire Supply)
+About: 02-kendall-tire-options
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: no
+Reviewer notes: 1. **Numbers:** PO-7795, TR-29, 400, 160, 240, day 8, day 12, day 22 and "two business days" all appear in the facts. "Two weeks later" (day 22 minus day 8 = 14 days) and "four days after" (day 12 minus day 8) follow by simple arithmetic. 2. **Promises:** The draft promises no dates, quantities, discounts or credits. It only asks Kendall whether the schedule can improve. Saying Brookfield will confirm within the two business days Kendall requested matches the facts, since Brookfield must decide and Kendall set that deadline. 3. **Supplier draft:** It names no customer and describes no customer's order. "Tires we're counting on" is generic. 4. **Customer rule:** This rule doesn't apply, because the draft goes to a supplier. 5. **No acceptance:** The draft says "We aren't accepting either option yet." It agrees to no cost and cancels nothing. 6. **Tone:** It is firm and cooperative. It pushes for earlier shipments, states the impact of each option, and stays polite. Before sending, the reviewer may want to check two details the facts don't contain: "mixing machine repair" and "trail" tires. They may come from Kendall's original message, but they are not in the facts provided. They don't break any of the six rules, so they don't change the verdict.
+------------------------------------------------------------
+Subject: RE: PO-7795 - TR-29 tires - two options, please choose
+
+Hi Lisa,
+
+Thank you for letting us know about the mixing machine repair. This is what we understand for PO-7795 (400 TR-29 trail tires), which was due on day 8:
+
+- Option 1: 160 tires on day 8, and the remaining 240 two weeks later, on day 22.
+- Option 2: all 400 tires together on day 12, four days after the scheduled date.
+
+Either option delays tires we're counting on. Option 1 delays 240 tires by two weeks. Option 2 delays all 400 tires by four days.
+
+Before we decide, can you help us reduce the delay?
+
+- Can you ship more than 160 tires on day 8?
+- Can the remaining tires under Option 1 ship sooner than day 22, even in smaller batches?
+- Under Option 2, can any tires ship before day 12, or can the full shipment arrive earlier?
+
+We aren't accepting either option yet. Brookfield will confirm its choice within the two business days you requested. Please send us any improvements to the schedule as soon as you can.
+
+Thank you,
+Purchasing, Brookfield Bicycle Company

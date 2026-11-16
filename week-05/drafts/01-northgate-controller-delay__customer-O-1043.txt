@@ -1,0 +1,19 @@
+To: City of Ashford Bike Share <fleet@ashfordbikeshare.example>
+Order: O-1043
+About: 01-northgate-controller-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: yes - order has a late penalty
+------------------------------------------------------------
+Subject: Update on Order O-1043
+
+Dear City of Ashford Bike Share,
+
+We're writing about order O-1043, for 100 Commuter E bicycles. We're sorry to tell you that it is now expected to ship 12 days later than planned.
+
+The delay comes from a delay in a part from one of our suppliers. The order was originally scheduled to ship on day 14 and is now expected to ship on day 26, counting from today.
+
+We'll let you know if this timing changes. If you have questions about your order, please reply to this message and our team will help.
+
+Sincerely,
+Customer Service, Brookfield Bicycle Company

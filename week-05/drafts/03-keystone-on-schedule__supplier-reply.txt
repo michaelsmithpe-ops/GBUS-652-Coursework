@@ -1,0 +1,8 @@
+To: Brian Foley <b.foley@keystonebattery.example> (Keystone Battery Co.)
+About: 03-keystone-on-schedule
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: no
+Reviewer notes: The facts say nothing has changed. PO-7790 has shipped and is still due on day 6. No orders are at risk, no units are short, there are no options, Brookfield has no decision to make, and there are no supplier questions. Nothing needs to be said to the supplier, so "NO REPLY NEEDED" is the right output. - **Rule 1 (numbers):** The draft contains no numbers or order numbers, so nothing is unsupported. - **Rule 2 (promises):** It promises no dates, quantities, discounts, or credits. - **Rule 3 (no customer details to a supplier):** It names no customer and describes no customer's order. - **Rule 4 (customer rules):** These don't apply, since the recipient is a supplier. The draft names no supplier or customer and mentions no cost anyway. - **Rule 5 (no commitments):** It accepts no option, agrees to no cost, and cancels nothing. - **Rule 6 (tone):** There is no email text to be too harsh or too soft. Staying silent when nothing has changed is consistent with a firm but cooperative tone. "NO REPLY NEEDED" is a signal to the reviewer, not message text. The person at Brookfield should treat it as "send nothing" and not forward it to the supplier.
+------------------------------------------------------------
+NO REPLY NEEDED

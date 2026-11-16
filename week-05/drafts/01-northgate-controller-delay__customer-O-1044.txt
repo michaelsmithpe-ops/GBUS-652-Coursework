@@ -1,0 +1,19 @@
+To: Main Street Bikes <owner@mainstreetbikes.example>
+Order: O-1044
+About: 01-northgate-controller-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: no
+------------------------------------------------------------
+Subject: Update on Order O-1044
+
+Dear Main Street Bikes,
+
+We're writing to let you know that your order O-1044, for 30 Cargo E bikes, is now expected to ship 8 days later than planned. The original ship date was day 18, and the new expected ship date is day 26, counting from today.
+
+The delay is due to a delay in a part from one of our suppliers. We apologize for the inconvenience this causes you.
+
+If you have questions about your order, please reply to this message and a member of our team will be glad to help.
+
+Sincerely,
+Customer Service, Brookfield Bicycle Company

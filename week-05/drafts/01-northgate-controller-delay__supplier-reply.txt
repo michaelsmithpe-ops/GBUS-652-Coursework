@@ -1,0 +1,25 @@
+To: Karen Walsh <k.walsh@northgatedrive.example> (Northgate Drive Systems)
+About: 01-northgate-controller-delay
+Reviewer: APPROVE
+Revisions: 1
+Needs a person: no
+------------------------------------------------------------
+Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule
+
+Hello Karen,
+
+Thank you for letting us know. To confirm our understanding, PO-7781 for 400 MC-500 controllers is now split. 120 units ship on day 5 as scheduled, and the remaining 280 ship three weeks later, on day 26, instead of all 400 arriving on day 5.
+
+This leaves us 90 units short across three orders. Those orders will be delayed by 12, 8, and 5 days, because they can't ship until the remaining units arrive on day 26.
+
+We can't share information about our customers. The unit shortfall and delays above show the impact on our side.
+
+To reduce that impact, please let us know:
+1. Whether you can ship more than 120 units on day 5.
+2. Whether any part of the 280 remaining units can ship before day 26, and the earliest date and quantity for each partial shipment.
+3. Whether an earlier second delivery is possible.
+
+We've noted your offer to discuss other options. We'll review the options and be in touch. We'd appreciate your answers to the questions above as soon as possible, so we can take them into account.
+
+Regards,
+Purchasing, Brookfield Bicycle Company
