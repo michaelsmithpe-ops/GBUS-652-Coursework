@@ -1,0 +1,211 @@
+Copperline Coffee Machines orchestrator - 2026-11-17 16:45
+Org:    copperline-coffee (drafts in week-05\drafts\copperline-coffee)
+Columns found:
+        bill-of-materials.csv: product = product, per_unit = per_unit
+        orders.csv: product = product, units = units, ship_day = ship_by_day
+Email:  04-pelham-maintenance-closure.eml
+Model:  claude-sonnet-5-5
+Tools:  run_supply_analyst, draft_supplier_reply, draft_customer_notice, finish (at most 10 calls)
+    [tokens] orchestrator: 1,418 in, 86 out (running total 1,418 in, 86 out)
+
+======================================================================
+Choice 1 of at most 10: run_supply_analyst()
+======================================================================
+
+>>> HANDOFF  orchestrator -> analyst: supplier email
+    | From: Owen Brady <o.brady@pelhamfittings.example>
+    | To: Purchasing <purchasing@copperlinecoffee.example>
+    | Subject: Plant maintenance closure - PO-5540 not affected
+    | 
+    | Hello,
+    | 
+    | A quick note for your planning: our plant will close for one week of annual
+    | maintenance, starting four weeks from today.
+    | 
+    | Your open order, PO-5540 for 60 SW-3 steam wands, ships before the closure
+    | and will arrive on the scheduled date. No action is needed on your side.
+    | 
+    | Kind regards,
+    | Owen Brady
+    | Customer Care, Pelham Fittings
+    analyst tools: get_part, get_orders_for_part, check_coverage
+    [tokens] analyst: 1,999 in, 128 out (running total 1,999 in, 128 out)
+
+>>> HANDOFF  analyst -> MCP tool get_part: tool call 1
+    | {
+    |   "part_id": "SW-3"
+    | }
+
+>>> HANDOFF  MCP tool get_part -> analyst: tool result
+    | {
+    |   "part_id": "SW-3",
+    |   "description": "Steam wand",
+    |   "supplier": "Pelham Fittings",
+    |   "on_hand": 40,
+    |   "scheduled_shipments": [
+    |     {
+    |       "po_number": "PO-5540",
+    |       "supplier": "Pelham Fittings",
+    |       "qty": 60,
+    |       "arrives_in_days": 11
+    |     }
+    |   ],
+    |   "total_scheduled": 60,
+    |   "used_in_products": [
+    |     {
+    |       "product": "Cafe Duo",
+    |       "parts_per_unit": 1
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  analyst -> MCP tool get_orders_for_part: tool call 2
+    | {
+    |   "part_id": "SW-3"
+    | }
+
+>>> HANDOFF  MCP tool get_orders_for_part -> analyst: tool result
+    | {
+    |   "part_id": "SW-3",
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 15,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 15,
+    |       "ship_day": 9,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 10,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 10,
+    |       "ship_day": 15,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 12,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 12,
+    |       "ship_day": 30,
+    |       "late_penalty": false
+    |     }
+    |   ],
+    |   "total_units_needed": 37
+    | }
+    [tokens] analyst: 2,746 in, 216 out (running total 4,745 in, 344 out)
+
+>>> HANDOFF  analyst -> MCP tool check_coverage: tool call 3
+    | {
+    |   "part_id": "SW-3",
+    |   "arrivals": [
+    |     {
+    |       "qty": 60,
+    |       "arrives_in_days": 11
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  MCP tool check_coverage -> analyst: tool result
+    | {
+    |   "part_id": "SW-3",
+    |   "on_hand": 40,
+    |   "arrivals_used": [
+    |     {
+    |       "qty": 60,
+    |       "arrives_in_days": 11
+    |     }
+    |   ],
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 15,
+    |       "ship_day": 9,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 10,
+    |       "ship_day": 15,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 12,
+    |       "ship_day": 30,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     }
+    |   ],
+    |   "summary": {
+    |     "orders_checked": 3,
+    |     "orders_covered": 3,
+    |     "orders_at_risk": [],
+    |     "orders_at_risk_with_late_penalty": [],
+    |     "total_units_needed": 37,
+    |     "total_supply": 100,
+    |     "units_left_over": 63
+    |   }
+    | }
+    [tokens] analyst: 3,432 in, 208 out (running total 8,177 in, 552 out)
+    analyst finished after 3 tool call(s)
+
+>>> HANDOFF  analyst -> orchestrator: brief (in full)
+    | {
+    |   "part_id": "SW-3",
+    |   "what_changed": "Nothing changes for our order: PO-5540 (60 SW-3 steam wands) still arrives on day 11. The supplier's plant closes for one week for maintenance starting about day 28, after that shipment.",
+    |   "orders_at_risk": [],
+    |   "options": [],
+    |   "decisions_for_a_person": [],
+    |   "supplier_questions": []
+    | }
+    [tokens] orchestrator: 1,649 in, 189 out (running total 3,067 in, 275 out)
+
+======================================================================
+Choice 2 of at most 10: finish({"summary": "Pelham Fittings will close its plant for one week of maintenance, starting about day 28. PO-5540 (60 SW-3 steam wands) is not affected. It still arrives on day 11, which is before the closure. The analyst found no orders at risk, no supplier questions and no options to consider. I drafted no supplier reply and no customer notices, because none are needed.", "decision_needed": false})
+======================================================================
+
+======================================================================
+Orchestrator's result
+======================================================================
+Ended: The orchestrator called finish.
+Tool calls: 2
+Decision needed by a person: no
+Summary for a person:
+  Pelham Fittings will close its plant for one week of maintenance, starting about day 28. PO-5540 (60 SW-3 steam wands) is not affected. It still arrives on day 11, which is before the closure. The analyst found no orders at risk, no supplier questions and no options to consider. I drafted no supplier reply and no customer notices, because none are needed.
+
+======================================================================
+Summary
+======================================================================
+Drafts saved (0):
+  (none)
+
+Drafts marked for a person (0):
+  (none)
+
+Decisions for a person (0):
+  (none)
+
+Tokens by specialist
+  specialist         calls     input    output     total
+  orchestrator           2     3,067       275     3,342
+  analyst                3     8,177       552     8,729
+  all                         11,244       827    12,071
+
+Saved this output to C:\Users\mikes\OneDrive\Desktop\GBUS-652-Course\GBUS-652-Coursework\week-05\runs\copperline-04-orchestrator.txt

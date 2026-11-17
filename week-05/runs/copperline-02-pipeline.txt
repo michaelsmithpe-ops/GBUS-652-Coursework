@@ -1,0 +1,639 @@
+Copperline Coffee Machines pipeline - 2026-11-17 16:26
+Org:    copperline-coffee (drafts in week-05\drafts\copperline-coffee)
+Columns found:
+        bill-of-materials.csv: product = product, per_unit = per_unit
+        orders.csv: product = product, units = units, ship_day = ship_by_day
+Email:  02-marlow-boiler-options.eml
+Model:  claude-sonnet-5-5
+Order:  1. supply analyst  2. customer notices  3. supplier reply
+
+======================================================================
+Step 1 of 3: supply analyst
+======================================================================
+
+>>> HANDOFF  pipeline -> analyst: supplier email
+    | From: Victor Lindqvist <v.lindqvist@marlowmetal.example>
+    | To: Purchasing <purchasing@copperlinecoffee.example>
+    | Subject: PO-5520 - BL-12 boilers - please choose a shipping option
+    | 
+    | Hi,
+    | 
+    | About PO-5520 for 200 BL-12 boilers: our welding cell is running at half
+    | capacity this month, so we can't ship the whole order on time. We can offer
+    | two options:
+    | 
+    | Option A: Ship 80 boilers on the scheduled date, and the remaining 120 two
+    | weeks after that.
+    | 
+    | Option B: Ship all 200 boilers together, six days after the scheduled date.
+    | 
+    | Please let us know which option you'd like within three business days. If we
+    | don't hear from you by then, we'll go with Option B.
+    | 
+    | Regards,
+    | Victor Lindqvist
+    | Sales Coordinator, Marlow Metalworks
+    analyst tools: get_part, get_orders_for_part, check_coverage
+    [tokens] analyst: 2,084 in, 106 out (running total 2,084 in, 106 out)
+
+>>> HANDOFF  analyst -> MCP tool get_part: tool call 1
+    | {
+    |   "part_id": "BL-12"
+    | }
+
+>>> HANDOFF  MCP tool get_part -> analyst: tool result
+    | {
+    |   "part_id": "BL-12",
+    |   "description": "1.2-liter boiler",
+    |   "supplier": "Marlow Metalworks",
+    |   "on_hand": 60,
+    |   "scheduled_shipments": [
+    |     {
+    |       "po_number": "PO-5520",
+    |       "supplier": "Marlow Metalworks",
+    |       "qty": 200,
+    |       "arrives_in_days": 7
+    |     }
+    |   ],
+    |   "total_scheduled": 200,
+    |   "used_in_products": [
+    |     {
+    |       "product": "Cafe One",
+    |       "parts_per_unit": 1
+    |     },
+    |     {
+    |       "product": "Cafe Duo",
+    |       "parts_per_unit": 2
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  analyst -> MCP tool get_orders_for_part: tool call 2
+    | {
+    |   "part_id": "BL-12"
+    | }
+
+>>> HANDOFF  MCP tool get_orders_for_part -> analyst: tool result
+    | {
+    |   "part_id": "BL-12",
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2201",
+    |       "customer": "Morning Ritual Cafe",
+    |       "product": "Cafe One",
+    |       "units_ordered": 20,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 20,
+    |       "ship_day": 6,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 15,
+    |       "parts_per_unit": 2,
+    |       "units_needed": 30,
+    |       "ship_day": 9,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2203",
+    |       "customer": "Elm State University Dining",
+    |       "product": "Cafe One",
+    |       "units_ordered": 50,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 50,
+    |       "ship_day": 12,
+    |       "late_penalty": true
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 10,
+    |       "parts_per_unit": 2,
+    |       "units_needed": 20,
+    |       "ship_day": 15,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2205",
+    |       "customer": "Tall Pines Coffee House",
+    |       "product": "Cafe One",
+    |       "units_ordered": 25,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 25,
+    |       "ship_day": 17,
+    |       "late_penalty": true
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 12,
+    |       "parts_per_unit": 2,
+    |       "units_needed": 24,
+    |       "ship_day": 30,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2210",
+    |       "customer": "Bright Day Coworking",
+    |       "product": "Cafe One",
+    |       "units_ordered": 15,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 15,
+    |       "ship_day": 33,
+    |       "late_penalty": false
+    |     }
+    |   ],
+    |   "total_units_needed": 184
+    | }
+    [tokens] analyst: 3,273 in, 262 out (running total 5,357 in, 368 out)
+
+>>> HANDOFF  analyst -> MCP tool check_coverage: tool call 3
+    | {
+    |   "part_id": "BL-12",
+    |   "arrivals": [
+    |     {
+    |       "qty": 80,
+    |       "arrives_in_days": 7
+    |     },
+    |     {
+    |       "qty": 120,
+    |       "arrives_in_days": 21
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  MCP tool check_coverage -> analyst: tool result
+    | {
+    |   "part_id": "BL-12",
+    |   "on_hand": 60,
+    |   "arrivals_used": [
+    |     {
+    |       "qty": 80,
+    |       "arrives_in_days": 7
+    |     },
+    |     {
+    |       "qty": 120,
+    |       "arrives_in_days": 21
+    |     }
+    |   ],
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2201",
+    |       "customer": "Morning Ritual Cafe",
+    |       "product": "Cafe One",
+    |       "units_needed": 20,
+    |       "ship_day": 6,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 30,
+    |       "ship_day": 9,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2203",
+    |       "customer": "Elm State University Dining",
+    |       "product": "Cafe One",
+    |       "units_needed": 50,
+    |       "ship_day": 12,
+    |       "late_penalty": true,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 20,
+    |       "ship_day": 15,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2205",
+    |       "customer": "Tall Pines Coffee House",
+    |       "product": "Cafe One",
+    |       "units_needed": 25,
+    |       "ship_day": 17,
+    |       "late_penalty": true,
+    |       "status": "short",
+    |       "units_short": 5,
+    |       "ready_day": 21,
+    |       "days_late": 4
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 24,
+    |       "ship_day": 30,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2210",
+    |       "customer": "Bright Day Coworking",
+    |       "product": "Cafe One",
+    |       "units_needed": 15,
+    |       "ship_day": 33,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     }
+    |   ],
+    |   "summary": {
+    |     "orders_checked": 7,
+    |     "orders_covered": 6,
+    |     "orders_at_risk": [
+    |       "O-2205"
+    |     ],
+    |     "orders_at_risk_with_late_penalty": [
+    |       "O-2205"
+    |     ],
+    |     "total_units_needed": 184,
+    |     "total_supply": 260,
+    |     "units_left_over": 76
+    |   }
+    | }
+
+>>> HANDOFF  analyst -> MCP tool check_coverage: tool call 4
+    | {
+    |   "part_id": "BL-12",
+    |   "arrivals": [
+    |     {
+    |       "qty": 200,
+    |       "arrives_in_days": 13
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  MCP tool check_coverage -> analyst: tool result
+    | {
+    |   "part_id": "BL-12",
+    |   "on_hand": 60,
+    |   "arrivals_used": [
+    |     {
+    |       "qty": 200,
+    |       "arrives_in_days": 13
+    |     }
+    |   ],
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2201",
+    |       "customer": "Morning Ritual Cafe",
+    |       "product": "Cafe One",
+    |       "units_needed": 20,
+    |       "ship_day": 6,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 30,
+    |       "ship_day": 9,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2203",
+    |       "customer": "Elm State University Dining",
+    |       "product": "Cafe One",
+    |       "units_needed": 50,
+    |       "ship_day": 12,
+    |       "late_penalty": true,
+    |       "status": "short",
+    |       "units_short": 40,
+    |       "ready_day": 13,
+    |       "days_late": 1
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 20,
+    |       "ship_day": 15,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2205",
+    |       "customer": "Tall Pines Coffee House",
+    |       "product": "Cafe One",
+    |       "units_needed": 25,
+    |       "ship_day": 17,
+    |       "late_penalty": true,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 24,
+    |       "ship_day": 30,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2210",
+    |       "customer": "Bright Day Coworking",
+    |       "product": "Cafe One",
+    |       "units_needed": 15,
+    |       "ship_day": 33,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     }
+    |   ],
+    |   "summary": {
+    |     "orders_checked": 7,
+    |     "orders_covered": 6,
+    |     "orders_at_risk": [
+    |       "O-2203"
+    |     ],
+    |     "orders_at_risk_with_late_penalty": [
+    |       "O-2203"
+    |     ],
+    |     "total_units_needed": 184,
+    |     "total_supply": 260,
+    |     "units_left_over": 76
+    |   }
+    | }
+    [tokens] analyst: 5,384 in, 868 out (running total 10,741 in, 1,236 out)
+    analyst finished after 4 tool call(s)
+
+>>> HANDOFF  analyst -> pipeline: brief (in full)
+    | {
+    |   "part_id": "BL-12",
+    |   "what_changed": "PO-5520 (200 boilers) was due on day 7. Marlow can't ship it all on time and offers either 80 on day 7 and 120 on day 21 (Option A), or all 200 on day 13 (Option B). If Copperline doesn't reply, Option B applies by default.",
+    |   "orders_at_risk": [
+    |     {
+    |       "order_id": "O-2203",
+    |       "customer": "Elm State University Dining",
+    |       "units_short": 40,
+    |       "ship_day": 12,
+    |       "ready_day": 13,
+    |       "late_penalty": true
+    |     }
+    |   ],
+    |   "options": [
+    |     {
+    |       "name": "Option A: 80 units on day 7, 120 units on day 21",
+    |       "order_ids_at_risk": [
+    |         "O-2205"
+    |       ]
+    |     },
+    |     {
+    |       "name": "Option B: all 200 units on day 13 (the default if Copperline doesn't reply)",
+    |       "order_ids_at_risk": [
+    |         "O-2203"
+    |       ]
+    |     }
+    |   ],
+    |   "decisions_for_a_person": [
+    |     "Choose Option A or Option B and reply to Marlow within three business days. Without a reply, Marlow ships Option B.",
+    |     "Option A leaves O-2205 (Tall Pines Coffee House) 5 units short. It can ship on day 21 instead of day 17, which is 4 days late, and the contract has a late penalty.",
+    |     "Option B leaves O-2203 (Elm State University Dining) 40 units short. It can ship on day 13 instead of day 12, which is 1 day late, and the contract has a late penalty.",
+    |     "Both options put one penalty-bearing order at risk. Decide which is more acceptable: a 4-day delay for Tall Pines Coffee House or a 1-day delay for Elm State University Dining.",
+    |     "The orders_at_risk list above shows Option B, since that is what happens if Copperline doesn't reply."
+    |   ],
+    |   "supplier_questions": [
+    |     "Which option would Copperline like: Option A (80 on the scheduled date, 120 two weeks later) or Option B (all 200 six days after the scheduled date)? Marlow needs an answer within three business days."
+    |   ]
+    | }
+
+======================================================================
+Step 2 of 3: customer notices
+======================================================================
+
+--- Customer notice 1 of 1: O-2203
+
+>>> HANDOFF  coordinator -> customer writer: one order's facts
+    | {
+    |   "order": {
+    |     "order_id": "O-2203",
+    |     "customer": "Elm State University Dining",
+    |     "product": "Cafe One",
+    |     "quantity": 50,
+    |     "planned_ship_day": 12,
+    |     "expected_ship_day": 13,
+    |     "days_late": 1,
+    |     "cause": "a delay in a part from one of our suppliers",
+    |     "note": "Days are counted from today (day 0). expected_ship_day null means not yet known."
+    |   },
+    |   "reviewer_notes": null
+    | }
+    [tokens] customer writer: 377 in, 202 out (running total 377 in, 202 out)
+
+>>> HANDOFF  customer writer -> coordinator: draft
+    | Subject: Update on your order O-2203
+    | 
+    | Dear Elm State University Dining team,
+    | 
+    | We're writing to let you know that your order O-2203, 50 Cafe One machines, is now expected to ship 1 day later than planned. The new expected ship date is day 13, rather than day 12 as originally planned.
+    | 
+    | The delay is due to a delay in a part from one of our suppliers. We apologize for the inconvenience this causes.
+    | 
+    | We'll keep you informed if anything changes. If you have questions in the meantime, please reply to this message and our team will be glad to help.
+    | 
+    | Sincerely,
+    | Customer Service, Copperline Coffee Machines
+
+>>> HANDOFF  coordinator -> reviewer: customer draft + facts
+    | {
+    |   "draft": "Subject: Update on your order O-2203\n\nDear Elm State University Dining team,\n\nWe're writing to let you know that your order O-2203, 50 Cafe One machines, is now expected to ship 1 day later than planned. The new expected ship date is day 13, rather than day 12 as originally planned.\n\nThe delay is due to a delay in a part from one of our suppliers. We apologize for the inconvenience this causes.\n\nWe'll keep you informed if anything changes. If you have questions in the meantime, please reply to this message and our team will be glad to help.\n\nSincerely,\nCustomer Service, Copperline Coffee Machines",
+    |   "facts": {
+    |     "order_id": "O-2203",
+    |     "customer": "Elm State University Dining",
+    |     "product": "Cafe One",
+    |     "quantity": 50,
+    |     "planned_ship_day": 12,
+    |     "expected_ship_day": 13,
+    |     "days_late": 1,
+    |     "cause": "a delay in a part from one of our suppliers",
+    |     "note": "Days are counted from today (day 0). expected_ship_day null means not yet known."
+    |   }
+    | }
+    [tokens] reviewer: 718 in, 772 out (running total 718 in, 772 out)
+
+>>> HANDOFF  reviewer -> coordinator: verdict
+    | {
+    |   "verdict": "APPROVE",
+    |   "reasons": "1. **Numbers:** Every figure is in the facts: order O-2203, 50 Cafe One machines, a 1-day delay, expected ship day 13, and planned ship day 12. The \"1 day later\" follows from 13 minus 12 and matches `days_late`.\n2. **No unsupported promises:** The draft gives no new dates, quantities, discounts, or credits. \"We'll keep you informed if anything changes\" only promises communication, not an outcome.\n3. **Supplier rule:** This rule applies only to supplier drafts, so it doesn't apply to this customer email.\n4. **Customer rule:** The draft says only \"one of our suppliers\" and names no supplier, so no supplier is identified. It names no other customer and mentions no cost.\n5. **No acceptance or cancellation:** The draft doesn't accept an option, agree to a cost, or cancel anything.\n6. **Tone:** It is plain, apologetic, and courteous, and it invites questions, which suits a customer.\n\nThe draft uses \"day 13\" and \"day 12\", which are counted from today in the facts. That's accurate, but the sender may want to confirm the wording reads clearly to the customer. No calendar date can be added unless it is supplied."
+    | }
+    name check (customer draft O-2203): passed, no supplier named
+    saved week-05\drafts\copperline-coffee\02-marlow-boiler-options__customer-O-2203.txt  ** NEEDS A PERSON **
+
+FINAL DRAFT TO CUSTOMER O-2203
+Subject: Update on your order O-2203
+
+Dear Elm State University Dining team,
+
+We're writing to let you know that your order O-2203, 50 Cafe One machines, is now expected to ship 1 day later than planned. The new expected ship date is day 13, rather than day 12 as originally planned.
+
+The delay is due to a delay in a part from one of our suppliers. We apologize for the inconvenience this causes.
+
+We'll keep you informed if anything changes. If you have questions in the meantime, please reply to this message and our team will be glad to help.
+
+Sincerely,
+Customer Service, Copperline Coffee Machines
+Marked for a person: yes
+
+======================================================================
+Step 3 of 3: supplier reply
+======================================================================
+
+>>> HANDOFF  coordinator -> supplier writer: email + redacted brief
+    | {
+    |   "brief": {
+    |     "part_id": "BL-12",
+    |     "what_changed": "PO-5520 (200 boilers) was due on day 7. Marlow can't ship it all on time and offers either 80 on day 7 and 120 on day 21 (Option A), or all 200 on day 13 (Option B). If Copperline doesn't reply, Option B applies by default.",
+    |     "options": [
+    |       {
+    |         "name": "Option A: 80 units on day 7, 120 units on day 21",
+    |         "units_short": 5,
+    |         "days_late": 4
+    |       },
+    |       {
+    |         "name": "Option B: all 200 units on day 13 (the default if Copperline doesn't reply)",
+    |         "units_short": 40,
+    |         "days_late": 1
+    |       }
+    |     ],
+    |     "note": "units_short: most units missing at any point; days_late: most days any order ships late; null means not known.",
+    |     "copperline_must_decide": true,
+    |     "supplier_questions": [
+    |       "Which option would Copperline like: Option A (80 on the scheduled date, 120 two weeks later) or Option B (all 200 six days after the scheduled date)? Marlow needs an answer within three business days."
+    |     ]
+    |   },
+    |   "reviewer_notes": null
+    | }
+    [tokens] supplier writer: 965 in, 855 out (running total 965 in, 855 out)
+
+>>> HANDOFF  supplier writer -> coordinator: draft
+    | Subject: RE: PO-5520 - BL-12 boilers - please choose a shipping option
+    | 
+    | Hi Victor,
+    | 
+    | Thank you for the update. We understand that, because your welding cell is running at half capacity, PO-5520 for 200 BL-12 boilers can't ship complete on the scheduled date. You've offered two options:
+    | 
+    | - Option A: 80 boilers on the scheduled date and the remaining 120 two weeks later.
+    | - Option B: all 200 boilers together, six days after the scheduled date.
+    | 
+    | Either option affects our build schedule:
+    | 
+    | - Option A leaves us up to 5 units short and delays orders by up to 4 days.
+    | - Option B leaves us up to 40 units short and delays orders by up to 1 day.
+    | 
+    | Anything that reduces this would help. Could you tell us whether you can:
+    | 
+    | - ship more than 80 boilers on the scheduled date under Option A,
+    | - ship the remaining 120 sooner than two weeks later, or
+    | - ship all 200 sooner than six days after the scheduled date?
+    | 
+    | Even a partial improvement on any of these would make a difference.
+    | 
+    | Copperline will confirm its choice by your deadline of three business days. Please don't treat Option B as agreed in the meantime. We'll send our decision before then.
+    | 
+    | Regards,
+    | Purchasing, Copperline Coffee Machines
+
+>>> HANDOFF  coordinator -> reviewer: supplier draft + facts + supplier email
+    | {
+    |   "draft": "Subject: RE: PO-5520 - BL-12 boilers - please choose a shipping option\n\nHi Victor,\n\nThank you for the update. We understand that, because your welding cell is running at half capacity, PO-5520 for 200 BL-12 boilers can't ship complete on the scheduled date. You've offered two options:\n\n- Option A: 80 boilers on the scheduled date and the remaining 120 two weeks later.\n- Option B: all 200 boilers together, six days after the scheduled date.\n\nEither option affects our build schedule:\n\n- Option A leaves us up to 5 units short and delays orders by up to 4 days.\n- Option B leaves us up to 40 units short and delays orders by up to 1 day.\n\nAnything that reduces this would help. Could you tell us whether you can:\n\n- ship more than 80 boilers on the scheduled date under Option A,\n- ship the remaining 120 sooner than two weeks later, or\n- ship all 200 sooner than six days after the scheduled date?\n\nEven a partial improvement on any of these would make a difference.\n\nCopperline will confirm its choice by your deadline of three business days. Please don't treat Option B as agreed in the meantime. We'll send our decision before then.\n\nRegards,\nPurchasing, Copperline Coffee Machines",
+    |   "facts": {
+    |     "part_id": "BL-12",
+    |     "what_changed": "PO-5520 (200 boilers) was due on day 7. Marlow can't ship it all on time and offers either 80 on day 7 and 120 on day 21 (Option A), or all 200 on day 13 (Option B). If Copperline doesn't reply, Option B applies by default.",
+    |     "options": [
+    |       {
+    |         "name": "Option A: 80 units on day 7, 120 units on day 21",
+    |         "units_short": 5,
+    |         "days_late": 4
+    |       },
+    |       {
+    |         "name": "Option B: all 200 units on day 13 (the default if Copperline doesn't reply)",
+    |         "units_short": 40,
+    |         "days_late": 1
+    |       }
+    |     ],
+    |     "note": "units_short: most units missing at any point; days_late: most days any order ships late; null means not known.",
+    |     "copperline_must_decide": true,
+    |     "supplier_questions": [
+    |       "Which option would Copperline like: Option A (80 on the scheduled date, 120 two weeks later) or Option B (all 200 six days after the scheduled date)? Marlow needs an answer within three business days."
+    |     ]
+    |   }
+    | }
+    [tokens] reviewer: 1,486 in, 1,866 out (running total 2,204 in, 2,638 out)
+
+>>> HANDOFF  reviewer -> coordinator: verdict
+    | {
+    |   "verdict": "APPROVE",
+    |   "reasons": "1. **Numbers:** Every figure traces to the facts or the supplier's email. PO-5520, 200 BL-12 boilers, 80, 120, \"two weeks\", \"six days\" and \"three business days\" all come from the supplier's message. The 5 units short and 4 days late for Option A, and the 40 units short and 1 day late for Option B, match the facts exactly. No numbers are invented.\n2. **No unsupported promises:** The draft offers no dates, quantities, discounts or credits. The three questions about shipping more than 80 on the scheduled date, shipping the 120 sooner, and shipping all 200 sooner are requests, not commitments. \"We'll send our decision before then\" only restates the supplier's three-business-day deadline and commits to no outcome.\n3. **No customer details:** No customer is named. \"Delays orders by up to 4 days\" is generic and matches the facts' \"days_late\" field. It identifies no customer and describes no particular customer's order.\n4. **Customer rule:** Not applicable, since the recipient is a supplier.\n5. **No acceptance or cancellation:** The draft doesn't choose an option, agree to a cost or cancel anything. \"Please don't treat Option B as agreed in the meantime\" keeps the decision open and is consistent with the facts that Copperline must decide.\n6. **Tone:** It is cooperative, thanking Victor and asking for improvements, and firm in refusing to let Option B stand as the default."
+    | }
+    name check (supplier draft): passed, no customer named
+    saved week-05\drafts\copperline-coffee\02-marlow-boiler-options__supplier-reply.txt  ** NEEDS A PERSON **
+
+FINAL DRAFT TO SUPPLIER
+Subject: RE: PO-5520 - BL-12 boilers - please choose a shipping option
+
+Hi Victor,
+
+Thank you for the update. We understand that, because your welding cell is running at half capacity, PO-5520 for 200 BL-12 boilers can't ship complete on the scheduled date. You've offered two options:
+
+- Option A: 80 boilers on the scheduled date and the remaining 120 two weeks later.
+- Option B: all 200 boilers together, six days after the scheduled date.
+
+Either option affects our build schedule:
+
+- Option A leaves us up to 5 units short and delays orders by up to 4 days.
+- Option B leaves us up to 40 units short and delays orders by up to 1 day.
+
+Anything that reduces this would help. Could you tell us whether you can:
+
+- ship more than 80 boilers on the scheduled date under Option A,
+- ship the remaining 120 sooner than two weeks later, or
+- ship all 200 sooner than six days after the scheduled date?
+
+Even a partial improvement on any of these would make a difference.
+
+Copperline will confirm its choice by your deadline of three business days. Please don't treat Option B as agreed in the meantime. We'll send our decision before then.
+
+Regards,
+Purchasing, Copperline Coffee Machines
+Marked for a person: yes
+
+======================================================================
+Summary
+======================================================================
+Drafts saved (2):
+  - customer notice O-2203: week-05\drafts\copperline-coffee\02-marlow-boiler-options__customer-O-2203.txt (reviewer APPROVE, 0 revision(s))
+  - supplier reply: week-05\drafts\copperline-coffee\02-marlow-boiler-options__supplier-reply.txt (reviewer APPROVE, 0 revision(s))
+
+Drafts marked for a person (2):
+  - customer notice O-2203: order has a late penalty
+  - supplier reply: Copperline Coffee Machines must make a decision first (see Decisions for a person)
+
+Decisions for a person (5):
+  - Choose Option A or Option B and reply to Marlow within three business days. Without a reply, Marlow ships Option B.
+  - Option A leaves O-2205 (Tall Pines Coffee House) 5 units short. It can ship on day 21 instead of day 17, which is 4 days late, and the contract has a late penalty.
+  - Option B leaves O-2203 (Elm State University Dining) 40 units short. It can ship on day 13 instead of day 12, which is 1 day late, and the contract has a late penalty.
+  - Both options put one penalty-bearing order at risk. Decide which is more acceptable: a 4-day delay for Tall Pines Coffee House or a 1-day delay for Elm State University Dining.
+  - The orders_at_risk list above shows Option B, since that is what happens if Copperline doesn't reply.
+
+Tokens by specialist
+  specialist         calls     input    output     total
+  analyst                3    10,741     1,236    11,977
+  customer writer        1       377       202       579
+  reviewer               2     2,204     2,638     4,842
+  supplier writer        1       965       855     1,820
+  all                         14,287     4,931    19,218
+
+Saved this output to C:\Users\mikes\OneDrive\Desktop\GBUS-652-Course\GBUS-652-Coursework\week-05\runs\copperline-02-pipeline.txt

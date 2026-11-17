@@ -1,0 +1,17 @@
+To: Priya Raman <p.raman@ashgroveprecision.example> (Ashgrove Precision)
+About: 03-ashgrove-burr-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: no
+Reviewer notes: **Rule 1 (numbers):** PO-5531, 120, BR-64, day 13, day 10, and 3 days later all appear in the facts. Nothing else numeric is introduced. **Rule 2 (no unsupported promises):** The draft promises no dates, quantities, discounts, or credits. Saying the delay causes no shortage and no late orders matches the facts (units_short 0, days_late 0, all open orders covered). Asking whether any part can ship earlier is a request, not a commitment. Noting that a further slip "could change our position" is a caution, not a promise. **Rule 3 (no customer named or described):** The draft refers only to "our side" and "our position." It names no customer and describes no customer order. The facts' mention of customer orders is not carried over. **Rule 4:** Not applicable, since the recipient is a supplier. **Rule 5 (no acceptance, cost, or cancellation):** The draft acknowledges the new date ("We understand...") but doesn't formally accept an option, agree to any cost, or cancel anything. No decision was required (copperline_must_decide is false). **Rule 6 (tone):** It is cooperative and polite (thanks Priya, answers her question) and firm in asking for the full quantity as soon as possible, an earlier shipment if feasible, and prompt notice of any further date change. It also answers Priya's question directly: the delay causes no problems.
+------------------------------------------------------------
+Subject: RE: PO-5531 - BR-64 burr sets - arriving 3 days late
+
+Hello Priya,
+
+Thank you for letting us know. We understand that PO-5531 for 120 BR-64 burr sets, shipping together as one delivery, will now arrive on day 13 instead of day 10, which is 3 days later.
+
+At this time the delay causes no shortage and no late orders on our side. We still need the full quantity as soon as possible, so if any part of the order can ship earlier than day 13, please tell us. Please also let us know right away if the date moves again, since any further slip could change our position.
+
+Regards,
+Purchasing, Copperline Coffee Machines

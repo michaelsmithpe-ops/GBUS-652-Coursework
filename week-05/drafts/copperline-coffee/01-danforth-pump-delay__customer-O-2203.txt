@@ -1,0 +1,19 @@
+To: Elm State University Dining <dining@elmstate.example>
+Order: O-2203
+About: 01-danforth-pump-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: yes - order has a late penalty
+Reviewer notes: 1. **Numbers:** Every figure matches the facts. The order number is O-2203, the quantity is 50 Cafe One machines, the planned ship day is 12, the expected ship day is 19, and the delay is 7 days (19 − 12). Nothing is invented. 2. **No unsupported promises:** The draft gives only the expected ship day the facts provide, and it offers no new dates, quantities, discounts, or credits. "We will let you know promptly if that timing changes" is a commitment to keep the customer informed, not a commitment on any of those items. 3. **Supplier rule:** This rule applies only to supplier-bound drafts, and this one goes to a customer, so it doesn't apply. 4. **Customer rule:** The draft names no specific supplier. "One of our suppliers" is generic and matches the cause in the facts. It names no other customer and mentions no cost. 5. **No acceptance or cancellation:** The draft doesn't accept an option, agree to a cost, or cancel anything. 6. **Tone:** It is plain and apologetic ("we apologize for the inconvenience"), without jargon or excuses, and it invites questions.
+------------------------------------------------------------
+Subject: Update on Order O-2203
+
+Dear Elm State University Dining team,
+
+We're writing to let you know that your order O-2203, for 50 Cafe One machines, is now expected to ship 7 days later than planned. The cause is a delay in a part from one of our suppliers, and we apologize for the inconvenience.
+
+The order was originally scheduled to ship on day 12. It is now expected to ship on day 19, counting from today as day 0. We will let you know promptly if that timing changes.
+
+If you have questions about your order, please reply to this message and our team will be glad to help.
+
+Customer Service, Copperline Coffee Machines

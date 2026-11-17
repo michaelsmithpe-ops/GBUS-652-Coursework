@@ -1,0 +1,29 @@
+To: Diane Kessler <d.kessler@danforthpump.example> (Danforth Pump Works)
+About: 01-danforth-pump-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: yes - Copperline Coffee Machines must make a decision first (see Decisions for a person)
+Reviewer notes: 1. **Numbers:** Every figure appears in the facts: PO-5512, 200 PU-20 pumps, 40 on day 4, 160 on day 19, 15 days later, 55 units short at the worst point, and 7 days late at most. Nothing is invented. 2. **No unsupported promises:** The draft promises no dates, quantities, discounts, or credits. It asks whether more pumps can ship earlier and states that Copperline will confirm its decision separately, with no date attached. 3. **No customer information:** The draft names no customer and describes no customer's order. "Some orders will ship up to 7 days late" is a general impact figure taken from the facts. The draft also declines Diane's request for customer names and quantities, which is the right handling. 4. **Customer rule:** This rule applies only to customer drafts, so it is not relevant here. 5. **No acceptance or cancellation:** The draft says plainly that the revised schedule has not been accepted. It agrees to no cost and cancels nothing, and the decision is left to Copperline, as the facts require. 6. **Tone:** The tone is firm and cooperative. It thanks Diane, restates the schedule, asks for mitigation, and holds the line on confidentiality without being hostile.
+------------------------------------------------------------
+Subject: Re: PO-5512 - PU-20 pumps - partial shipment
+
+Hello Diane,
+
+Thank you for letting us know. Here is our understanding of the change to PO-5512 (200 PU-20 pumps):
+
+- 40 pumps arrive on day 4, as scheduled.
+- The remaining 160 pumps arrive on day 19, which is 15 days later.
+
+This leaves us up to 55 pumps short at the worst point, and some orders will ship up to 7 days late.
+
+Please tell us what you can do to reduce that impact. In particular:
+
+- Can you release more than 40 pumps on the scheduled date?
+- Can any part of the 160 pumps ship sooner than day 19, for example in smaller batches as the test rig allows?
+
+We can't share order details, including customer names or quantities. The unit shortfall and delay above are what you need for planning, and we're glad to answer other questions about the schedule.
+
+We have not accepted the revised schedule. Copperline will confirm its decision separately once we've heard what you can do to improve it.
+
+Regards,
+Purchasing, Copperline Coffee Machines

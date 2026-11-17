@@ -1,4 +1,4 @@
-"""The four specialists that Brookfield Bicycle Company's coordinators share.
+"""The four specialists that the coordinators share (for any company; Brookfield by default).
 
 Both coordinators (a fixed pipeline and an orchestrator agent) import this file, so the
 specialists behave the same way no matter who calls them.
@@ -7,14 +7,20 @@ specialists behave the same way no matter who calls them.
                                         10 tool calls; returns its brief as a dict (JSON)
     write_supplier_reply(email, brief)  one model call; customer names are removed first
     write_customer_notice(order)        one model call; sees only that one order's facts
-    review(draft, facts, recipient)     one model call; returns APPROVE or REVISE with reasons
+    review(draft, facts, recipient[, email])  one model call; returns APPROVE or REVISE with reasons
 
     draft_supplier_reply(email, brief, email_name)   writer -> reviewer, up to 2 revisions,
     draft_customer_notice(order, email_name)         then the code name check, then save to
                                                      week-05/drafts
 
-Each specialist reads its system prompt from week-05/brookfield-bikes/prompts on every
-call, so prompt edits take effect without a restart.
+set_org(org) picks the company: its folder in week-05 (brookfield-bikes by default, or
+copperline-coffee). Each specialist reads its system prompt from <folder>/prompts on every
+call, so prompt edits take effect without a restart. Each company's drafts are saved in
+week-05/drafts/<folder>.
+
+After each review step the final draft is printed once, between a FINAL DRAFT TO
+SUPPLIER (or FINAL DRAFT TO CUSTOMER <order_id>) line and a "Marked for a person: yes/no"
+line. The analyst's brief is printed in full.
 
 Every handoff (who passes what to whom) is printed, and so are the tokens each specialist
 uses. print_token_summary() prints the totals by specialist.
@@ -37,13 +43,15 @@ import sys
 from pathlib import Path
 
 import anthropic
+import supply_mcp_server as sd
 from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 HERE = Path(__file__).resolve().parent                  # .../GBUS-652-Coursework/week-05
-DATA_DIR = HERE / "brookfield-bikes"
-PROMPTS_DIR = DATA_DIR / "prompts"
-DRAFTS_DIR = HERE / "drafts"
+ORG = sd.DEFAULT_ORG                                    # company folder in week-05
+COMPANY = sd.company_name(ORG)
+PROMPTS_DIR = HERE / ORG / "prompts"
+DRAFTS_DIR = HERE / "drafts" / ORG                      # each company's drafts in its own folder
 SERVER = HERE / "supply_mcp_server.py"
 KEY_FILE = HERE.parents[1] / "API-Key.txt"              # folder that contains the repo
 
@@ -55,6 +63,15 @@ MAX_REVISIONS = 2                                       # redrafts after a REVIS
 # Server-side refusal fallback: if the model declines a request, the API retries it on a
 # fallback model it picks by refusal category, so a draft still comes back.
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
+
+
+def set_org(org: str) -> None:
+    """Point the specialists (and the supply tools) at one company's folder."""
+    global ORG, COMPANY, PROMPTS_DIR, DRAFTS_DIR
+    sd.set_org(org)                                     # ValueError for an unknown folder
+    ORG, COMPANY = org, sd.company_name(org)
+    PROMPTS_DIR = HERE / org / "prompts"
+    DRAFTS_DIR = HERE / "drafts" / org
 
 
 # ---------------------------------------------------------------------------
@@ -148,9 +165,9 @@ def text_of(response) -> str:
 # ---------------------------------------------------------------------------
 
 def read_csv(name: str) -> list[dict]:
-    with open(DATA_DIR / name, newline="", encoding="utf-8-sig") as f:
-        return [{k.strip(): (v or "").strip() for k, v in row.items() if k}
-                for row in csv.DictReader(f)]
+    """One of the company's CSV files, with the standard column names added (product,
+    units, ship_day, ...), whatever this company calls them."""
+    return sd.read_table(name)
 
 
 def customer_terms() -> list[str]:
@@ -197,7 +214,8 @@ def parse_brief(text: str) -> dict:
 
 async def _run_analyst(email: str) -> dict:
     system = load_prompt("analyst")
-    server = StdioServerParameters(command=sys.executable, args=[str(SERVER)], cwd=str(HERE.parent))
+    server = StdioServerParameters(command=sys.executable, args=[str(SERVER), "--org", ORG],
+                                   cwd=str(HERE.parent))
     with open(os.devnull, "w") as quiet:
         async with stdio_client(server, errlog=quiet) as (read, write):
             async with ClientSession(read, write) as session:
@@ -237,6 +255,11 @@ async def _run_analyst(email: str) -> dict:
                             text, is_error = f"Tool failed: {exc}", True
                         handoff(f"MCP tool {tu.name}", "analyst",
                                 "tool error" if is_error else "tool result", text)
+                        if tu.name == "check_coverage" and not is_error:
+                            try:
+                                COVERAGE_CHECKS.append(json.loads(text))
+                            except json.JSONDecodeError:
+                                pass
                         results.append({"type": "tool_result", "tool_use_id": tu.id,
                                         "content": text, "is_error": is_error})
                     if calls >= MAX_TOOL_CALLS:
@@ -248,8 +271,9 @@ async def _run_analyst(email: str) -> dict:
 def run_analyst(email: str, sender: str = "coordinator") -> dict:
     """Work out how a supplier email affects customer orders. Returns the brief (a dict)."""
     handoff(sender, "analyst", "supplier email", email)
+    COVERAGE_CHECKS.clear()
     brief = asyncio.run(_run_analyst(email))
-    handoff("analyst", sender, "brief", brief)
+    handoff("analyst", sender, "brief (in full)", brief)
     return brief
 
 
@@ -257,8 +281,52 @@ def run_analyst(email: str, sender: str = "coordinator") -> dict:
 # Redacted views for the writers
 # ---------------------------------------------------------------------------
 
+# Every successful check_coverage result from the analyst's last run (one email per run).
+# supplier_view uses them to give the supplier writer each option's impact in units and days.
+COVERAGE_CHECKS: list[dict] = []
+
+
+def impact_of(check: dict) -> dict:
+    """Units short and days late for one check_coverage result, with no order details.
+
+    units_short is the largest gap, on any order's ship day, between the units needed by that
+    day (that order plus every order ahead of it) and the supply available by then. Adding up
+    each order's units_short would count the same missing units more than once.
+    """
+    steps = [(0, check.get("on_hand", 0))]
+    for a in sorted(check.get("arrivals_used", []), key=lambda a: a["arrives_in_days"]):
+        steps.append((a["arrives_in_days"], steps[-1][1] + a["qty"]))
+    needed, gap, late, never = 0, 0, 0, False
+    for o in check.get("orders", []):
+        needed += o["units_needed"]
+        if o.get("status") == "short":
+            supply = max(total for d, total in steps if d <= o["ship_day"])
+            gap = max(gap, needed - supply)
+            if o.get("days_late") is None:
+                never = True
+            else:
+                late = max(late, o["days_late"])
+    return {"units_short": gap, "days_late": None if never else late}
+
+
+def impact_for(order_ids: list) -> dict:
+    """The impact of the analyst's latest coverage check whose orders at risk are order_ids."""
+    want = {str(i).upper() for i in order_ids}
+    for check in reversed(COVERAGE_CHECKS):
+        got = {str(i).upper() for i in check.get("summary", {}).get("orders_at_risk", [])}
+        if got == want:
+            return impact_of(check)
+    if not want:
+        return {"units_short": 0, "days_late": 0}
+    return {"units_short": None, "days_late": None}     # no matching tool result: not known
+
+
 def supplier_view(brief: dict) -> dict:
-    """The brief with every customer name, order number and customer email removed."""
+    """The brief with every customer name, order number, customer email and order detail removed.
+
+    The supplier writer gets the impact in units short and days late (its prompt allows that),
+    per option when the supplier offers options, but nothing about any single customer order.
+    """
     terms = sorted(customer_terms(), key=len, reverse=True)
 
     def scrub(value):
@@ -272,30 +340,29 @@ def supplier_view(brief: dict) -> dict:
             return {k: scrub(v) for k, v in value.items()}
         return value
 
-    at_risk = [{"units_short": o.get("units_short"), "ship_day": o.get("ship_day"),
-                "ready_day": o.get("ready_day")}
-               for o in brief.get("orders_at_risk", [])]
-    def orders_in_option(option: dict) -> int:
+    def orders_in_option(option: dict) -> list:
         # The analyst names this list order_ids, order_ids_at_risk, orders_at_risk, ...
         for key, value in option.items():
             if isinstance(value, list) and ("order" in key or "risk" in key):
-                return len(value)
-        return 0
+                return value
+        return []
 
-    options = [{"name": o.get("name"), "orders_at_risk": orders_in_option(o)}
+    options = [{"name": o.get("name"), **impact_for(orders_in_option(o))}
                for o in brief.get("options", []) if isinstance(o, dict)]
-    # decisions_for_a_person is left out on purpose: it is the analyst's notes for Brookfield
+    view = {"part_id": brief.get("part_id"), "what_changed": brief.get("what_changed")}
+    if options:
+        # Only per-option figures: one overall figure would be true for one option only.
+        view["options"] = options
+    else:
+        view["impact"] = impact_for([o.get("order_id") for o in brief.get("orders_at_risk", [])])
+    view["note"] = ("units_short: most units missing at any point; days_late: most days any "
+                    "order ships late; null means not known.")
+    # decisions_for_a_person is left out on purpose: it is the analyst's notes for the company
     # and describes individual customer orders (shortfalls, lateness, penalties) even with the
-    # names removed. The writer only needs to know that Brookfield still has to decide.
-    return scrub({
-        "part_id": brief.get("part_id"),
-        "what_changed": brief.get("what_changed"),
-        "orders_at_risk": at_risk,
-        "total_units_short": sum(o["units_short"] or 0 for o in at_risk),
-        "options": options,
-        "brookfield_must_decide": bool(brief.get("decisions_for_a_person")),
-        "supplier_questions": brief.get("supplier_questions", []),
-    })
+    # names removed. The writer only needs to know that the company still has to decide.
+    view[f"{COMPANY.split()[0].lower()}_must_decide"] = bool(brief.get("decisions_for_a_person"))
+    view["supplier_questions"] = brief.get("supplier_questions", [])
+    return scrub(view)
 
 
 def customer_view(order: dict) -> dict:
@@ -305,8 +372,8 @@ def customer_view(order: dict) -> dict:
     return {
         "order_id": order.get("order_id"),
         "customer": row.get("customer") or order.get("customer"),
-        "model": row.get("model"),
-        "quantity": int(row["qty"]) if row.get("qty") else None,
+        "product": row.get("product"),
+        "quantity": int(row["units"]) if row.get("units") else None,
         "planned_ship_day": ship,
         "expected_ship_day": ready,
         "days_late": (ready - ship) if isinstance(ready, int) and isinstance(ship, int) else None,
@@ -356,16 +423,21 @@ def write_customer_notice(order: dict, previous: str | None = None,
     return draft
 
 
-def review(draft: str, facts, recipient: str) -> dict:
+def review(draft: str, facts, recipient: str, email: str | None = None) -> dict:
     """One model call. Returns {"verdict": "APPROVE"|"REVISE", "reasons": str}.
 
-    recipient is "supplier" or "customer". The verdict is always exactly APPROVE or REVISE,
-    and reasons is never empty. Anything other than a clear APPROVE counts as REVISE.
+    recipient is "supplier" or "customer". email is the supplier email being answered; it is
+    passed only for supplier drafts, so the reviewer can check names and details taken from it
+    (it holds no customer data, so the redaction is unchanged). The verdict is always exactly
+    APPROVE or REVISE, and reasons is never empty. Anything other than a clear APPROVE is REVISE.
     """
     if recipient not in ("supplier", "customer"):
         raise ValueError(f"review(): recipient must be 'supplier' or 'customer', not {recipient!r}")
-    handoff("coordinator", "reviewer", f"{recipient} draft + facts", {"draft": draft, "facts": facts})
-    content = (f"Recipient: {recipient}\n\nFacts:\n{json.dumps(facts, indent=2)}\n\n"
+    handoff("coordinator", "reviewer", f"{recipient} draft + facts" + (" + supplier email" if email else ""),
+            {"draft": draft, "facts": facts})
+    email_block = (f"Supplier email this draft replies to (its own details, such as the sender's "
+                   f"name, may be used in the draft):\n\n{email}\n\n" if email else "")
+    content = (f"Recipient: {recipient}\n\n{email_block}Facts:\n{json.dumps(facts, indent=2)}\n\n"
                f"Draft:\n{draft}\n\nGive your reasons for either verdict. For APPROVE, say "
                "briefly why the draft passes each rule.")
     answer = text_of(call_model("reviewer", load_prompt("reviewer"),
@@ -395,16 +467,23 @@ def review(draft: str, facts, recipient: str) -> dict:
 # Review step: write -> review (up to 2 revisions) -> name check -> save
 # ---------------------------------------------------------------------------
 
-def _review_loop(write, facts, recipient: str) -> tuple[str, dict, int]:
+def _review_loop(write, facts, recipient: str, email: str | None = None) -> tuple[str, dict, int]:
     draft = write(None, None)
-    verdict = review(draft, facts, recipient)
+    verdict = review(draft, facts, recipient, email)
     revisions = 0
     while verdict["verdict"] == "REVISE" and revisions < MAX_REVISIONS:
         revisions += 1
         print(f"    revision {revisions} of {MAX_REVISIONS}")
         draft = write(draft, verdict["reasons"])
-        verdict = review(draft, facts, recipient)
+        verdict = review(draft, facts, recipient, email)
     return draft, verdict, revisions
+
+
+def print_final(title: str, draft: str, needs_person: bool) -> None:
+    """Print the final draft once, after the review step."""
+    print(f"\n{title}")
+    print(draft.strip())
+    print(f"Marked for a person: {'yes' if needs_person else 'no'}")
 
 
 def _save(filename: str, header: dict, draft: str) -> Path:
@@ -421,7 +500,7 @@ def draft_supplier_reply(email: str, brief: dict, email_name: str) -> dict:
     """Supplier writer + reviewer, the customer-name check, and the saved draft."""
     facts = supplier_view(brief)
     draft, verdict, revisions = _review_loop(
-        lambda prev, notes: write_supplier_reply(email, brief, prev, notes), facts, "supplier")
+        lambda prev, notes: write_supplier_reply(email, brief, prev, notes), facts, "supplier", email)
 
     leaks = find_terms(draft, customer_terms())
     print(f"    name check (supplier draft): "
@@ -431,6 +510,10 @@ def draft_supplier_reply(email: str, brief: dict, email_name: str) -> dict:
         reasons.append(f"reviewer still says REVISE after {revisions} revision(s)")
     if leaks:
         reasons.append("names a customer: " + ", ".join(leaks))
+    # The analyst listed decisions only a person can make (e.g. choosing a supplier's option),
+    # so the reply can't go out until someone has decided.
+    if brief.get("decisions_for_a_person"):
+        reasons.append(f"{COMPANY} must make a decision first (see Decisions for a person)")
 
     part = next((p for p in read_csv("parts.csv") if p["part_id"] == brief.get("part_id")), {})
     contact = next((s for s in read_csv("suppliers.csv") if s["supplier"] == part.get("supplier")), {})
@@ -444,6 +527,7 @@ def draft_supplier_reply(email: str, brief: dict, email_name: str) -> dict:
     if verdict["reasons"]:
         header["Reviewer notes"] = " ".join(verdict["reasons"].split())
     path = _save(f"{email_name}__supplier-reply.txt", header, draft)
+    print_final("FINAL DRAFT TO SUPPLIER", draft, bool(reasons))
     return {"draft": draft, "path": str(path), "verdict": verdict["verdict"],
             "revisions": revisions, "needs_person": bool(reasons), "reasons": reasons}
 
@@ -475,5 +559,6 @@ def draft_customer_notice(order: dict, email_name: str) -> dict:
     if verdict["reasons"]:
         header["Reviewer notes"] = " ".join(verdict["reasons"].split())
     path = _save(f"{email_name}__customer-{facts['order_id']}.txt", header, draft)
+    print_final(f"FINAL DRAFT TO CUSTOMER {facts['order_id']}", draft, bool(reasons))
     return {"draft": draft, "path": str(path), "verdict": verdict["verdict"],
             "revisions": revisions, "needs_person": bool(reasons), "reasons": reasons}

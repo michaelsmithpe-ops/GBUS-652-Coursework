@@ -1,0 +1,255 @@
+Copperline Coffee Machines pipeline - 2026-11-17 16:44
+Org:    copperline-coffee (drafts in week-05\drafts\copperline-coffee)
+Columns found:
+        bill-of-materials.csv: product = product, per_unit = per_unit
+        orders.csv: product = product, units = units, ship_day = ship_by_day
+Email:  04-pelham-maintenance-closure.eml
+Model:  claude-sonnet-5-5
+Order:  1. supply analyst  2. customer notices  3. supplier reply
+
+======================================================================
+Step 1 of 3: supply analyst
+======================================================================
+
+>>> HANDOFF  pipeline -> analyst: supplier email
+    | From: Owen Brady <o.brady@pelhamfittings.example>
+    | To: Purchasing <purchasing@copperlinecoffee.example>
+    | Subject: Plant maintenance closure - PO-5540 not affected
+    | 
+    | Hello,
+    | 
+    | A quick note for your planning: our plant will close for one week of annual
+    | maintenance, starting four weeks from today.
+    | 
+    | Your open order, PO-5540 for 60 SW-3 steam wands, ships before the closure
+    | and will arrive on the scheduled date. No action is needed on your side.
+    | 
+    | Kind regards,
+    | Owen Brady
+    | Customer Care, Pelham Fittings
+    analyst tools: get_part, get_orders_for_part, check_coverage
+    [tokens] analyst: 1,999 in, 127 out (running total 1,999 in, 127 out)
+
+>>> HANDOFF  analyst -> MCP tool get_part: tool call 1
+    | {
+    |   "part_id": "SW-3"
+    | }
+
+>>> HANDOFF  MCP tool get_part -> analyst: tool result
+    | {
+    |   "part_id": "SW-3",
+    |   "description": "Steam wand",
+    |   "supplier": "Pelham Fittings",
+    |   "on_hand": 40,
+    |   "scheduled_shipments": [
+    |     {
+    |       "po_number": "PO-5540",
+    |       "supplier": "Pelham Fittings",
+    |       "qty": 60,
+    |       "arrives_in_days": 11
+    |     }
+    |   ],
+    |   "total_scheduled": 60,
+    |   "used_in_products": [
+    |     {
+    |       "product": "Cafe Duo",
+    |       "parts_per_unit": 1
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  analyst -> MCP tool get_orders_for_part: tool call 2
+    | {
+    |   "part_id": "SW-3"
+    | }
+
+>>> HANDOFF  MCP tool get_orders_for_part -> analyst: tool result
+    | {
+    |   "part_id": "SW-3",
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 15,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 15,
+    |       "ship_day": 9,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 10,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 10,
+    |       "ship_day": 15,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_ordered": 12,
+    |       "parts_per_unit": 1,
+    |       "units_needed": 12,
+    |       "ship_day": 30,
+    |       "late_penalty": false
+    |     }
+    |   ],
+    |   "total_units_needed": 37
+    | }
+    [tokens] analyst: 2,745 in, 208 out (running total 4,744 in, 335 out)
+
+>>> HANDOFF  analyst -> MCP tool check_coverage: tool call 3
+    | {
+    |   "part_id": "SW-3",
+    |   "arrivals": [
+    |     {
+    |       "qty": 60,
+    |       "arrives_in_days": 11
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  MCP tool check_coverage -> analyst: tool result
+    | {
+    |   "part_id": "SW-3",
+    |   "on_hand": 40,
+    |   "arrivals_used": [
+    |     {
+    |       "qty": 60,
+    |       "arrives_in_days": 11
+    |     }
+    |   ],
+    |   "orders": [
+    |     {
+    |       "order_id": "O-2202",
+    |       "customer": "Harbor Hotel Group",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 15,
+    |       "ship_day": 9,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2204",
+    |       "customer": "Kettle & Crumb Bakery",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 10,
+    |       "ship_day": 15,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-2208",
+    |       "customer": "Northside Roasters",
+    |       "product": "Cafe Duo",
+    |       "units_needed": 12,
+    |       "ship_day": 30,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     }
+    |   ],
+    |   "summary": {
+    |     "orders_checked": 3,
+    |     "orders_covered": 3,
+    |     "orders_at_risk": [],
+    |     "orders_at_risk_with_late_penalty": [],
+    |     "total_units_needed": 37,
+    |     "total_supply": 100,
+    |     "units_left_over": 63
+    |   }
+    | }
+    [tokens] analyst: 3,423 in, 207 out (running total 8,167 in, 542 out)
+    analyst finished after 3 tool call(s)
+
+>>> HANDOFF  analyst -> pipeline: brief (in full)
+    | {
+    |   "part_id": "SW-3",
+    |   "what_changed": "Nothing changes for PO-5540: the 60 SW-3 steam wands still arrive on day 11. Pelham's plant closes for one week of maintenance starting around day 28, which is after the delivery.",
+    |   "orders_at_risk": [],
+    |   "options": [],
+    |   "decisions_for_a_person": [],
+    |   "supplier_questions": []
+    | }
+
+======================================================================
+Step 2 of 3: customer notices
+======================================================================
+No orders at risk; skipping customer notices.
+
+======================================================================
+Step 3 of 3: supplier reply
+======================================================================
+
+>>> HANDOFF  coordinator -> supplier writer: email + redacted brief
+    | {
+    |   "brief": {
+    |     "part_id": "SW-3",
+    |     "what_changed": "Nothing changes for PO-5540: the 60 SW-3 steam wands still arrive on day 11. Pelham's plant closes for one week of maintenance starting around day 28, which is after the delivery.",
+    |     "impact": {
+    |       "units_short": 0,
+    |       "days_late": 0
+    |     },
+    |     "note": "units_short: most units missing at any point; days_late: most days any order ships late; null means not known.",
+    |     "copperline_must_decide": false,
+    |     "supplier_questions": []
+    |   },
+    |   "reviewer_notes": null
+    | }
+    [tokens] supplier writer: 685 in, 13 out (running total 685 in, 13 out)
+
+>>> HANDOFF  supplier writer -> coordinator: draft
+    | NO REPLY NEEDED
+
+>>> HANDOFF  coordinator -> reviewer: supplier draft + facts + supplier email
+    | {
+    |   "draft": "NO REPLY NEEDED",
+    |   "facts": {
+    |     "part_id": "SW-3",
+    |     "what_changed": "Nothing changes for PO-5540: the 60 SW-3 steam wands still arrive on day 11. Pelham's plant closes for one week of maintenance starting around day 28, which is after the delivery.",
+    |     "impact": {
+    |       "units_short": 0,
+    |       "days_late": 0
+    |     },
+    |     "note": "units_short: most units missing at any point; days_late: most days any order ships late; null means not known.",
+    |     "copperline_must_decide": false,
+    |     "supplier_questions": []
+    |   }
+    | }
+    [tokens] reviewer: 799 in, 611 out (running total 799 in, 611 out)
+
+>>> HANDOFF  reviewer -> coordinator: verdict
+    | {
+    |   "verdict": "APPROVE",
+    |   "reasons": "The draft is a decision not to reply, not an email. That decision fits the facts. Owen Brady's message is informational and says no action is needed. The facts confirm that nothing changes for PO-5540 (impact is 0 units short and 0 days late), that Copperline has no decision to make (`copperline_must_decide` is false), and that there are no questions for the supplier (`supplier_questions` is empty). A reply would add nothing.\n\n1. **Numbers:** The draft contains no numbers or order numbers, so nothing is unsupported.\n2. **Promises:** It makes no commitments about dates, quantities, discounts, or credits.\n3. **Customer information (supplier recipient):** It names no customer and describes no customer's order.\n4. **Customer-recipient rule:** This rule doesn't apply because the recipient is a supplier. The draft also mentions no supplier, other customer, or cost.\n5. **Accepting, agreeing, or cancelling:** The draft accepts no option, agrees to no cost, and cancels nothing.\n6. **Tone:** With no text, there is nothing to be curt or off-key. Staying silent in reply to a courtesy notice that asks for no action is appropriate and cooperative."
+    | }
+    name check (supplier draft): passed, no customer named
+    saved week-05\drafts\copperline-coffee\04-pelham-maintenance-closure__supplier-reply.txt
+
+FINAL DRAFT TO SUPPLIER
+NO REPLY NEEDED
+Marked for a person: no
+
+======================================================================
+Summary
+======================================================================
+Drafts saved (1):
+  - supplier reply: week-05\drafts\copperline-coffee\04-pelham-maintenance-closure__supplier-reply.txt (reviewer APPROVE, 0 revision(s))
+
+Drafts marked for a person (0):
+  (none)
+
+Decisions for a person (0):
+  (none)
+
+Tokens by specialist
+  specialist         calls     input    output     total
+  analyst                3     8,167       542     8,709
+  supplier writer        1       685        13       698
+  reviewer               1       799       611     1,410
+  all                          9,651     1,166    10,817
+
+Saved this output to C:\Users\mikes\OneDrive\Desktop\GBUS-652-Course\GBUS-652-Coursework\week-05\runs\copperline-04-pipeline.txt

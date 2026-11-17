@@ -1,11 +1,11 @@
-"""Fixed-order coordinator for Brookfield Bicycle Company's supplier emails.
+"""Fixed-order coordinator for a company's supplier emails (Brookfield Bicycle by default).
 
 Runs the shared specialists in specialists.py, always in this order:
   1. The supply analyst reads the email and returns its brief.
   2. A customer notice for each order at risk (skipped if there are none).
   3. A reply to the supplier.
 Every draft goes through the review step (writer -> reviewer, up to 2 revisions, then the
-code name check) and is saved in week-05/drafts. Nothing is sent.
+code name check) and is saved in week-05/drafts/<company folder>. Nothing is sent.
 
 At the end it prints a summary: drafts saved, drafts marked for a person, decisions for a
 person, and total tokens.
@@ -14,7 +14,12 @@ Run from the top of the repository:
     .venv\\Scripts\\python.exe week-05\\pipeline.py --email week-05\\brookfield-bikes\\supplier-emails\\01-northgate-controller-delay.eml
     .venv\\Scripts\\python.exe week-05\\pipeline.py --email <file> --save week-05\\runs\\pipeline-01.txt
 
+    .venv\\Scripts\\python.exe week-05\\pipeline.py --org copperline-coffee --email week-05\\copperline-coffee\\supplier-emails\\01-danforth-pump-delay.eml
+
 --save FILE also writes everything printed to FILE (UTF-8).
+--org FOLDER picks the company: its folder in week-05 (default brookfield-bikes). Drafts
+are saved in week-05/drafts/FOLDER. After each review step the final draft is printed
+between FINAL DRAFT TO ... and "Marked for a person: yes/no".
 """
 
 from __future__ import annotations
@@ -74,7 +79,10 @@ def section(title: str) -> None:
 def run(email_path: Path) -> None:
     email = s.read_email(email_path)
     name = email_path.stem
-    print(f"Brookfield pipeline - {datetime.datetime.now():%Y-%m-%d %H:%M}")
+    print(f"{s.COMPANY} pipeline - {datetime.datetime.now():%Y-%m-%d %H:%M}")
+    print(f"Org:    {s.ORG} (drafts in {s.DRAFTS_DIR.relative_to(s.HERE.parent)})")
+    print("Columns found:")
+    print_columns()
     print(f"Email:  {email_path.name}")
     print(f"Model:  {s.MODEL}")
     print("Order:  1. supply analyst  2. customer notices  3. supplier reply")
@@ -152,11 +160,18 @@ def print_summary(drafts: list[dict], brief: dict | None, stopped: str) -> None:
 
 
 def main() -> None:
-    cli("Run Brookfield's specialists in a fixed order on one supplier email. Sends nothing.", run)
+    cli("Run a company's specialists in a fixed order on one supplier email. Sends nothing.",
+        run)
+
+
+def print_columns() -> None:
+    """The columns detected in this company's CSV files (no names are assumed)."""
+    for name, found in s.sd.detect_columns().items():
+        print(f"        {name}: " + ", ".join(f"{k} = {v}" for k, v in found.items()))
 
 
 def cli(description: str, run_fn) -> None:
-    """--email / --save handling, shared with orchestrator.py."""
+    """--email / --save / --org handling, shared with orchestrator.py."""
     out = Output(sys.stdout)
     out.console.reconfigure(encoding="utf-8", errors="replace")
     sys.stdout = out
@@ -164,7 +179,10 @@ def cli(description: str, run_fn) -> None:
     ap = argparse.ArgumentParser(description=description)
     ap.add_argument("--email", required=True, metavar="FILE", help="path of one supplier email (.eml)")
     ap.add_argument("--save", metavar="FILE", help="also write everything printed to this UTF-8 text file")
+    ap.add_argument("--org", default=s.sd.DEFAULT_ORG, choices=s.sd.list_orgs(),
+                    help=f"company folder in week-05 (default {s.sd.DEFAULT_ORG})")
     args = ap.parse_args()
+    s.set_org(args.org)
 
     email_path = Path(args.email).expanduser().resolve()
     if not email_path.is_file():

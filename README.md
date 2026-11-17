@@ -14,4 +14,4 @@ This repository contains course materials and coursework for UMW's GBUS 652: AI 
 
 3. [week-03](week-03/): RAG tool that answers questions from Copperline Manufacturing's finance documents, built with Claude Code
 4. [week-04](week-04/): AI agent that prepares replies to HR emails using tools from an MCP server, built with Claude Code. Works for any organization's policies, employee file and inbox; first built for Hartwell Foods, then pointed at Ridgeline Hotels ([seven saved runs](week-04/runs/) and [write-up](week-04/writeup.md))
-5. [week-05](week-05/): A team of AI agents that prepares a bicycle maker's response to supplier emails, built with Claude Code
+5. [week-05](week-05/): A team of AI agents that prepares a manufacturer's response to supplier emails, run under two coordinators (a fixed pipeline and an orchestrator agent), built with Claude Code. Works for any company's parts, orders, suppliers and inbox; first built for Brookfield Bicycle, then pointed at Copperline Coffee Machines

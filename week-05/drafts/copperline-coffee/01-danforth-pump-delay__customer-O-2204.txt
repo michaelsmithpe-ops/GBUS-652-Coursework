@@ -1,0 +1,20 @@
+To: Kettle & Crumb Bakery <owner@kettleandcrumb.example>
+Order: O-2204
+About: 01-danforth-pump-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: no
+Reviewer notes: Rule 1: The numbers check out. Order O-2204, 10 machines, and "4 days later" all match the facts (planned day 15, expected day 19, days_late 4). No other figures appear. Rule 2: The draft promises no dates, quantities, discounts, or credits. It says the order is "now expected" to ship 4 days later, which matches the facts, and it commits only to updating the customer if the date changes. That is a promise to communicate, not a promise about an outcome. Rule 3: Not applicable, since this goes to a customer. Rule 4: The draft names no supplier and no other customer. "One of our suppliers" is a generic reference with no name, and the draft mentions no cost. Rule 5: The draft accepts no option, agrees to no cost, and cancels nothing. Rule 6: The tone is plain and apologetic, which suits a customer. It states the delay and its cause without excess detail and apologizes directly.
+------------------------------------------------------------
+Subject: Update on Order O-2204
+
+Dear Kettle & Crumb Bakery,
+
+We're writing about your order O-2204 for 10 Cafe Duo machines. Because of a delay in a part from one of our suppliers, the order is now expected to ship 4 days later than planned.
+
+We apologize for the inconvenience this causes you.
+
+We'll continue to monitor the situation. If anything changes with the expected ship date, we'll let you know right away.
+
+Sincerely,
+Customer Service, Copperline Coffee Machines

@@ -1,0 +1,8 @@
+To: Owen Brady <o.brady@pelhamfittings.example> (Pelham Fittings)
+About: 04-pelham-maintenance-closure
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: no
+Reviewer notes: The draft is a decision not to reply, not an email. That decision fits the facts. Owen Brady's message is informational and says no action is needed. The facts confirm that nothing changes for PO-5540 (impact is 0 units short and 0 days late), that Copperline has no decision to make (`copperline_must_decide` is false), and that there are no questions for the supplier (`supplier_questions` is empty). A reply would add nothing. 1. **Numbers:** The draft contains no numbers or order numbers, so nothing is unsupported. 2. **Promises:** It makes no commitments about dates, quantities, discounts, or credits. 3. **Customer information (supplier recipient):** It names no customer and describes no customer's order. 4. **Customer-recipient rule:** This rule doesn't apply because the recipient is a supplier. The draft also mentions no supplier, other customer, or cost. 5. **Accepting, agreeing, or cancelling:** The draft accepts no option, agrees to no cost, and cancels nothing. 6. **Tone:** With no text, there is nothing to be curt or off-key. Staying silent in reply to a courtesy notice that asks for no action is appropriate and cooperative.
+------------------------------------------------------------
+NO REPLY NEEDED

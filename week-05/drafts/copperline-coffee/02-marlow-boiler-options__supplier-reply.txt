@@ -1,0 +1,26 @@
+To: Victor Lindqvist <v.lindqvist@marlowmetal.example> (Marlow Metalworks)
+About: 02-marlow-boiler-options
+Reviewer: APPROVE
+Revisions: 1
+Needs a person: yes - Copperline Coffee Machines must make a decision first (see Decisions for a person)
+Reviewer notes: 1. **Numbers:** Every figure traces to the facts or the supplier's email: PO-5520, 200 BL-12 boilers, 80 and 120 units, two weeks, six days (day 13 minus day 7), up to 5 and 40 units short, and up to 4 and 1 days of delay. The three business days come from Marlow's email. 2. **No unsupported promises:** The draft promises no dates, quantities, discounts or credits. The "confirm our choice within the three business days you've asked for" line only echoes Marlow's stated deadline, and the facts say Copperline must decide. The questions about shipping more units sooner or recovering welding capacity are requests, not commitments. 3. **No customer details:** The draft names no customer and describes no specific customer order. "Orders would be delayed" and "delays our builds" are general statements about the impact on Copperline, drawn from the facts' days_late and units_short. 4. **Supplier-recipient check only:** Rule 4 applies only to customer emails, so it doesn't apply here. 5. **No acceptance or cancellation:** The draft explicitly says "Please don't treat this message as acceptance of either option." It agrees to no cost, and asking about overtime or a second shift is an inquiry only. It also doesn't choose Option A or B, which is correct because the decision hasn't been made. 6. **Tone:** It is firm and cooperative. It restates the situation, explains the impact, asks for improvements, and keeps Copperline's position open. Optional wording tweak, not required: "We will respond within the three business days" would avoid even implying a promised decision.
+------------------------------------------------------------
+Subject: RE: PO-5520 - BL-12 boilers - please choose a shipping option
+
+Hi Victor,
+
+Thanks for letting us know about PO-5520. Here is our understanding of the change. Your welding cell is at half capacity, so the 200 BL-12 boilers can't all ship on the scheduled date. You've offered two options:
+
+- **Option A:** 80 boilers on the scheduled date and the remaining 120 two weeks later. For us, that means we would be up to 5 units short and orders would be delayed by up to 4 days.
+- **Option B:** all 200 boilers together, six days after the scheduled date. For us, that means we would be up to 40 units short and orders would be delayed by up to 1 day.
+
+Any shortfall on this part directly delays our builds, so we'd like to reduce the impact wherever possible. Could you tell us:
+
+1. Under Option A, can you ship more than 80 boilers on the scheduled date, or bring the remaining shipment forward from two weeks later?
+2. Under Option B, can you ship any boilers earlier than six days after the scheduled date, for example a partial shipment sooner with the rest following?
+3. Is there any way to recover capacity in the welding cell, such as overtime or a second shift, to bring either option forward?
+
+We will confirm our choice within the three business days you've asked for. Please don't treat this message as acceptance of either option. Any additional boilers you can ship sooner would help, so please send us what you can do on the above.
+
+Regards,
+Purchasing, Copperline Coffee Machines

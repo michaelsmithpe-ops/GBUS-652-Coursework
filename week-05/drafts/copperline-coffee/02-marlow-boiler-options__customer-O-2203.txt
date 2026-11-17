@@ -1,0 +1,20 @@
+To: Elm State University Dining <dining@elmstate.example>
+Order: O-2203
+About: 02-marlow-boiler-options
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: yes - order has a late penalty
+Reviewer notes: 1. **Numbers:** The order number O-2203, the quantity of 50 Cafe One machines, and the 1-day delay all appear in the facts. The delay matches days_late (13 − 12 = 1). 2. **No unsupported promises:** The draft gives no ship date, quantity, discount, or credit. It only says the order is expected to ship 1 day later than planned, which the facts support. The offer to "let you know if anything changes" is a communication commitment, not one of the promises the rule restricts. 3. **Supplier-facing restriction:** This rule doesn't apply, because the draft goes to a customer. 4. **Customer restrictions:** The draft names no supplier. "One of our suppliers" is the generic cause given in the facts and identifies no one. It names no other customer and mentions no cost. 5. **No acceptance or cancellation:** The draft doesn't accept an option, agree to a cost, or cancel anything. 6. **Tone:** It is plain and apologetic, with a clear apology and an invitation to reply with questions. That suits a customer.
+------------------------------------------------------------
+Subject: Update on Order O-2203
+
+Dear Elm State University Dining team,
+
+We're writing about your order O-2203 for 50 Cafe One machines. Because of a delay in a part from one of our suppliers, the order is now expected to ship 1 day later than planned.
+
+We apologize for the inconvenience. We know you're counting on these machines, and we'll let you know if anything changes with this timing.
+
+If you have questions about your order, please reply to this message and our team will be glad to help.
+
+Sincerely,
+Customer Service, Copperline Coffee Machines

@@ -1,7 +1,7 @@
-"""Agent coordinator for Brookfield Bicycle Company's supplier emails.
+"""Agent coordinator for a company's supplier emails (Brookfield Bicycle by default).
 
 Unlike pipeline.py (fixed order), here Claude decides which specialists to use. The agent
-gets the system prompt in week-05/brookfield-bikes/prompts/orchestrator.txt and four tools:
+gets the system prompt in week-05/<company folder>/prompts/orchestrator.txt and four tools:
 
   run_supply_analyst       runs the supply analyst on the email; returns its brief
   draft_supplier_reply     drafts the supplier reply from the analyst's brief (no input)
@@ -12,7 +12,8 @@ gets the system prompt in week-05/brookfield-bikes/prompts/orchestrator.txt and 
 The tools take no free text, so the orchestrator can't pass customer names to the supplier
 writer or anything else to the writers: the code hands each specialist only what it should
 see (see specialists.py). Every draft goes through the same review step as the pipeline
-(writer -> reviewer, up to 2 revisions, code name check, saved in week-05/drafts).
+(writer -> reviewer, up to 2 revisions, code name check, saved in week-05/drafts/<company
+folder>), and the final draft is printed with FINAL DRAFT TO ... / Marked for a person.
 
 The agent stops after 10 tool calls. Each choice it makes is printed, and at the end the
 same summary as pipeline.py. Nothing is sent.
@@ -20,6 +21,9 @@ same summary as pipeline.py. Nothing is sent.
 Run from the top of the repository:
     .venv\\Scripts\\python.exe week-05\\orchestrator.py --email week-05\\brookfield-bikes\\supplier-emails\\02-kendall-tire-options.eml
     .venv\\Scripts\\python.exe week-05\\orchestrator.py --email <file> --save week-05\\runs\\02-orchestrator.txt
+    .venv\\Scripts\\python.exe week-05\\orchestrator.py --org copperline-coffee --email week-05\\copperline-coffee\\supplier-emails\\02-marlow-boiler-options.eml
+
+--org FOLDER picks the company: its folder in week-05 (default brookfield-bikes).
 """
 
 from __future__ import annotations
@@ -58,16 +62,19 @@ TOOLS = [
         "description": "Draft a notice to the customer of ONE order at risk, given only that "
                        "order's facts. The draft is reviewed and saved for a person to check; it "
                        "is never sent. The order must be in the analyst's orders_at_risk. "
+                       "Drafting is not sending: draft a notice for each order at risk. Don't "
+                       "skip one because a person must decide whether to warn the customer; the "
+                       "person decides that when reviewing the draft. "
                        "Returns the review result and the draft.",
         "input_schema": {"type": "object",
                          "properties": {"order_id": {"type": "string",
-                                                     "description": "An order_id from the brief's orders_at_risk, such as O-1043."}},
+                                                     "description": "An order_id from the brief's orders_at_risk."}},
                          "required": ["order_id"], "additionalProperties": False},
         "strict": True,
     },
     {
         "name": "finish",
-        "description": "End the job. Give a short summary for Brookfield's purchasing manager and "
+        "description": "End the job. Give a short summary for {company}'s purchasing manager and "
                        "say whether a person needs to make a decision.",
         "input_schema": {"type": "object",
                          "properties": {
@@ -79,6 +86,11 @@ TOOLS = [
         "strict": True,
     },
 ]
+
+
+def tools() -> list[dict]:
+    """TOOLS with the company's name filled in (set by --org)."""
+    return [{**t, "description": t["description"].replace("{company}", s.COMPANY.split()[0])} for t in TOOLS]
 
 
 class Job:
@@ -147,10 +159,13 @@ def draft_report(result: dict) -> str:
 
 def run(email_path: Path) -> None:
     job = Job(email_path)
-    print(f"Brookfield orchestrator - {datetime.datetime.now():%Y-%m-%d %H:%M}")
+    print(f"{s.COMPANY} orchestrator - {datetime.datetime.now():%Y-%m-%d %H:%M}")
+    print(f"Org:    {s.ORG} (drafts in {s.DRAFTS_DIR.relative_to(s.HERE.parent)})")
+    print("Columns found:")
+    p.print_columns()
     print(f"Email:  {email_path.name}")
     print(f"Model:  {s.MODEL}")
-    print(f"Tools:  {', '.join(t['name'] for t in TOOLS)} (at most {MAX_TOOL_CALLS} calls)")
+    print(f"Tools:  {', '.join(t['name'] for t in tools())} (at most {MAX_TOOL_CALLS} calls)")
 
     handlers = {"run_supply_analyst": job.run_supply_analyst,
                 "draft_supplier_reply": job.draft_supplier_reply,
@@ -160,7 +175,7 @@ def run(email_path: Path) -> None:
     calls, stopped, end = 0, "", ""
     try:
         while True:
-            response = s.call_model("orchestrator", s.load_prompt("orchestrator"), messages, TOOLS)
+            response = s.call_model("orchestrator", s.load_prompt("orchestrator"), messages, tools())
             text = s.text_of(response)
             if text:
                 print(f"\n[orchestrator] {text}")
@@ -211,7 +226,8 @@ def run(email_path: Path) -> None:
 
 
 def main() -> None:
-    p.cli("Let Claude choose Brookfield's specialists for one supplier email. Sends nothing.", run)
+    p.cli("Let Claude choose a company's specialists for one supplier email. Sends nothing.",
+          run)
 
 
 if __name__ == "__main__":

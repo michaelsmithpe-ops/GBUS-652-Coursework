@@ -1,22 +1,29 @@
-"""MCP server with Brookfield Bicycle Company's supply data tools.
+"""MCP server with one company's supply data tools (Brookfield Bicycle by default).
 
 Start it (normally Claude Code or an agent starts it for you, over stdio), from the
 top of the repository:
     .venv\\Scripts\\python.exe week-05\\supply_mcp_server.py
+    .venv\\Scripts\\python.exe week-05\\supply_mcp_server.py --org copperline-coffee
 
-It reads the five CSV files in week-05/brookfield-bikes, fresh on every call, so
-edits show up without a restart:
+--org is the company's folder in week-05 (default brookfield-bikes). The server reads
+the five CSV files in that folder, fresh on every call, so edits show up without a
+restart:
     parts.csv              part_id, description, on_hand, supplier
-    bill-of-materials.csv  model, part_id, qty_per_bike
+    bill-of-materials.csv  product, part_id, parts per unit of product
     inbound.csv            po_number, part_id, supplier, qty, arrives_in_days
-    orders.csv             order_id, customer, contact_email, model, qty, ship_in_days, late_penalty
+    orders.csv             order_id, customer, contact_email, product, units, ship day, late_penalty
     suppliers.csv          supplier, contact_name, contact_email, part_id
 
+Companies name some columns differently (Brookfield: model, qty_per_bike, qty,
+ship_in_days; Copperline: product, per_unit, units, ship_by_day), so no names are
+assumed for those: detect_columns() works out from each header row and the values
+which columns hold the product, the parts per unit, the quantity and the ship day.
+
 Tools (all read-only; days are counted from today, which is day 0):
-  get_part(part_id)               stock on hand, scheduled shipments, and the models
+  get_part(part_id)               stock on hand, scheduled shipments, and the products
                                   that use the part
   get_orders_for_part(part_id)    open orders that need the part, in ship-day order,
-                                  with units needed (bikes x parts per bike)
+                                  with units needed (units ordered x parts per unit)
   check_coverage(part_id, arrivals)
                                   replaces the part's scheduled shipments with a new
                                   list of arrivals and fills orders complete, in
@@ -31,6 +38,7 @@ The functions can also be imported by other week-05 programs.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import sys
 from pathlib import Path
@@ -41,7 +49,31 @@ from mcp.types import ToolAnnotations
 from pydantic import BaseModel, Field
 
 HERE = Path(__file__).resolve().parent                  # .../GBUS-652-Coursework/week-05
-DATA_DIR = HERE / "brookfield-bikes"
+DEFAULT_ORG = "brookfield-bikes"
+DATA_DIR = HERE / DEFAULT_ORG
+
+# Company names by folder; any other folder gets a name made from the folder name.
+COMPANIES = {"brookfield-bikes": "Brookfield Bicycle Company",
+             "copperline-coffee": "Copperline Coffee Machines"}
+
+
+def list_orgs() -> list[str]:
+    """Company folders in week-05: every folder that has a parts.csv."""
+    return sorted(p.parent.name for p in HERE.glob("*/parts.csv"))
+
+
+def company_name(org: str | None = None) -> str:
+    org = org or DATA_DIR.name
+    return COMPANIES.get(org, org.replace("-", " ").title())
+
+
+def set_org(org: str) -> Path:
+    """Point every lookup at one company's folder in week-05."""
+    global DATA_DIR
+    if org not in list_orgs():
+        raise ValueError(f"Unknown --org {org!r}. Company folders: {', '.join(list_orgs())}.")
+    DATA_DIR = HERE / org
+    return DATA_DIR
 
 READ_ONLY = ToolAnnotations(readOnlyHint=True, openWorldHint=False)
 
@@ -59,6 +91,79 @@ def read_csv(name: str) -> list[dict]:
                     for row in csv.DictReader(f)]
     except OSError as exc:
         raise ToolError(f"Could not read {name}: {exc}") from exc
+
+
+def is_whole_number(value: str) -> bool:
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
+
+def numeric_columns(rows: list[dict], columns: list[str]) -> list[str]:
+    """Columns where every row holds a whole number."""
+    return [c for c in columns if all(is_whole_number(r[c]) for r in rows)]
+
+
+def one(found: list[str], meaning: str, name: str, header: list[str]) -> str:
+    if len(found) != 1:
+        raise ToolError(f"Could not tell which column of {name} holds {meaning} "
+                        f"(candidates: {', '.join(found) or 'none'}; header: {', '.join(header)}).")
+    return found[0]
+
+
+def detect_columns() -> dict[str, dict[str, str]]:
+    """Work out, from each file's header row and values, which columns hold the product,
+    the parts per unit, the quantity ordered and the ship day. No column names are assumed
+    except the ID columns both layouts share (part_id, order_id, customer, contact_email,
+    late_penalty).
+
+      bill-of-materials.csv  part = the part_id column; parts per unit = the other column
+                             that holds only whole numbers; product = the column left over.
+      orders.csv             product = the column whose values are all products from the
+                             bill of materials; of the two whole-number columns, ship day is
+                             the one whose header mentions a day, ship or date, and quantity
+                             is the other.
+    Returns {"bill-of-materials.csv": {"product": ..., "per_unit": ...},
+             "orders.csv": {"product": ..., "units": ..., "ship_day": ...}}.
+    """
+    bom = read_csv("bill-of-materials.csv")
+    if not bom:
+        raise ToolError("bill-of-materials.csv has no rows.")
+    header = list(bom[0])
+    rest = [c for c in header if c != "part_id"]
+    per_unit = one(numeric_columns(bom, rest), "the parts per unit", "bill-of-materials.csv", header)
+    product = one([c for c in rest if c != per_unit], "the product", "bill-of-materials.csv", header)
+    products = {r[product] for r in bom}
+
+    orders = read_csv("orders.csv")
+    if not orders:
+        raise ToolError("orders.csv has no rows.")
+    header = list(orders[0])
+    shared = {"order_id", "customer", "contact_email", "late_penalty"}
+    rest = [c for c in header if c not in shared]
+    o_product = one([c for c in rest if all(r[c] in products for r in orders)],
+                    "the product", "orders.csv", header)
+    numbers = numeric_columns(orders, [c for c in rest if c != o_product])
+    if len(numbers) != 2:
+        one(numbers, "the quantity and the ship day (two whole-number columns)", "orders.csv", header)
+    ship_day = one([c for c in numbers if any(w in c.lower() for w in ("day", "ship", "date"))],
+                   "the ship day", "orders.csv", header)
+    units = one([c for c in numbers if c != ship_day], "the quantity", "orders.csv", header)
+    return {"bill-of-materials.csv": {"product": product, "per_unit": per_unit},
+            "orders.csv": {"product": o_product, "units": units, "ship_day": ship_day}}
+
+
+def read_table(name: str) -> list[dict]:
+    """read_csv, plus standard names (product, per_unit, units, ship_day) added to every
+    row for the columns detect_columns() found, whatever this company calls them."""
+    rows = read_csv(name)
+    found = detect_columns().get(name, {})
+    for row in rows:
+        for meaning, column in found.items():
+            row[meaning] = row[column]
+    return rows
 
 
 def to_int(value: str, what: str) -> int:
@@ -83,10 +188,10 @@ def find_part(part_id: str) -> dict:
     raise ToolError(f"No part '{part_id}' in parts.csv. Known parts: {known}.")
 
 
-def models_using(part_id: str) -> dict[str, int]:
-    """{model: parts per bike} for every model whose bill of materials includes the part."""
-    return {row["model"]: to_int(row["qty_per_bike"], f"qty_per_bike for {row['model']}")
-            for row in read_csv("bill-of-materials.csv")
+def products_using(part_id: str) -> dict[str, int]:
+    """{product: parts per unit} for every product whose bill of materials includes the part."""
+    return {row["product"]: to_int(row["per_unit"], f"parts per unit for {row['product']}")
+            for row in read_table("bill-of-materials.csv")
             if row["part_id"].upper() == part_id}
 
 
@@ -100,21 +205,21 @@ def scheduled_shipments(part_id: str) -> list[dict]:
 
 
 def orders_needing(part_id: str) -> list[dict]:
-    """Open orders whose model uses the part, sorted by ship day (then order_id)."""
-    per_bike = models_using(part_id)
+    """Open orders whose product uses the part, sorted by ship day (then order_id)."""
+    per_unit = products_using(part_id)
     orders = []
-    for r in read_csv("orders.csv"):
-        if r["model"] not in per_bike:
+    for r in read_table("orders.csv"):
+        if r["product"] not in per_unit:
             continue
-        bikes = to_int(r["qty"], f"qty on {r['order_id']}")
+        ordered = to_int(r["units"], f"units on {r['order_id']}")
         orders.append({
             "order_id": r["order_id"],
             "customer": r["customer"],
-            "model": r["model"],
-            "bikes": bikes,
-            "parts_per_bike": per_bike[r["model"]],
-            "units_needed": bikes * per_bike[r["model"]],
-            "ship_day": to_int(r["ship_in_days"], f"ship_in_days on {r['order_id']}"),
+            "product": r["product"],
+            "units_ordered": ordered,
+            "parts_per_unit": per_unit[r["product"]],
+            "units_needed": ordered * per_unit[r["product"]],
+            "ship_day": to_int(r["ship_day"], f"ship day on {r['order_id']}"),
             "late_penalty": r["late_penalty"].lower() == "yes",
         })
     return sorted(orders, key=lambda o: (o["ship_day"], o["order_id"]))
@@ -125,12 +230,12 @@ def orders_needing(part_id: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def get_part(part_id: str) -> dict:
-    """Look up one part: its stock on hand, its scheduled shipments, and the models that use it.
+    """Look up one part: its stock on hand, its scheduled shipments, and the products that use it.
 
-    part_id is the part number, such as MC-500. Days are counted from today (day 0).
+    part_id is the part number from the email. Days are counted from today (day 0).
     Returns part_id, description, supplier, on_hand (units in stock today),
     scheduled_shipments (po_number, supplier, qty, arrives_in_days, earliest first),
-    total_scheduled, and used_in_models (model and parts_per_bike).
+    total_scheduled, and used_in_products (product and parts_per_unit).
     """
     row = find_part(part_id)
     pid = row["part_id"].upper()
@@ -142,16 +247,17 @@ def get_part(part_id: str) -> dict:
         "on_hand": to_int(row["on_hand"], f"on_hand for {pid}"),
         "scheduled_shipments": shipments,
         "total_scheduled": sum(s["qty"] for s in shipments),
-        "used_in_models": [{"model": m, "parts_per_bike": n} for m, n in models_using(pid).items()],
+        "used_in_products": [{"product": m, "parts_per_unit": n}
+                             for m, n in products_using(pid).items()],
     }
 
 
 def get_orders_for_part(part_id: str) -> dict:
     """List the open customer orders that need a part, earliest ship day first.
 
-    part_id is the part number, such as MC-500. Days are counted from today (day 0).
-    For each order: order_id, customer, model, bikes, parts_per_bike, units_needed
-    (bikes x parts per bike), ship_day, and late_penalty (true if the contract has a
+    part_id is the part number from the email. Days are counted from today (day 0).
+    For each order: order_id, customer, product, units_ordered, parts_per_unit,
+    units_needed (units ordered x parts per unit), ship_day, and late_penalty (true if the contract has a
     penalty for shipping late). Also returns total_units_needed.
     """
     pid = find_part(part_id)["part_id"].upper()
@@ -169,7 +275,7 @@ class Arrival(BaseModel):
 def check_coverage(part_id: str, arrivals: list[Arrival]) -> dict:
     """Check which open orders a new delivery schedule for a part can cover.
 
-    part_id is the part number, such as MC-500. arrivals is the NEW list of deliveries
+    part_id is the part number from the email. arrivals is the NEW list of deliveries
     (qty and arrives_in_days, counted from today = day 0). It REPLACES all of the part's
     scheduled shipments; stock on hand counts as available on day 0. To check the
     current schedule, pass the shipments from get_part.
@@ -178,7 +284,7 @@ def check_coverage(part_id: str, arrivals: list[Arrival]) -> dict:
     units are available, and every order after it waits for it, so a short order holds
     up the ones behind it.
 
-    For each order: order_id, customer, model, units_needed, ship_day, late_penalty,
+    For each order: order_id, customer, product, units_needed, ship_day, late_penalty,
     status ("covered" or "short"), and for a short order units_short (units missing on
     its ship day), ready_day (first day it can ship; null if these arrivals never cover
     it) and days_late. Also returns a summary with orders_at_risk.
@@ -213,7 +319,7 @@ def check_coverage(part_id: str, arrivals: list[Arrival]) -> dict:
     for o in orders_needing(pid):
         needed_so_far += o["units_needed"]          # this order plus every order ahead of it
         ready = first_day_with(needed_so_far)
-        entry = {k: o[k] for k in ("order_id", "customer", "model", "units_needed",
+        entry = {k: o[k] for k in ("order_id", "customer", "product", "units_needed",
                                    "ship_day", "late_penalty")}
         if ready is not None and ready <= o["ship_day"]:
             entry["status"] = "covered"
@@ -256,7 +362,7 @@ def check_coverage(part_id: str, arrivals: list[Arrival]) -> dict:
 def build_server() -> MCPServer:
     server = MCPServer(
         name="brookfield-supply",
-        instructions=("Brookfield Bicycle Company's planning data: parts, scheduled shipments "
+        instructions=(f"{company_name()}'s planning data: parts, scheduled shipments "
                       "and open customer orders. Days are counted from today (day 0). Use "
                       "check_coverage for any question about which orders a delivery schedule "
                       "covers; never work out coverage yourself."))
@@ -269,6 +375,12 @@ def build_server() -> MCPServer:
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser(description="Serve one company's supply data tools over stdio.")
+    ap.add_argument("--org", default=DEFAULT_ORG, help=f"company folder in week-05 (default {DEFAULT_ORG})")
+    try:
+        set_org(ap.parse_args().org)
+    except ValueError as exc:
+        sys.exit(str(exc))
     parts = read_csv("parts.csv")
     print(f"brookfield-supply: reading {DATA_DIR} ({len(parts)} parts)", file=sys.stderr)
     build_server().run("stdio")

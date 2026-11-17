@@ -1,0 +1,21 @@
+To: Tall Pines Coffee House <hello@tallpinescoffee.example>
+Order: O-2205
+About: 01-danforth-pump-delay
+Reviewer: APPROVE
+Revisions: 0
+Needs a person: yes - order has a late penalty
+Reviewer notes: 1. **Numbers:** Every figure is in the facts: order O-2205, 25 Cafe One machines, 2 days later, day 19 against day 17, and day 0 as today. Nothing is invented. 2. **No unsupported promises:** The draft says only that the order is "expected" to ship on day 19, which matches the facts. It offers no firm dates, quantities, discounts, or credits. Promising to update the customer if anything changes is a commitment to communicate, not a commitment on dates or money. 3. **Supplier rule:** Not applicable, since this goes to a customer. 4. **Customer rule:** The draft names no supplier, only "one of our suppliers", which is the same level of detail as the facts. It names no other customer and mentions no cost. 5. **No acceptance or cancellation:** The draft doesn't accept an option, agree to a cost, or cancel anything. 6. **Tone:** It is plain, brief, and apologetic, which suits a customer. The "day 19 rather than day 17, counting from today as day 0" wording is a little awkward, but it is accurate and doesn't break any rule.
+------------------------------------------------------------
+Subject: Update on Order O-2205
+
+Dear Tall Pines Coffee House,
+
+We're writing to let you know that your order O-2205, 25 Cafe One machines, is now expected to ship 2 days later than planned.
+
+The delay comes from a part we're waiting on from one of our suppliers. We apologize for the inconvenience this causes you.
+
+Based on what we know today, the order is expected to ship on day 19 rather than day 17, counting from today as day 0. If anything changes, we'll let you know promptly.
+
+Thank you for your patience.
+
+Customer Service, Copperline Coffee Machines
