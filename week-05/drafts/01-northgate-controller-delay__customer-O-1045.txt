@@ -4,15 +4,16 @@ About: 01-northgate-controller-delay
 Reviewer: APPROVE
 Revisions: 0
 Needs a person: no
+Reviewer notes: 1. **Numbers:** Order O-1045, 50 bicycles, 5 days late, planned day 21 and expected day 26 all appear in the facts. The 5-day figure also matches 26 − 21. 2. **No unsupported promises:** The draft gives only the expected ship day of 26, which is in the facts. It says "if anything changes" rather than committing to a new date. The promise to keep the customer updated is a general courtesy, not a date, quantity, discount, or credit. 3. **Supplier rule:** This rule applies only to supplier emails, so it doesn't apply here. 4. **Customer rule:** The draft names no supplier. "One of our suppliers" is generic and matches the facts' wording. It names no other customer and mentions no cost. 5. **No acceptances or cancellations:** The draft doesn't accept any option, agree to any cost, or cancel anything. 6. **Tone:** It is plain and apologetic ("We're sorry to let you know," "Thank you for your patience"), which suits a customer.
 ------------------------------------------------------------
-Subject: Delay to Your Order O-1045
+Subject: Delay Notice for Order O-1045
 
 Dear Lakeview Rentals,
 
 We're sorry to let you know that your order O-1045, for 50 Commuter E bicycles, is now expected to ship 5 days later than planned. The delay is due to a delay in a part from one of our suppliers.
 
-The order was originally scheduled to ship on day 21 and is now expected to ship on day 26, counting from today as day 0. This is our current expectation, and we'll tell you promptly if anything changes.
+The order was originally scheduled to ship on day 21 and is now expected to ship on day 26, counting from today. We'll keep you updated if anything changes.
 
-If you have questions about your order, please reply to this message and a member of our team will help.
+Thank you for your patience.
 
 Customer Service, Brookfield Bicycle Company

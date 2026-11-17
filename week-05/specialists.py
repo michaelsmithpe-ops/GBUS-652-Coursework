@@ -357,17 +357,36 @@ def write_customer_notice(order: dict, previous: str | None = None,
 
 
 def review(draft: str, facts, recipient: str) -> dict:
-    """One model call. Returns {"verdict": "APPROVE"|"REVISE", "reasons": str}."""
+    """One model call. Returns {"verdict": "APPROVE"|"REVISE", "reasons": str}.
+
+    recipient is "supplier" or "customer". The verdict is always exactly APPROVE or REVISE,
+    and reasons is never empty. Anything other than a clear APPROVE counts as REVISE.
+    """
+    if recipient not in ("supplier", "customer"):
+        raise ValueError(f"review(): recipient must be 'supplier' or 'customer', not {recipient!r}")
     handoff("coordinator", "reviewer", f"{recipient} draft + facts", {"draft": draft, "facts": facts})
     content = (f"Recipient: {recipient}\n\nFacts:\n{json.dumps(facts, indent=2)}\n\n"
                f"Draft:\n{draft}\n\nGive your reasons for either verdict. For APPROVE, say "
                "briefly why the draft passes each rule.")
     answer = text_of(call_model("reviewer", load_prompt("reviewer"),
                                 [{"role": "user", "content": content}]))
+
+    # The prompt asks for APPROVE or REVISE on the first line. Accept small format slips
+    # ("**APPROVE**", "Verdict: REVISE", "APPROVE."), but a missing or mixed verdict is REVISE.
     first, _, rest = answer.partition("\n")
-    verdict = "APPROVE" if first.strip().strip("*").upper().startswith("APPROVE") else "REVISE"
+    words = set(re.findall(r"[A-Z]+", first.upper()))
+    unclear = ("APPROVE" in words) == ("REVISE" in words)  # neither, or both
+    if unclear:
+        verdict, rest = "REVISE", answer  # keep the whole answer as the reasons
+    else:
+        verdict = "APPROVE" if "APPROVE" in words else "REVISE"
+    reasons = rest.strip() or (
+        "The reviewer gave no reasons." if verdict == "APPROVE"
+        else "The reviewer said REVISE but gave no reasons. Check the draft against every rule.")
+    if unclear:
+        reasons = "The reviewer's answer had no clear APPROVE/REVISE line. " + reasons
     # Reasons are kept for both verdicts (printed, and saved as "Reviewer notes").
-    result = {"verdict": verdict, "reasons": rest.strip()}
+    result = {"verdict": verdict, "reasons": reasons}
     handoff("reviewer", "coordinator", "verdict", result)
     return result
 

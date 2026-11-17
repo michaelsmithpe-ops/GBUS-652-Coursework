@@ -4,16 +4,16 @@ About: 01-northgate-controller-delay
 Reviewer: APPROVE
 Revisions: 0
 Needs a person: yes - order has a late penalty
+Reviewer notes: 1. **Numbers:** The draft uses only order O-1043, 100 bicycles, and 12 days later. All three match the facts, and the 12 days is the `days_late` figure. 2. **Promises:** It gives no new date, quantity, discount, or credit. It says only that the order will ship 12 days later than planned and that the customer will be told if anything changes. That is a commitment to communicate, not a commitment on delivery or compensation. 3. **Supplier rule:** This rule applies only to supplier-bound drafts, so it doesn't apply here. The draft goes to a customer. 4. **Customer rule:** The draft says "a delay in a part from one of our suppliers" and names no supplier. It names no other customer and mentions no cost. 5. **Options and costs:** It accepts no option, agrees to no cost, and cancels nothing. 6. **Tone:** It is plain and apologetic, without excuses or jargon.
 ------------------------------------------------------------
 Subject: Update on Order O-1043
 
 Dear City of Ashford Bike Share,
 
-We're writing about order O-1043, for 100 Commuter E bicycles. We're sorry to tell you that it is now expected to ship 12 days later than planned.
+We're writing about order O-1043, for 100 Commuter E bicycles. Because of a delay in a part from one of our suppliers, we now expect this order to ship 12 days later than planned.
 
-The delay comes from a delay in a part from one of our suppliers. The order was originally scheduled to ship on day 14 and is now expected to ship on day 26, counting from today.
+We apologize for the delay and the disruption it may cause your plans.
 
-We'll let you know if this timing changes. If you have questions about your order, please reply to this message and our team will help.
+If anything changes, we will let you know promptly. Please reach out to us with any questions about your order.
 
-Sincerely,
 Customer Service, Brookfield Bicycle Company

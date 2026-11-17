@@ -1,28 +1,28 @@
 To: Lisa Moreno <l.moreno@kendalltire.example> (Kendall Tire Supply)
 About: 02-kendall-tire-options
-Reviewer: APPROVE
-Revisions: 0
-Needs a person: no
-Reviewer notes: 1. **Numbers:** PO-7795, TR-29, 400, 160, 240, day 8, day 12, day 22 and "two business days" all appear in the facts. "Two weeks later" (day 22 minus day 8 = 14 days) and "four days after" (day 12 minus day 8) follow by simple arithmetic. 2. **Promises:** The draft promises no dates, quantities, discounts or credits. It only asks Kendall whether the schedule can improve. Saying Brookfield will confirm within the two business days Kendall requested matches the facts, since Brookfield must decide and Kendall set that deadline. 3. **Supplier draft:** It names no customer and describes no customer's order. "Tires we're counting on" is generic. 4. **Customer rule:** This rule doesn't apply, because the draft goes to a supplier. 5. **No acceptance:** The draft says "We aren't accepting either option yet." It agrees to no cost and cancels nothing. 6. **Tone:** It is firm and cooperative. It pushes for earlier shipments, states the impact of each option, and stays polite. Before sending, the reviewer may want to check two details the facts don't contain: "mixing machine repair" and "trail" tires. They may come from Kendall's original message, but they are not in the facts provided. They don't break any of the six rules, so they don't change the verdict.
+Reviewer: REVISE
+Revisions: 2
+Needs a person: yes - reviewer still says REVISE after 2 revision(s)
+Reviewer notes: **Rule 3 is broken.** "Delays orders by 3 days" describes how a customer's order would slip. The 3 days comes from that order's ship day (9) and ready day (12). The supplier doesn't need this, and "orders" is plural when the facts show only one order at risk. - Change: delete "and delays orders by 3 days". Option 2 can read "this leaves us 40 units short." The supplier gets the shortfall without any customer order detail. **Rule 2 is broken, mildly.** "Brookfield will confirm its choice within the two business days you asked for" commits Brookfield to a decision date. The facts say Brookfield must decide and that Kendall needs an answer within two business days. They don't say Brookfield has agreed to that timing. The reader could also take it as a promise that the choice will be Brookfield's, when Kendall will otherwise default to Option 2. - Change: use "We understand you need our answer within two business days and are working to get it to you by then." Alternatively, leave the timing to the person sending the email. **Not tied to a numbered rule, but fix it before sending.** The greeting says "Hi Lisa," but the facts name only Kendall as the supplier contact, and Lisa appears nowhere in them. - Change: confirm the recipient's name and use "Hi Kendall," if Kendall is the contact. **Passes:** - **Rule 1:** Every number is in the facts or follows from them. Two weeks is day 22 minus day 8, four days is day 12 minus day 8, and 160, 240, 400 and 40 all appear in the facts. - **Rule 4:** It is addressed to a supplier, so this rule doesn't apply. - **Rule 5:** The draft accepts no option, agrees to no cost and cancels nothing. It only asks questions. - **Rule 6:** The tone is firm and cooperative.
 ------------------------------------------------------------
 Subject: RE: PO-7795 - TR-29 tires - two options, please choose
 
 Hi Lisa,
 
-Thank you for letting us know about the mixing machine repair. This is what we understand for PO-7795 (400 TR-29 trail tires), which was due on day 8:
+Thanks for the quick heads-up on PO-7795. Here is how we understand the two options for the 400 TR-29 tires:
 
-- Option 1: 160 tires on day 8, and the remaining 240 two weeks later, on day 22.
-- Option 2: all 400 tires together on day 12, four days after the scheduled date.
+- Option 1: 160 tires on the scheduled date and the remaining 240 two weeks later. On our current schedule, this leaves us no units short and causes no delay.
+- Option 2: all 400 tires together, four days after the scheduled date. On our current schedule, this leaves us 40 units short and delays orders by 3 days.
 
-Either option delays tires we're counting on. Option 1 delays 240 tires by two weeks. Option 2 delays all 400 tires by four days.
+Please let us know if we have misread either option.
 
-Before we decide, can you help us reduce the delay?
+We'd like to reduce the impact however we can. Could you tell us:
 
-- Can you ship more than 160 tires on day 8?
-- Can the remaining tires under Option 1 ship sooner than day 22, even in smaller batches?
-- Under Option 2, can any tires ship before day 12, or can the full shipment arrive earlier?
+1. Under Option 1, can you ship more than 160 tires on the scheduled date?
+2. Under Option 2, can you send any portion of the order, even just 40 tires, ahead of the four-day-late shipment?
+3. Is there any other way to bring forward some or all of the 240 remaining tires?
 
-We aren't accepting either option yet. Brookfield will confirm its choice within the two business days you requested. Please send us any improvements to the schedule as soon as you can.
+Brookfield will confirm its choice within the two business days you asked for. Any answers on the questions above before then will help us decide.
 
-Thank you,
+Thanks,
 Purchasing, Brookfield Bicycle Company

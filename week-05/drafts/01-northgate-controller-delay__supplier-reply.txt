@@ -1,25 +1,27 @@
 To: Karen Walsh <k.walsh@northgatedrive.example> (Northgate Drive Systems)
 About: 01-northgate-controller-delay
 Reviewer: APPROVE
-Revisions: 1
+Revisions: 2
 Needs a person: no
+Reviewer notes: 1. **Numbers:** Every figure traces to the facts. PO-7781, MC-500, 400, 120, 280, day 5, day 26 and "three weeks" are all given. The 90 units short matches total_units_short. "Up to 12 days" is simple arithmetic: the worst case is ship day 14 against ready day 26, and the other two orders are 8 and 5 days late. The draft also flags day 26 as a conversion and asks the supplier to confirm it. 2. **Promises:** It commits to no dates, quantities, credits or discounts. The only forward commitment is that Brookfield "will respond separately," which has no date or outcome attached. The three requests are questions, not assumptions that the supplier will agree. 3. **No customer details:** It names no customer and describes no individual order. It gives only the aggregate shortfall and the maximum delay, and it declines to share customer details, which handles Karen's question appropriately. 4. **Customer rule:** Not applicable, since the recipient is a supplier. 5. **No acceptance:** It states that Brookfield is not agreeing to any option or cost and is still deciding. It accepts and cancels nothing. 6. **Tone:** It is firm and cooperative. It states the impact, asks for earlier shipment options, and keeps Brookfield's decision open. One optional wording point: the facts say the units "arrive" on day 5 and day 26, while the draft says "ship." This isn't a rule violation, but the sender may want to check which word matches the supplier's schedule.
 ------------------------------------------------------------
 Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule
 
 Hello Karen,
 
-Thank you for letting us know. To confirm our understanding, PO-7781 for 400 MC-500 controllers is now split. 120 units ship on day 5 as scheduled, and the remaining 280 ship three weeks later, on day 26, instead of all 400 arriving on day 5.
+Thank you for letting us know. This is how we understand the revised schedule for PO-7781 (400 MC-500 controllers):
 
-This leaves us 90 units short across three orders. Those orders will be delayed by 12, 8, and 5 days, because they can't ship until the remaining units arrive on day 26.
+- 120 units ship on the original date, day 5.
+- The remaining 280 units follow three weeks later, which we calculate as day 26. Please confirm that date.
 
-We can't share information about our customers. The unit shortfall and delays above show the impact on our side.
+**Impact on our side:** We will be 90 units short against our commitments, with delays of up to 12 days. We can't share details about our customers, but this shows the scale of the impact.
 
-To reduce that impact, please let us know:
-1. Whether you can ship more than 120 units on day 5.
-2. Whether any part of the 280 remaining units can ship before day 26, and the earliest date and quantity for each partial shipment.
-3. Whether an earlier second delivery is possible.
+**What would help:** We'd like to reduce this shortfall wherever possible. Please let us know:
+1. Whether any of the 280 units can ship before day 26, even in partial lots.
+2. Whether you can increase the 120 units shipping on day 5.
+3. Whether there is any expedited shipping or other way to bring the remaining units in sooner.
 
-We've noted your offer to discuss other options. We'll review the options and be in touch. We'd appreciate your answers to the questions above as soon as possible, so we can take them into account.
+We are not agreeing to any option or cost at this stage. Brookfield is still deciding how to proceed and will respond separately. In the meantime, please send any earlier-shipment possibilities as soon as you have them.
 
 Regards,
 Purchasing, Brookfield Bicycle Company

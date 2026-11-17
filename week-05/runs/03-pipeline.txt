@@ -1,0 +1,240 @@
+Brookfield pipeline - 2026-11-17 09:11
+Email:  03-keystone-on-schedule.eml
+Model:  claude-sonnet-5-5
+Order:  1. supply analyst  2. customer notices  3. supplier reply
+
+======================================================================
+Step 1 of 3: supply analyst
+======================================================================
+
+>>> HANDOFF  pipeline -> analyst: supplier email
+    | From: Brian Foley <b.foley@keystonebattery.example>
+    | To: Purchasing <purchasing@brookfieldbikes.example>
+    | Subject: PO-7790 - BP-48 battery packs - shipped on schedule
+    | 
+    | Hello,
+    | 
+    | Good news: PO-7790 for 150 BP-48 battery packs left our warehouse today and is
+    | on track to arrive on the scheduled date. No action is needed on your side.
+    | 
+    | Best regards,
+    | Brian Foley
+    | Order Desk, Keystone Battery Co.
+    analyst tools: get_part, get_orders_for_part, check_coverage
+    [tokens] analyst: 1,981 in, 106 out (running total 1,981 in, 106 out)
+
+>>> HANDOFF  analyst -> MCP tool get_part: tool call 1
+    | {
+    |   "part_id": "BP-48"
+    | }
+
+>>> HANDOFF  MCP tool get_part -> analyst: tool result
+    | {
+    |   "part_id": "BP-48",
+    |   "description": "48-volt battery pack",
+    |   "supplier": "Keystone Battery Co.",
+    |   "on_hand": 35,
+    |   "scheduled_shipments": [
+    |     {
+    |       "po_number": "PO-7790",
+    |       "supplier": "Keystone Battery Co.",
+    |       "qty": 150,
+    |       "arrives_in_days": 6
+    |     }
+    |   ],
+    |   "total_scheduled": 150,
+    |   "used_in_models": [
+    |     {
+    |       "model": "Cargo E",
+    |       "parts_per_bike": 1
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  analyst -> MCP tool get_orders_for_part: tool call 2
+    | {
+    |   "part_id": "BP-48"
+    | }
+
+>>> HANDOFF  MCP tool get_orders_for_part -> analyst: tool result
+    | {
+    |   "part_id": "BP-48",
+    |   "orders": [
+    |     {
+    |       "order_id": "O-1042",
+    |       "customer": "Blue Ridge Bike Shop",
+    |       "model": "Cargo E",
+    |       "bikes": 30,
+    |       "parts_per_bike": 1,
+    |       "units_needed": 30,
+    |       "ship_day": 10,
+    |       "late_penalty": true
+    |     },
+    |     {
+    |       "order_id": "O-1044",
+    |       "customer": "Main Street Bikes",
+    |       "model": "Cargo E",
+    |       "bikes": 30,
+    |       "parts_per_bike": 1,
+    |       "units_needed": 30,
+    |       "ship_day": 18,
+    |       "late_penalty": false
+    |     },
+    |     {
+    |       "order_id": "O-1048",
+    |       "customer": "Bayside Cycle Co.",
+    |       "model": "Cargo E",
+    |       "bikes": 20,
+    |       "parts_per_bike": 1,
+    |       "units_needed": 20,
+    |       "ship_day": 28,
+    |       "late_penalty": false
+    |     }
+    |   ],
+    |   "total_units_needed": 80
+    | }
+    [tokens] analyst: 2,701 in, 192 out (running total 4,682 in, 298 out)
+
+>>> HANDOFF  analyst -> MCP tool check_coverage: tool call 3
+    | {
+    |   "part_id": "BP-48",
+    |   "arrivals": [
+    |     {
+    |       "qty": 150,
+    |       "arrives_in_days": 6
+    |     }
+    |   ]
+    | }
+
+>>> HANDOFF  MCP tool check_coverage -> analyst: tool result
+    | {
+    |   "part_id": "BP-48",
+    |   "on_hand": 35,
+    |   "arrivals_used": [
+    |     {
+    |       "qty": 150,
+    |       "arrives_in_days": 6
+    |     }
+    |   ],
+    |   "orders": [
+    |     {
+    |       "order_id": "O-1042",
+    |       "customer": "Blue Ridge Bike Shop",
+    |       "model": "Cargo E",
+    |       "units_needed": 30,
+    |       "ship_day": 10,
+    |       "late_penalty": true,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-1044",
+    |       "customer": "Main Street Bikes",
+    |       "model": "Cargo E",
+    |       "units_needed": 30,
+    |       "ship_day": 18,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     },
+    |     {
+    |       "order_id": "O-1048",
+    |       "customer": "Bayside Cycle Co.",
+    |       "model": "Cargo E",
+    |       "units_needed": 20,
+    |       "ship_day": 28,
+    |       "late_penalty": false,
+    |       "status": "covered"
+    |     }
+    |   ],
+    |   "summary": {
+    |     "orders_checked": 3,
+    |     "orders_covered": 3,
+    |     "orders_at_risk": [],
+    |     "orders_at_risk_with_late_penalty": [],
+    |     "total_units_needed": 80,
+    |     "total_supply": 185,
+    |     "units_left_over": 105
+    |   }
+    | }
+    [tokens] analyst: 3,359 in, 189 out (running total 8,041 in, 487 out)
+    analyst finished after 3 tool call(s)
+
+>>> HANDOFF  analyst -> pipeline: brief
+    | {
+    |   "part_id": "BP-48",
+    |   "what_changed": "Nothing has changed: PO-7790 (150 BP-48 battery packs) has shipped and is still due to arrive on day 6, as already scheduled.",
+    |   "orders_at_risk": [],
+    |   "options": [],
+    |   "decisions_for_a_person": [],
+    |   "supplier_questions": []
+    | }
+
+======================================================================
+Step 2 of 3: customer notices
+======================================================================
+No orders at risk; skipping customer notices.
+
+======================================================================
+Step 3 of 3: supplier reply
+======================================================================
+
+>>> HANDOFF  coordinator -> supplier writer: email + redacted brief
+    | {
+    |   "brief": {
+    |     "part_id": "BP-48",
+    |     "what_changed": "Nothing has changed: PO-7790 (150 BP-48 battery packs) has shipped and is still due to arrive on day 6, as already scheduled.",
+    |     "orders_at_risk": [],
+    |     "total_units_short": 0,
+    |     "options": [],
+    |     "brookfield_must_decide": false,
+    |     "supplier_questions": []
+    |   },
+    |   "reviewer_notes": null
+    | }
+    [tokens] supplier writer: 620 in, 13 out (running total 620 in, 13 out)
+
+>>> HANDOFF  supplier writer -> coordinator: draft
+    | NO REPLY NEEDED
+
+>>> HANDOFF  coordinator -> reviewer: supplier draft + facts
+    | {
+    |   "draft": "NO REPLY NEEDED",
+    |   "facts": {
+    |     "part_id": "BP-48",
+    |     "what_changed": "Nothing has changed: PO-7790 (150 BP-48 battery packs) has shipped and is still due to arrive on day 6, as already scheduled.",
+    |     "orders_at_risk": [],
+    |     "total_units_short": 0,
+    |     "options": [],
+    |     "brookfield_must_decide": false,
+    |     "supplier_questions": []
+    |   }
+    | }
+    [tokens] reviewer: 520 in, 683 out (running total 520 in, 683 out)
+
+>>> HANDOFF  reviewer -> coordinator: verdict
+    | {
+    |   "verdict": "APPROVE",
+    |   "reasons": "The draft is not an email. It is a marker that nothing needs to be sent, and the facts support that: nothing has changed, PO-7790 is still due on day 6, no orders are at risk, no units are short, there are no options, no decision is needed, and the supplier has no open questions.\n\n1. **Numbers:** The draft contains no numbers or order numbers, so nothing can be wrong.\n2. **Promises:** It makes no promises about dates, quantities, discounts, or credits.\n3. **Supplier confidentiality:** It names no customer and describes no customer's order.\n4. **Customer rule:** This rule applies only to customer emails. The draft also names no supplier, other customer, or cost, so it would pass anyway.\n5. **Commitments:** It accepts no option, agrees to no cost, and cancels nothing.\n6. **Tone:** Nothing in it is discourteous. If the text were ever sent literally to the supplier, it would read as curt, so it should be treated only as a \"do not send\" signal."
+    | }
+    name check (supplier draft): passed, no customer named
+    saved week-05\drafts\03-keystone-on-schedule__supplier-reply.txt
+
+======================================================================
+Summary
+======================================================================
+Drafts saved (1):
+  - supplier reply: week-05\drafts\03-keystone-on-schedule__supplier-reply.txt (reviewer APPROVE, 0 revision(s))
+
+Drafts marked for a person (0):
+  (none)
+
+Decisions for a person (0):
+  (none)
+
+Tokens by specialist
+  specialist         calls     input    output     total
+  analyst                3     8,041       487     8,528
+  supplier writer        1       620        13       633
+  reviewer               1       520       683     1,203
+  all                          9,181     1,183    10,364
+
+Saved this output to C:\Users\mikes\OneDrive\Desktop\GBUS-652-Course\GBUS-652-Coursework\week-05\runs\03-pipeline.txt

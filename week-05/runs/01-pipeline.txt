@@ -1,4 +1,4 @@
-Brookfield pipeline - 2026-11-16 17:48
+Brookfield pipeline - 2026-11-17 09:06
 Email:  01-northgate-controller-delay.eml
 Model:  claude-sonnet-5-5
 Order:  1. supply analyst  2. customer notices  3. supplier reply
@@ -265,13 +265,13 @@ Step 1 of 3: supply analyst
     |     "units_left_over": 100
     |   }
     | }
-    [tokens] analyst: 4,362 in, 732 out (running total 9,696 in, 969 out)
+    [tokens] analyst: 4,362 in, 692 out (running total 9,696 in, 929 out)
     analyst finished after 3 tool call(s)
 
 >>> HANDOFF  analyst -> pipeline: brief
     | {
     |   "part_id": "MC-500",
-    |   "what_changed": "PO-7781 is now split: 120 of the 400 controllers arrive on day 5 as scheduled, and the other 280 arrive three weeks later on day 26, instead of all 400 arriving on day 5.",
+    |   "what_changed": "PO-7781 now brings 120 of the 400 controllers on day 5 as scheduled. The other 280 arrive about three weeks later, on day 26 (my conversion of 'three weeks later').",
     |   "orders_at_risk": [
     |     {
     |       "order_id": "O-1043",
@@ -300,12 +300,12 @@ Step 1 of 3: supply analyst
     |   ],
     |   "options": [],
     |   "decisions_for_a_person": [
-    |     "Decide whether to accept the split shipment (120 on day 5, 280 on day 26) or take up Karen Walsh's offer to discuss other options this week, for example an earlier second delivery or a partial earlier delivery.",
-    |     "O-1043 (City of Ashford Bike Share) has a late penalty. It is 10 units short on day 14 and can't ship until day 26, which is 12 days late. Decide how to handle it, for example by asking the supplier to pull forward at least 10 units, or by contacting the customer.",
-    |     "Decide whether to warn Main Street Bikes (O-1044, 8 days late) and Lakeview Rentals (O-1045, 5 days late). Neither order has a late penalty."
+    |     "O-1043 (City of Ashford Bike Share) has a late-delivery penalty. It is 10 units short and would ship 12 days late on day 26. Brookfield must decide whether to take the delay, ask Northgate to speed up or add to the first shipment, or find another source for at least 10 controllers.",
+    |     "O-1044 (Main Street Bikes) and O-1045 (Lakeview Rentals) would ship 8 and 5 days late. Neither has a penalty. Brookfield must decide whether to warn these customers.",
+    |     "Karen Walsh offered to discuss other options this week. Brookfield must decide whether to take her up on it."
     |   ],
     |   "supplier_questions": [
-    |     "Karen Walsh asks which Brookfield customers are most affected, so Northgate can understand the impact. The most affected is City of Ashford Bike Share (O-1043), which has a late penalty. Main Street Bikes (O-1044) and Lakeview Rentals (O-1045) are also late."
+    |     "Karen Walsh asked which Brookfield customers are most affected. The orders at risk are City of Ashford Bike Share (O-1043, has a late penalty), Main Street Bikes (O-1044) and Lakeview Rentals (O-1045)."
     |   ]
     | }
 
@@ -330,25 +330,22 @@ Step 2 of 3: customer notices
     |   },
     |   "reviewer_notes": null
     | }
-    [tokens] customer writer: 389 in, 202 out (running total 389 in, 202 out)
+    [tokens] customer writer: 389 in, 428 out (running total 389 in, 428 out)
 
 >>> HANDOFF  customer writer -> coordinator: draft
-    | Subject: Update on Order O-1043
+    | Subject: Possible delay to order O-1043
     | 
     | Dear City of Ashford Bike Share,
     | 
-    | We're writing about order O-1043, for 100 Commuter E bicycles. We're sorry to tell you that it is now expected to ship 12 days later than planned.
+    | We're sorry, but your order O-1043 for 100 Commuter E bikes is now expected to ship 12 days later than planned. It was scheduled to ship on day 14 and is now expected to ship on day 26, counting from today.
     | 
-    | The delay comes from a delay in a part from one of our suppliers. The order was originally scheduled to ship on day 14 and is now expected to ship on day 26, counting from today.
+    | The delay is due to a delay in a part from one of our suppliers. This date is our current expectation, not a guarantee.
     | 
-    | We'll let you know if this timing changes. If you have questions about your order, please reply to this message and our team will help.
-    | 
-    | Sincerely,
     | Customer Service, Brookfield Bicycle Company
 
 >>> HANDOFF  coordinator -> reviewer: customer draft + facts
     | {
-    |   "draft": "Subject: Update on Order O-1043\n\nDear City of Ashford Bike Share,\n\nWe're writing about order O-1043, for 100 Commuter E bicycles. We're sorry to tell you that it is now expected to ship 12 days later than planned.\n\nThe delay comes from a delay in a part from one of our suppliers. The order was originally scheduled to ship on day 14 and is now expected to ship on day 26, counting from today.\n\nWe'll let you know if this timing changes. If you have questions about your order, please reply to this message and our team will help.\n\nSincerely,\nCustomer Service, Brookfield Bicycle Company",
+    |   "draft": "Subject: Possible delay to order O-1043\n\nDear City of Ashford Bike Share,\n\nWe're sorry, but your order O-1043 for 100 Commuter E bikes is now expected to ship 12 days later than planned. It was scheduled to ship on day 14 and is now expected to ship on day 26, counting from today.\n\nThe delay is due to a delay in a part from one of our suppliers. This date is our current expectation, not a guarantee.\n\nCustomer Service, Brookfield Bicycle Company",
     |   "facts": {
     |     "order_id": "O-1043",
     |     "customer": "City of Ashford Bike Share",
@@ -361,12 +358,12 @@ Step 2 of 3: customer notices
     |     "note": "Days are counted from today (day 0). expected_ship_day null means not yet known."
     |   }
     | }
-    [tokens] reviewer: 688 in, 500 out (running total 688 in, 500 out)
+    [tokens] reviewer: 685 in, 362 out (running total 685 in, 362 out)
 
 >>> HANDOFF  reviewer -> coordinator: verdict
     | {
     |   "verdict": "APPROVE",
-    |   "reasons": ""
+    |   "reasons": "Rule 1: Every figure comes from the facts. Order O-1043, 100 Commuter E bikes, planned ship day 14, expected ship day 26, and 12 days late (26 − 14 = 12) all match.\n\nRule 2: The draft promises no dates, quantities, discounts, or credits. It gives the current expected ship day and says plainly that it is an expectation, not a guarantee.\n\nRule 3: Not applicable, since the draft goes to a customer.\n\nRule 4: The draft names no supplier and no other customer. \"One of our suppliers\" is a generic reference, not a name. It mentions no cost.\n\nRule 5: The draft doesn't accept any option, agree to any cost, or cancel anything.\n\nRule 6: The tone is plain and apologetic, which suits a customer. It opens with an apology and explains the cause without blame or jargon.\n\nOptional, non-blocking note: the subject line says \"Possible delay,\" while the body states the delay as expected. A reviewer might change it to \"Delay to order O-1043\" for consistency, but this doesn't break any rule."
     | }
     name check (customer draft O-1043): passed, no supplier named
     saved week-05\drafts\01-northgate-controller-delay__customer-O-1043.txt  ** NEEDS A PERSON **
@@ -388,25 +385,24 @@ Step 2 of 3: customer notices
     |   },
     |   "reviewer_notes": null
     | }
-    [tokens] customer writer: 386 in, 195 out (running total 775 in, 397 out)
+    [tokens] customer writer: 386 in, 187 out (running total 775 in, 615 out)
 
 >>> HANDOFF  customer writer -> coordinator: draft
     | Subject: Update on Order O-1044
     | 
     | Dear Main Street Bikes,
     | 
-    | We're writing to let you know that your order O-1044, for 30 Cargo E bikes, is now expected to ship 8 days later than planned. The original ship date was day 18, and the new expected ship date is day 26, counting from today.
+    | We're sorry to let you know that your order O-1044, 30 Cargo E bikes, is now expected to ship 8 days later than planned. The cause is a delay in a part from one of our suppliers.
     | 
-    | The delay is due to a delay in a part from one of our suppliers. We apologize for the inconvenience this causes you.
+    | The order was originally scheduled to ship on day 18 and is now expected to ship on day 26, counting from today as day 0.
     | 
-    | If you have questions about your order, please reply to this message and a member of our team will be glad to help.
+    | We will keep you informed if anything changes. If you have questions about this order, please reply to this message and our team will help.
     | 
-    | Sincerely,
     | Customer Service, Brookfield Bicycle Company
 
 >>> HANDOFF  coordinator -> reviewer: customer draft + facts
     | {
-    |   "draft": "Subject: Update on Order O-1044\n\nDear Main Street Bikes,\n\nWe're writing to let you know that your order O-1044, for 30 Cargo E bikes, is now expected to ship 8 days later than planned. The original ship date was day 18, and the new expected ship date is day 26, counting from today.\n\nThe delay is due to a delay in a part from one of our suppliers. We apologize for the inconvenience this causes you.\n\nIf you have questions about your order, please reply to this message and a member of our team will be glad to help.\n\nSincerely,\nCustomer Service, Brookfield Bicycle Company",
+    |   "draft": "Subject: Update on Order O-1044\n\nDear Main Street Bikes,\n\nWe're sorry to let you know that your order O-1044, 30 Cargo E bikes, is now expected to ship 8 days later than planned. The cause is a delay in a part from one of our suppliers.\n\nThe order was originally scheduled to ship on day 18 and is now expected to ship on day 26, counting from today as day 0.\n\nWe will keep you informed if anything changes. If you have questions about this order, please reply to this message and our team will help.\n\nCustomer Service, Brookfield Bicycle Company",
     |   "facts": {
     |     "order_id": "O-1044",
     |     "customer": "Main Street Bikes",
@@ -419,12 +415,12 @@ Step 2 of 3: customer notices
     |     "note": "Days are counted from today (day 0). expected_ship_day null means not yet known."
     |   }
     | }
-    [tokens] reviewer: 678 in, 407 out (running total 1,366 in, 907 out)
+    [tokens] reviewer: 704 in, 597 out (running total 1,389 in, 959 out)
 
 >>> HANDOFF  reviewer -> coordinator: verdict
     | {
     |   "verdict": "APPROVE",
-    |   "reasons": ""
+    |   "reasons": "1. **Numbers:** Every figure appears in the facts: order O-1044, 30 Cargo E bikes, planned ship day 18, expected ship day 26, and day 0 as today. The \"8 days later\" matches `days_late` and also equals 26 − 18.\n2. **No unsupported promises:** The draft gives only the expected ship day from the facts and words it as an expectation, not a guarantee. \"We will keep you informed if anything changes\" promises communication, not a date, quantity, discount, or credit.\n3. **Supplier rule:** Not applicable, since this goes to a customer.\n4. **Customer rule:** The draft names no specific supplier. \"One of our suppliers\" repeats the facts' own generic wording. It names no other customer and mentions no cost.\n5. **No acceptance or cancellation:** The draft doesn't accept an option, agree to a cost, or cancel anything.\n6. **Tone:** It is plain and apologetic (\"We're sorry to let you know\"), states the delay and cause directly, and offers a way to ask questions."
     | }
     name check (customer draft O-1044): passed, no supplier named
     saved week-05\drafts\01-northgate-controller-delay__customer-O-1044.txt
@@ -446,24 +442,24 @@ Step 2 of 3: customer notices
     |   },
     |   "reviewer_notes": null
     | }
-    [tokens] customer writer: 387 in, 209 out (running total 1,162 in, 606 out)
+    [tokens] customer writer: 387 in, 190 out (running total 1,162 in, 805 out)
 
 >>> HANDOFF  customer writer -> coordinator: draft
-    | Subject: Delay to Your Order O-1045
+    | Subject: Delay Notice for Order O-1045
     | 
     | Dear Lakeview Rentals,
     | 
-    | We're sorry to let you know that your order O-1045, for 50 Commuter E bicycles, is now expected to ship 5 days later than planned. The delay is due to a delay in a part from one of our suppliers.
+    | We're sorry to tell you that your order O-1045, 50 Commuter E bicycles, is now expected to ship 5 days later than planned. The delay comes from a late part from one of our suppliers.
     | 
-    | The order was originally scheduled to ship on day 21 and is now expected to ship on day 26, counting from today as day 0. This is our current expectation, and we'll tell you promptly if anything changes.
+    | The order was originally planned to ship on day 21 and is now expected to ship on day 26, counting from today. If that expected date changes, we'll let you know.
     | 
-    | If you have questions about your order, please reply to this message and a member of our team will help.
+    | Thank you for your patience, and we apologize again for the inconvenience.
     | 
     | Customer Service, Brookfield Bicycle Company
 
 >>> HANDOFF  coordinator -> reviewer: customer draft + facts
     | {
-    |   "draft": "Subject: Delay to Your Order O-1045\n\nDear Lakeview Rentals,\n\nWe're sorry to let you know that your order O-1045, for 50 Commuter E bicycles, is now expected to ship 5 days later than planned. The delay is due to a delay in a part from one of our suppliers.\n\nThe order was originally scheduled to ship on day 21 and is now expected to ship on day 26, counting from today as day 0. This is our current expectation, and we'll tell you promptly if anything changes.\n\nIf you have questions about your order, please reply to this message and a member of our team will help.\n\nCustomer Service, Brookfield Bicycle Company",
+    |   "draft": "Subject: Delay Notice for Order O-1045\n\nDear Lakeview Rentals,\n\nWe're sorry to tell you that your order O-1045, 50 Commuter E bicycles, is now expected to ship 5 days later than planned. The delay comes from a late part from one of our suppliers.\n\nThe order was originally planned to ship on day 21 and is now expected to ship on day 26, counting from today. If that expected date changes, we'll let you know.\n\nThank you for your patience, and we apologize again for the inconvenience.\n\nCustomer Service, Brookfield Bicycle Company",
     |   "facts": {
     |     "order_id": "O-1045",
     |     "customer": "Lakeview Rentals",
@@ -476,12 +472,12 @@ Step 2 of 3: customer notices
     |     "note": "Days are counted from today (day 0). expected_ship_day null means not yet known."
     |   }
     | }
-    [tokens] reviewer: 693 in, 379 out (running total 2,059 in, 1,286 out)
+    [tokens] reviewer: 708 in, 284 out (running total 2,097 in, 1,243 out)
 
 >>> HANDOFF  reviewer -> coordinator: verdict
     | {
     |   "verdict": "APPROVE",
-    |   "reasons": ""
+    |   "reasons": "Rule 1: Every number comes from the facts: order O-1045, 50 bicycles, Commuter E, planned day 21, expected day 26, and 5 days late (26 − 21 = 5).\n\nRule 2: The draft makes no promises beyond the facts. It gives day 26 as an expected date, not a guarantee, and says only that the customer will be told if it changes. It offers no discounts, credits, or new quantities.\n\nRule 3: This rule applies only to supplier emails, so it doesn't apply here.\n\nRule 4: The draft names no supplier. It refers only to \"one of our suppliers\" generically, and it names no other customer. It mentions no costs.\n\nRule 5: The draft accepts no option, agrees to no cost, and cancels nothing.\n\nRule 6: The tone is plain and apologetic, which suits a customer."
     | }
     name check (customer draft O-1045): passed, no supplier named
     saved week-05\drafts\01-northgate-controller-delay__customer-O-1045.txt
@@ -494,7 +490,7 @@ Step 3 of 3: supplier reply
     | {
     |   "brief": {
     |     "part_id": "MC-500",
-    |     "what_changed": "PO-7781 is now split: 120 of the 400 controllers arrive on day 5 as scheduled, and the other 280 arrive three weeks later on day 26, instead of all 400 arriving on day 5.",
+    |     "what_changed": "PO-7781 now brings 120 of the 400 controllers on day 5 as scheduled. The other 280 arrive about three weeks later, on day 26 (my conversion of 'three weeks later').",
     |     "orders_at_risk": [
     |       {
     |         "units_short": 10,
@@ -514,148 +510,44 @@ Step 3 of 3: supplier reply
     |     ],
     |     "total_units_short": 90,
     |     "options": [],
-    |     "decisions_for_a_person": [
-    |       "Decide whether to accept the split shipment (120 on day 5, 280 on day 26) or take up Karen Walsh's offer to discuss other options this week, for example an earlier second delivery or a partial earlier delivery.",
-    |       "a customer order (a customer order) has a late penalty. It is 10 units short on day 14 and can't ship until day 26, which is 12 days late. Decide how to handle it, for example by asking the supplier to pull forward at least 10 units, or by contacting the customer.",
-    |       "Decide whether to warn a customer order (a customer order, 8 days late) and a customer order (a customer order, 5 days late). Neither order has a late penalty."
-    |     ],
+    |     "brookfield_must_decide": true,
     |     "supplier_questions": [
-    |       "Karen Walsh asks which Brookfield customers are most affected, so Northgate can understand the impact. The most affected is a customer order (a customer order), which has a late penalty. a customer order (a customer order) and a customer order (a customer order) are also late."
+    |       "Karen Walsh asked which Brookfield customers are most affected. The orders at risk are a customer order (a customer order, has a late penalty), a customer order (a customer order) and a customer order (a customer order)."
     |     ]
     |   },
     |   "reviewer_notes": null
     | }
-    [tokens] supplier writer: 1,169 in, 1,090 out (running total 1,169 in, 1,090 out)
+    [tokens] supplier writer: 927 in, 1,148 out (running total 927 in, 1,148 out)
 
 >>> HANDOFF  supplier writer -> coordinator: draft
     | Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule
     | 
     | Hello Karen,
     | 
-    | Thank you for letting us know. To confirm our understanding, PO-7781 for 400 MC-500 controllers is now split. 120 units ship on day 5 as scheduled, and the remaining 280 ship three weeks later, on day 26, instead of all 400 arriving on day 5.
+    | Thank you for letting us know. Here is our understanding of the change to PO-7781 (400 MC-500 controllers):
     | 
-    | This leaves us 90 units short across three orders. Those orders will be delayed by 12, 8, and 5 days, because they can't ship until the remaining units arrive on day 26.
+    | - 120 controllers ship on the scheduled date (day 5), as planned.
+    | - The remaining 280 follow about three weeks later. We count that as day 26. Please confirm the exact date.
     | 
-    | We can't share information about our customers. The unit shortfall and delays above show the impact on our side.
+    | This will leave us 90 units short, and affected orders will be delayed between 5 and 12 days. We can't share information about our customers, but this is the impact on our side.
     | 
-    | To reduce that impact, please let us know:
-    | 1. Whether you can ship more than 120 units on day 5.
-    | 2. Whether any part of the 280 remaining units can ship before day 26, and the earliest date and quantity for each partial shipment.
-    | 3. Whether the chip shortage will allow an earlier second delivery.
+    | To reduce it, we ask that you look at the following:
     | 
-    | We'll confirm Brookfield's position by the end of this week, as you asked. We'd appreciate your answers to the questions above before then, so we can take them into account.
+    | 1. Can you ship more than 120 controllers on day 5?
+    | 2. Can any of the 280 ship before day 26, even in smaller partial shipments? Any units that arrive by days 14, 18, and 21 would help the most.
+    | 3. What is the earliest date you can commit to for each portion of the 280?
     | 
-    | Regards,
-    | Purchasing, Brookfield Bicycle Company
-
->>> HANDOFF  coordinator -> reviewer: supplier draft + facts
-    | {
-    |   "draft": "Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule\n\nHello Karen,\n\nThank you for letting us know. To confirm our understanding, PO-7781 for 400 MC-500 controllers is now split. 120 units ship on day 5 as scheduled, and the remaining 280 ship three weeks later, on day 26, instead of all 400 arriving on day 5.\n\nThis leaves us 90 units short across three orders. Those orders will be delayed by 12, 8, and 5 days, because they can't ship until the remaining units arrive on day 26.\n\nWe can't share information about our customers. The unit shortfall and delays above show the impact on our side.\n\nTo reduce that impact, please let us know:\n1. Whether you can ship more than 120 units on day 5.\n2. Whether any part of the 280 remaining units can ship before day 26, and the earliest date and quantity for each partial shipment.\n3. Whether the chip shortage will allow an earlier second delivery.\n\nWe'll confirm Brookfield's position by the end of this week, as you asked. We'd appreciate your answers to the questions above before then, so we can take them into account.\n\nRegards,\nPurchasing, Brookfield Bicycle Company",
-    |   "facts": {
-    |     "part_id": "MC-500",
-    |     "what_changed": "PO-7781 is now split: 120 of the 400 controllers arrive on day 5 as scheduled, and the other 280 arrive three weeks later on day 26, instead of all 400 arriving on day 5.",
-    |     "orders_at_risk": [
-    |       {
-    |         "units_short": 10,
-    |         "ship_day": 14,
-    |         "ready_day": 26
-    |       },
-    |       {
-    |         "units_short": 30,
-    |         "ship_day": 18,
-    |         "ready_day": 26
-    |       },
-    |       {
-    |         "units_short": 50,
-    |         "ship_day": 21,
-    |         "ready_day": 26
-    |       }
-    |     ],
-    |     "total_units_short": 90,
-    |     "options": [],
-    |     "decisions_for_a_person": [
-    |       "Decide whether to accept the split shipment (120 on day 5, 280 on day 26) or take up Karen Walsh's offer to discuss other options this week, for example an earlier second delivery or a partial earlier delivery.",
-    |       "a customer order (a customer order) has a late penalty. It is 10 units short on day 14 and can't ship until day 26, which is 12 days late. Decide how to handle it, for example by asking the supplier to pull forward at least 10 units, or by contacting the customer.",
-    |       "Decide whether to warn a customer order (a customer order, 8 days late) and a customer order (a customer order, 5 days late). Neither order has a late penalty."
-    |     ],
-    |     "supplier_questions": [
-    |       "Karen Walsh asks which Brookfield customers are most affected, so Northgate can understand the impact. The most affected is a customer order (a customer order), which has a late penalty. a customer order (a customer order) and a customer order (a customer order) are also late."
-    |     ]
-    |   }
-    | }
-    [tokens] reviewer: 1,320 in, 1,371 out (running total 3,379 in, 2,657 out)
-
->>> HANDOFF  reviewer -> coordinator: verdict
-    | {
-    |   "verdict": "REVISE",
-    |   "reasons": "**Rule 2 (promises nothing the facts don't support):**\n- \"We'll confirm Brookfield's position by the end of this week, as you asked.\" The facts only say Karen offered to discuss other options this week. They don't say she asked for an answer by the end of the week, and nothing authorizes a commitment to confirm by then. Replace it with something that promises no date, for example: \"We'll review the options and be in touch.\" If you refer to Karen's offer, say only that you'd like to take her up on discussing options this week, and only if the person reviewing agrees.\n- The last sentence asks for answers \"before then.\" Drop that deadline, or ask for answers \"as soon as possible.\"\n\n**Rule 1 (only facts in the draft):**\n- Question 3 refers to \"the chip shortage.\" Nothing in the facts mentions a chip shortage or any cause for the delay. Remove it, for example: \"Whether an earlier second delivery is possible.\"\n\nThe numbers (400, 120, 280, day 5, day 26, 90 units, 12/8/5 days late) all match the facts or follow from them by simple arithmetic. The draft names no customer, makes no commitment on the split shipment, and has an appropriately firm, cooperative tone."
-    | }
-    revision 1 of 2
-
->>> HANDOFF  coordinator -> supplier writer: email + redacted brief + reviewer notes
-    | {
-    |   "brief": {
-    |     "part_id": "MC-500",
-    |     "what_changed": "PO-7781 is now split: 120 of the 400 controllers arrive on day 5 as scheduled, and the other 280 arrive three weeks later on day 26, instead of all 400 arriving on day 5.",
-    |     "orders_at_risk": [
-    |       {
-    |         "units_short": 10,
-    |         "ship_day": 14,
-    |         "ready_day": 26
-    |       },
-    |       {
-    |         "units_short": 30,
-    |         "ship_day": 18,
-    |         "ready_day": 26
-    |       },
-    |       {
-    |         "units_short": 50,
-    |         "ship_day": 21,
-    |         "ready_day": 26
-    |       }
-    |     ],
-    |     "total_units_short": 90,
-    |     "options": [],
-    |     "decisions_for_a_person": [
-    |       "Decide whether to accept the split shipment (120 on day 5, 280 on day 26) or take up Karen Walsh's offer to discuss other options this week, for example an earlier second delivery or a partial earlier delivery.",
-    |       "a customer order (a customer order) has a late penalty. It is 10 units short on day 14 and can't ship until day 26, which is 12 days late. Decide how to handle it, for example by asking the supplier to pull forward at least 10 units, or by contacting the customer.",
-    |       "Decide whether to warn a customer order (a customer order, 8 days late) and a customer order (a customer order, 5 days late). Neither order has a late penalty."
-    |     ],
-    |     "supplier_questions": [
-    |       "Karen Walsh asks which Brookfield customers are most affected, so Northgate can understand the impact. The most affected is a customer order (a customer order), which has a late penalty. a customer order (a customer order) and a customer order (a customer order) are also late."
-    |     ]
-    |   },
-    |   "reviewer_notes": "**Rule 2 (promises nothing the facts don't support):**\n- \"We'll confirm Brookfield's position by the end of this week, as you asked.\" The facts only say Karen offered to discuss other options this week. They don't say she asked for an answer by the end of the week, and nothing authorizes a commitment to confirm by then. Replace it with something that promises no date, for example: \"We'll review the options and be in touch.\" If you refer to Karen's offer, say only that you'd like to take her up on discussing options this week, and only if the person reviewing agrees.\n- The last sentence asks for answers \"before then.\" Drop that deadline, or ask for answers \"as soon as possible.\"\n\n**Rule 1 (only facts in the draft):**\n- Question 3 refers to \"the chip shortage.\" Nothing in the facts mentions a chip shortage or any cause for the delay. Remove it, for example: \"Whether an earlier second delivery is possible.\"\n\nThe numbers (400, 120, 280, day 5, day 26, 90 units, 12/8/5 days late) all match the facts or follow from them by simple arithmetic. The draft names no customer, makes no commitment on the split shipment, and has an appropriately firm, cooperative tone."
-    | }
-    [tokens] supplier writer: 2,047 in, 836 out (running total 3,216 in, 1,926 out)
-
->>> HANDOFF  supplier writer -> coordinator: draft
-    | Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule
-    | 
-    | Hello Karen,
-    | 
-    | Thank you for letting us know. To confirm our understanding, PO-7781 for 400 MC-500 controllers is now split. 120 units ship on day 5 as scheduled, and the remaining 280 ship three weeks later, on day 26, instead of all 400 arriving on day 5.
-    | 
-    | This leaves us 90 units short across three orders. Those orders will be delayed by 12, 8, and 5 days, because they can't ship until the remaining units arrive on day 26.
-    | 
-    | We can't share information about our customers. The unit shortfall and delays above show the impact on our side.
-    | 
-    | To reduce that impact, please let us know:
-    | 1. Whether you can ship more than 120 units on day 5.
-    | 2. Whether any part of the 280 remaining units can ship before day 26, and the earliest date and quantity for each partial shipment.
-    | 3. Whether an earlier second delivery is possible.
-    | 
-    | We've noted your offer to discuss other options. We'll review the options and be in touch. We'd appreciate your answers to the questions above as soon as possible, so we can take them into account.
+    | Please send us your best answers on these. This email is not an acceptance of the revised schedule. If a decision is needed from us, Brookfield will confirm it separately.
     | 
     | Regards,
     | Purchasing, Brookfield Bicycle Company
 
 >>> HANDOFF  coordinator -> reviewer: supplier draft + facts
     | {
-    |   "draft": "Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule\n\nHello Karen,\n\nThank you for letting us know. To confirm our understanding, PO-7781 for 400 MC-500 controllers is now split. 120 units ship on day 5 as scheduled, and the remaining 280 ship three weeks later, on day 26, instead of all 400 arriving on day 5.\n\nThis leaves us 90 units short across three orders. Those orders will be delayed by 12, 8, and 5 days, because they can't ship until the remaining units arrive on day 26.\n\nWe can't share information about our customers. The unit shortfall and delays above show the impact on our side.\n\nTo reduce that impact, please let us know:\n1. Whether you can ship more than 120 units on day 5.\n2. Whether any part of the 280 remaining units can ship before day 26, and the earliest date and quantity for each partial shipment.\n3. Whether an earlier second delivery is possible.\n\nWe've noted your offer to discuss other options. We'll review the options and be in touch. We'd appreciate your answers to the questions above as soon as possible, so we can take them into account.\n\nRegards,\nPurchasing, Brookfield Bicycle Company",
+    |   "draft": "Subject: RE: PO-7781 - MC-500 controllers - revised shipment schedule\n\nHello Karen,\n\nThank you for letting us know. Here is our understanding of the change to PO-7781 (400 MC-500 controllers):\n\n- 120 controllers ship on the scheduled date (day 5), as planned.\n- The remaining 280 follow about three weeks later. We count that as day 26. Please confirm the exact date.\n\nThis will leave us 90 units short, and affected orders will be delayed between 5 and 12 days. We can't share information about our customers, but this is the impact on our side.\n\nTo reduce it, we ask that you look at the following:\n\n1. Can you ship more than 120 controllers on day 5?\n2. Can any of the 280 ship before day 26, even in smaller partial shipments? Any units that arrive by days 14, 18, and 21 would help the most.\n3. What is the earliest date you can commit to for each portion of the 280?\n\nPlease send us your best answers on these. This email is not an acceptance of the revised schedule. If a decision is needed from us, Brookfield will confirm it separately.\n\nRegards,\nPurchasing, Brookfield Bicycle Company",
     |   "facts": {
     |     "part_id": "MC-500",
-    |     "what_changed": "PO-7781 is now split: 120 of the 400 controllers arrive on day 5 as scheduled, and the other 280 arrive three weeks later on day 26, instead of all 400 arriving on day 5.",
+    |     "what_changed": "PO-7781 now brings 120 of the 400 controllers on day 5 as scheduled. The other 280 arrive about three weeks later, on day 26 (my conversion of 'three weeks later').",
     |     "orders_at_risk": [
     |       {
     |         "units_short": 10,
@@ -675,22 +567,18 @@ Step 3 of 3: supplier reply
     |     ],
     |     "total_units_short": 90,
     |     "options": [],
-    |     "decisions_for_a_person": [
-    |       "Decide whether to accept the split shipment (120 on day 5, 280 on day 26) or take up Karen Walsh's offer to discuss other options this week, for example an earlier second delivery or a partial earlier delivery.",
-    |       "a customer order (a customer order) has a late penalty. It is 10 units short on day 14 and can't ship until day 26, which is 12 days late. Decide how to handle it, for example by asking the supplier to pull forward at least 10 units, or by contacting the customer.",
-    |       "Decide whether to warn a customer order (a customer order, 8 days late) and a customer order (a customer order, 5 days late). Neither order has a late penalty."
-    |     ],
+    |     "brookfield_must_decide": true,
     |     "supplier_questions": [
-    |       "Karen Walsh asks which Brookfield customers are most affected, so Northgate can understand the impact. The most affected is a customer order (a customer order), which has a late penalty. a customer order (a customer order) and a customer order (a customer order) are also late."
+    |       "Karen Walsh asked which Brookfield customers are most affected. The orders at risk are a customer order (a customer order, has a late penalty), a customer order (a customer order) and a customer order (a customer order)."
     |     ]
     |   }
     | }
-    [tokens] reviewer: 1,319 in, 1,155 out (running total 4,698 in, 3,812 out)
+    [tokens] reviewer: 1,096 in, 1,146 out (running total 3,193 in, 2,389 out)
 
 >>> HANDOFF  reviewer -> coordinator: verdict
     | {
     |   "verdict": "APPROVE",
-    |   "reasons": ""
+    |   "reasons": "1. **Numbers:** Every figure comes from the facts or follows from them. PO-7781, MC-500, 400, 120, 280, day 5, day 26 and the 90 units short are all stated. Days 14, 18 and 21 are the ship days of the at-risk orders. \"Between 5 and 12 days\" is simple arithmetic: 26−21 = 5, 26−18 = 8 and 26−14 = 12. The draft also flags day 26 as Brookfield's own conversion and asks the supplier to confirm it.\n2. **Promises:** It commits to nothing. It only asks questions and says that earlier units \"would help the most.\" It offers no dates, quantities, credits or discounts.\n3. **No customer information:** It names no customer and doesn't describe any customer's order. It mentions only \"affected orders\" and an aggregate delay range, and it declines to share customer information, which is the right way to handle Karen's question. Days 14, 18 and 21 are given as timing needs, with no link to any customer.\n4. **Customer rule:** Not applicable, since this goes to a supplier.\n5. **No acceptance:** It states that the email is not an acceptance of the revised schedule. It also says Brookfield will confirm any decision separately, which leaves the open decision with Brookfield.\n6. **Tone:** It is firm and cooperative. It thanks the supplier, states Brookfield's understanding, asks for specific improvements, and reserves Brookfield's position."
     | }
     name check (supplier draft): passed, no customer named
     saved week-05\drafts\01-northgate-controller-delay__supplier-reply.txt
@@ -702,22 +590,22 @@ Drafts saved (4):
   - customer notice O-1043: week-05\drafts\01-northgate-controller-delay__customer-O-1043.txt (reviewer APPROVE, 0 revision(s))
   - customer notice O-1044: week-05\drafts\01-northgate-controller-delay__customer-O-1044.txt (reviewer APPROVE, 0 revision(s))
   - customer notice O-1045: week-05\drafts\01-northgate-controller-delay__customer-O-1045.txt (reviewer APPROVE, 0 revision(s))
-  - supplier reply: week-05\drafts\01-northgate-controller-delay__supplier-reply.txt (reviewer APPROVE, 1 revision(s))
+  - supplier reply: week-05\drafts\01-northgate-controller-delay__supplier-reply.txt (reviewer APPROVE, 0 revision(s))
 
 Drafts marked for a person (1):
   - customer notice O-1043: order has a late penalty
 
 Decisions for a person (3):
-  - Decide whether to accept the split shipment (120 on day 5, 280 on day 26) or take up Karen Walsh's offer to discuss other options this week, for example an earlier second delivery or a partial earlier delivery.
-  - O-1043 (City of Ashford Bike Share) has a late penalty. It is 10 units short on day 14 and can't ship until day 26, which is 12 days late. Decide how to handle it, for example by asking the supplier to pull forward at least 10 units, or by contacting the customer.
-  - Decide whether to warn Main Street Bikes (O-1044, 8 days late) and Lakeview Rentals (O-1045, 5 days late). Neither order has a late penalty.
+  - O-1043 (City of Ashford Bike Share) has a late-delivery penalty. It is 10 units short and would ship 12 days late on day 26. Brookfield must decide whether to take the delay, ask Northgate to speed up or add to the first shipment, or find another source for at least 10 controllers.
+  - O-1044 (Main Street Bikes) and O-1045 (Lakeview Rentals) would ship 8 and 5 days late. Neither has a penalty. Brookfield must decide whether to warn these customers.
+  - Karen Walsh offered to discuss other options this week. Brookfield must decide whether to take her up on it.
 
 Tokens by specialist
   specialist         calls     input    output     total
-  analyst                3     9,696       969    10,665
-  customer writer        3     1,162       606     1,768
-  reviewer               5     4,698     3,812     8,510
-  supplier writer        2     3,216     1,926     5,142
-  all                         18,772     7,313    26,085
+  analyst                3     9,696       929    10,625
+  customer writer        3     1,162       805     1,967
+  reviewer               4     3,193     2,389     5,582
+  supplier writer        1       927     1,148     2,075
+  all                         14,978     5,271    20,249
 
 Saved this output to C:\Users\mikes\OneDrive\Desktop\GBUS-652-Course\GBUS-652-Coursework\week-05\runs\01-pipeline.txt
