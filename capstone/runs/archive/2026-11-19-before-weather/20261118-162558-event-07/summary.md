@@ -1,0 +1,19 @@
+# Fort GBUS run 20261118-162558-event-07
+- Event 07; steps [7] of 7; model claude-sonnet-5-5
+- Prompts v1 (hash a91085a10b); human decisions: SIMULATED from decisions.json
+- MCP tools: analyst=7; reviewer=7; safety=8
+
+## Step 7 of 7 - 2026-12-03 08:22:00
+- **Analyst:** threat LOW, rung 2: Recommend rung 2. Send base security to the pilot on the base beach to detain and question the pilot and have the drone landed (ROE-6.1). Keep S-GIM on the drone (rung 1) and keep tracking all sensors (rung 0). Watch for movement toward Z-HOUSE or any other critical asset, a payload, or the pilot leaving. Ask the tower whether the approach corridor Z-APPR is in use. No defeat option is recommended now. If the threat rises, re-assess. If a jammer is then needed, it has a live link and clear geometry at present (ROE-5.1, ROE-5.2).
+        blocked: D-LAS: Threat LOW is below the HIGH minimum for rung 5 (ROE-4.1). The line of fire check failed: the beam path...
+                 D-GUN: Threat LOW is below the CRITICAL minimum for rung 6 (ROE-4.1, ROE-5.14). The jammer, interceptor and la...
+- **Reviewer:** APPROVE - Rung 2 meets the LOW minimum and needs operator approval (ROE-4.1). The pilot is located on base, so sending security to detain and question the pilot and have the drone landed is the direct response ...
+- **Shown to operator:** Recommend rung 2. Send base security to the pilot on the base beach to detain and question the pilot and have the drone landed (ROE-6.1). Keep S-GIM on the drone (rung 1) and keep tracking all sensors (rung 0). Watch for movement toward Z-HOUSE or any other critical asset, a payload, or the pilot leaving. Ask the tower whether the approach corridor Z-APPR is in use. No defeat option is recommended now. If the threat rises, re-assess. If a jammer is then needed, it has a live link and clear geometry at present (ROE-5.1, ROE-5.2).
+- **Operator** (SIMULATED (decisions.json)): ACCEPT -> requests rung 2: Recommend rung 2. Send base security to the pilot on the base beach to detain and question the pilot and have the drone landed (ROE-6.1). Keep S-GIM on the drone (rung 1) and keep tracking all sensors (rung 0). Watch for movement toward Z-HOUSE or any other critical asset, a payload, or the pilot leaving. Ask the tower whether the approach corridor Z-APPR is in use. No defeat option is recommended now. If the threat rises, re-assess. If a jammer is then needed, it has a live link and clear geometry at present (ROE-5.1, ROE-5.2).
+- **Outcome:** Operator authority: rung 2 - Recommend rung 2. Send base security to the pilot on the base beach to detain and question the pilot and have the drone landed (ROE-6.1). Keep S-GIM on the drone (rung 1) and keep tracking all sensors (rung 0). Watch for movement toward Z-HOUSE or any other critical asset, a payload, or the pilot leaving. Ask the tower whether the approach corridor Z-APPR is in use. No defeat option is recommended now. If the threat rises, re-assess. If a jammer is then needed, it has a live link and clear geometry at present (ROE-5.1, ROE-5.2).
+- Tokens this step: 22 in + 116,624 cache read + 57,314 cache write, 10,098 out = $0.2560
+
+## Run totals
+- Model calls: 9; tokens: 22 in, 116,624 cache read, 57,314 cache write, 10,098 out
+- Estimated cost: $0.2560
+- Final outcome: Operator authority: rung 2 - Recommend rung 2. Send base security to the pilot on the base beach to detain and question the pilot and have the drone landed (ROE-6.1). Keep S-GIM on the drone (rung 1) and keep tracking all sensors (rung 0). Watch for movement toward Z-HOUSE or any other critical asset, a payload, or the pilot leaving. Ask the tower whether the approach corridor Z-APPR is in use. No defeat option is recommended now. If the threat rises, re-assess. If a jammer is then needed, it has a live link and clear geometry at present (ROE-5.1, ROE-5.2).

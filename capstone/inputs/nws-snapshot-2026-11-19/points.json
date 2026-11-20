@@ -1,0 +1,112 @@
+{
+    "@context": [
+        "https://geojson.org/geojson-ld/geojson-context.jsonld",
+        {
+            "@version": "1.1",
+            "wx": "https://api.weather.gov/ontology#",
+            "s": "https://schema.org/",
+            "geo": "http://www.opengis.net/ont/geosparql#",
+            "unit": "http://codes.wmo.int/common/unit/",
+            "@vocab": "https://api.weather.gov/ontology#",
+            "geometry": {
+                "@id": "s:GeoCoordinates",
+                "@type": "geo:wktLiteral"
+            },
+            "city": "s:addressLocality",
+            "state": "s:addressRegion",
+            "distance": {
+                "@id": "s:Distance",
+                "@type": "s:QuantitativeValue"
+            },
+            "bearing": {
+                "@type": "s:QuantitativeValue"
+            },
+            "value": {
+                "@id": "s:value"
+            },
+            "unitCode": {
+                "@id": "s:unitCode",
+                "@type": "@id"
+            },
+            "forecastOffice": {
+                "@type": "@id"
+            },
+            "forecastGridData": {
+                "@type": "@id"
+            },
+            "publicZone": {
+                "@type": "@id"
+            },
+            "county": {
+                "@type": "@id"
+            }
+        }
+    ],
+    "id": "https://api.weather.gov/points/43.1167,-77.6767",
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -77.6767,
+            43.1167
+        ]
+    },
+    "properties": {
+        "@id": "https://api.weather.gov/points/43.1167,-77.6767",
+        "@type": "wx:Point",
+        "cwa": "BUF",
+        "type": "land",
+        "forecastOffice": "https://api.weather.gov/offices/BUF",
+        "gridId": "BUF",
+        "gridX": 75,
+        "gridY": 62,
+        "forecast": "https://api.weather.gov/gridpoints/BUF/75,62/forecast",
+        "forecastHourly": "https://api.weather.gov/gridpoints/BUF/75,62/forecast/hourly",
+        "forecastGridData": "https://api.weather.gov/gridpoints/BUF/75,62",
+        "observationStations": "https://api.weather.gov/gridpoints/BUF/75,62/stations",
+        "relativeLocation": {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.6168907,
+                    43.1699272
+                ]
+            },
+            "properties": {
+                "city": "Rochester",
+                "state": "NY",
+                "distance": {
+                    "unitCode": "wmoUnit:m",
+                    "value": 0
+                },
+                "bearing": {
+                    "unitCode": "wmoUnit:degree_(angle)",
+                    "value": 0
+                }
+            }
+        },
+        "forecastZone": "https://api.weather.gov/zones/forecast/NYZ003",
+        "county": "https://api.weather.gov/zones/county/NYC055",
+        "fireWeatherZone": "https://api.weather.gov/zones/fire/NYZ201",
+        "timeZone": "America/New_York",
+        "radarStation": "KBUF",
+        "astronomicalData": {
+            "sunrise": "2026-11-19T07:08:40-05:00",
+            "sunset": "2026-11-19T16:43:35-05:00",
+            "transit": "2026-11-19T11:56:08-05:00",
+            "civilTwilightBegin": "2026-11-19T06:37:49-05:00",
+            "civilTwilightEnd": "2026-11-19T17:14:26-05:00",
+            "nauticalTwilightBegin": "2026-11-19T06:03:09-05:00",
+            "nauticalTwilightEnd": "2026-11-19T17:49:06-05:00",
+            "astronomicalTwilightBegin": "2026-11-19T05:29:24-05:00",
+            "astronomicalTwilightEnd": "2026-11-19T18:22:52-05:00"
+        },
+        "nwr": {
+            "transmitter": "WNG539",
+            "sameCode": "036055",
+            "areaBroadcast": "https://api.weather.gov/radio/WNG539/broadcast",
+            "pointBroadcast": "https://api.weather.gov/points/43.1167,-77.6767/radio"
+        }
+    }
+}

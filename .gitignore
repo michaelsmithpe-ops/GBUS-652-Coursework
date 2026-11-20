@@ -224,3 +224,11 @@ week-03/chroma_db/
 # Week 4 HR agent: one Chroma database per organization
 # (chroma_db = hartwell-hr, chroma_db-<org> = any other; rebuild with hr_search.py --org ORG --rebuild)
 week-04/chroma_db*/
+# Capstone (Fort GBUS): generated or local-only files. Rebuild chroma_rules with
+# capstone/app/fgb_rules.py --rebuild. (mcp-servers.log and runs/launcher.log are covered by *.log.)
+capstone/app/chroma_rules/
+capstone/**/clock.json
+capstone/runs/**/pending.json
+capstone/runs/**/answer.json
+capstone/runs/**/answer.json.tmp
+capstone/**/~$*

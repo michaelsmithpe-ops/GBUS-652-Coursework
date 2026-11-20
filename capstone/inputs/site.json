@@ -1,0 +1,69 @@
+{
+  "title": "Fort GBUS site layout (machine-readable)",
+  "note": "Draft 1. Entirely fictional. Same content as site.md, as numbers, for drawing the map and for distance/backstop checks. If this file and site.md disagree, fix both.",
+  "grid": {
+    "units": "meters",
+    "origin": "GRP-0, survey marker on the shoreline",
+    "x": "east (negative = west)",
+    "y": "north (positive = over the lake)",
+    "bearings": "degrees true, clockwise from north"
+  },
+  "extent": {"x_min": -3500, "x_max": 4000, "y_min": -3300, "y_max": 8000},
+  "shoreline_y": 0,
+  "base_boundary": {"x0": -2500, "x1": 2500, "y0": -3000, "y1": 0},
+  "zones": [
+    {"id": "Z-LAKE",   "name": "Open water (near shore)",     "shape": "rect", "x0": -3500, "x1": 4000, "y0": 0,     "y1": 4000,  "ground_hazard": "Low",      "backstop": "Preferred",   "condition": "if clear of boats"},
+    {"id": "Z-SHIP",   "name": "Shipping lane",               "shape": "rect", "x0": -3500, "x1": 4000, "y0": 4000,  "y1": 6000,  "ground_hazard": "High",     "backstop": "Never", "condition": "the international border runs along the middle of the lane"},
+    {"id": "Z-CAN",    "name": "Canadian waters",             "shape": "rect", "x0": -3500, "x1": 4000, "y0": 5000,  "y1": 8000,  "ground_hazard": "-",        "backstop": "Never"},
+    {"id": "Z-BEACH",  "name": "Base beach",                  "shape": "rect", "x0": -2500, "x1": -1000, "y0": -100, "y1": 0,     "ground_hazard": "Low when empty, High when occupied", "backstop": "Never", "condition": "never when occupied; must be confirmed empty"},
+    {"id": "Z-MARINA", "name": "Base marina",                 "shape": "rect", "x0": 1000,  "x1": 1600,  "y0": -200,  "y1": 300,   "ground_hazard": "Medium",   "backstop": "Never"},
+    {"id": "Z-FUEL",   "name": "Fuel farm",                   "shape": "rect", "x0": 1800,  "x1": 2300,  "y0": -900,  "y1": -500,  "ground_hazard": "Critical", "backstop": "Never"},
+    {"id": "Z-HOUSE",  "name": "Base housing",                "shape": "rect", "x0": -2200, "x1": -800,  "y0": -2500, "y1": -1200, "ground_hazard": "Critical", "backstop": "Never"},
+    {"id": "Z-HQ",     "name": "Headquarters / control room", "shape": "rect", "x0": -150,  "x1": 150,   "y0": -1650, "y1": -1350, "ground_hazard": "High",     "backstop": "Never"},
+    {"id": "Z-AIR",    "name": "Airstrip + helipad",          "shape": "rect", "x0": 500,   "x1": 1800,  "y0": -2600, "y1": -2400, "ground_hazard": "High",     "backstop": "Never"},
+    {"id": "Z-TOWN",   "name": "Harborview (civilian town)",  "shape": "rect", "x0": 2500,  "x1": 4000,  "y0": -3300, "y1": 0,     "ground_hazard": "Critical", "backstop": "Never"},
+    {"id": "Z-APPR",   "name": "Airfield approach corridor",  "shape": "polygon",
+     "points": [[-3700, 2300], [-3300, 2700], [700, -2300], [300, -2700]],
+     "ground_hazard": "High (aircraft)", "backstop": "Never", "condition": "never when aircraft active"}
+  ],
+  "lines": [
+    {"id": "L-BORDER", "name": "U.S. / Canada border", "points": [[-3500, 5000], [4000, 5000]]},
+    {"id": "Z-ROAD",   "name": "Public road (south boundary)", "points": [[-3500, -3000], [2500, -3000], [2500, -3300]]}
+  ],
+  "sensors": [
+    {"id": "S-RF1", "name": "RF detection node (west)",   "x": -2000, "y": -200,  "height": 15, "network": "S-RF"},
+    {"id": "S-RF2", "name": "RF detection node (center)", "x": 0,     "y": -1500, "height": 20, "network": "S-RF"},
+    {"id": "S-RF3", "name": "RF detection node (east)",   "x": 2000,  "y": -300,  "height": 15, "network": "S-RF"},
+    {"id": "S-RAD", "name": "Radar",                      "x": 0,     "y": -300,  "height": 25},
+    {"id": "S-GIM", "name": "Gimbal camera (IR / visible / high-speed)", "x": -200, "y": -250, "height": 20},
+    {"id": "S-WAC", "name": "Wide-area scanning camera",  "x": 300,   "y": -350,  "height": 20}
+  ],
+  "acoustic_array": {
+    "id": "S-ACO",
+    "name": "Distributed acoustic array (12 nodes)",
+    "footprint": {"x0": -1000, "x1": 1000, "y0": -1000, "y1": 0},
+    "center": {"x": 0, "y": -500},
+    "nodes": [
+      [-1000, -100], [-333, -100], [333, -100], [1000, -100],
+      [-1000, -500], [-333, -500], [333, -500], [1000, -500],
+      [-1000, -900], [-333, -900], [333, -900], [1000, -900]
+    ]
+  },
+  "defeat_options": [
+    {"id": "D-JAM", "name": "RF jammer",                 "x": 0,    "y": -300, "height": 25, "note": "Shares the radar tower"},
+    {"id": "D-INT", "name": "Interceptor drone pad",     "x": 600,  "y": -800, "height": 0},
+    {"id": "D-LAS", "name": "Laser on remote gimbal",    "x": -400, "y": -200, "height": 15, "rule": "Elevation limit 45 deg (ROE-5.7)"},
+    {"id": "D-GUN", "name": "Gun on remote gimbal",      "x": 200,  "y": -100, "height": 10, "rule": "Sector 300-060 deg, elevation 5-30 deg (ROE-5.12)"}
+  ],
+  "engagement_geometry": {
+    "note": "Made-up limits, copied from roe-standing.md so check_line_of_fire can calculate them exactly. If a rule changes, change it here too.",
+    "D-GUN": {"sector_from": 300, "sector_to": 60, "min_elevation": 5, "max_elevation": 30, "danger_range_m": 3500, "rules": ["ROE-5.12", "ROE-5.13"]},
+    "D-LAS": {"max_elevation": 45, "danger_range_m": 5000, "rules": ["ROE-5.7", "ROE-5.9", "ROE-5.11"]},
+    "D-JAM": {"vessel_standoff_m": 2000, "aircraft_standoff_m": 3000, "rules": ["ROE-5.2"]},
+    "D-INT": {"aircraft_standoff_m": 3000, "rules": ["ROE-5.4", "ROE-5.5"]}
+  },
+  "fire_sectors": [
+    {"id": "SECTOR-GUN", "from": "D-GUN", "bearing_from": 300, "bearing_to": 60, "range_m": 3500,
+     "rule": "ROE-5.12 / ROE-5.13", "note": "Gun firing sector over the lake; vessels within 3.5 km block fire"}
+  ]
+}

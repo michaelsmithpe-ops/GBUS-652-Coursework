@@ -1,0 +1,14 @@
+# Fort GBUS counter-drone decision aid (GBUS 562 capstone)
+# Install from the repository folder:  .venv\Scripts\python.exe -m pip install -r capstone\requirements.txt
+# Versions are the ones the tool was built and tested with (Python 3.13).
+
+# The tool
+anthropic==2.4.0        # Claude API (model claude-sonnet-5-5)
+mcp==2.3.0              # MCP server and client: the agents' tools
+chromadb==1.5.9         # vector database for the rules search (RAG)
+streamlit==1.67.0       # web page: operator and control-room views
+plotly==7.1.0           # site map on the web page
+
+# Build scripts only (briefing deck)
+python-pptx==1.0.2
+pillow==13.0.0

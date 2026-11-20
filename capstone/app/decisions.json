@@ -1,0 +1,22 @@
+{
+  "note": "SIMULATED human decisions for batch runs. Every decision taken from this file is labeled SIMULATED in the run log. Steps are numbered 1-7. Anything not listed uses the defaults.",
+  "defaults": {
+    "operator": "accept",
+    "control_room": "follow_safety_advice"
+  },
+  "choices": {
+    "operator": "accept (take the recommendation as shown) | reject (no action beyond automatic) | override (engage despite the recommendation; needs a reason. If the reviewer said DO NOT ENGAGE, the analyst's original proposal is requested; otherwise override_action says what the operator requests)",
+    "control_room": "approve | stop (needs a reason) | no_response (silence means no) | follow_safety_advice (approve on CONCUR or CONCUR WITH CAUTIONS, stop on RECOMMEND STOP)"
+  },
+  "events": {
+    "07": {
+      "6": {
+        "operator": "override",
+        "operator_reason": "Drone has circled off the beach for over a minute; I want it brought down before it moves over the base.",
+        "override_action": {"rung": 3, "action": "RF jammer (D-JAM) against T-1"},
+        "control_room": "stop",
+        "control_room_reason": "Patrol 2 has eyes on: walkers on the beach and the pilot is among them. Debris risk to people. Send base security to detain the pilot instead."
+      }
+    }
+  }
+}

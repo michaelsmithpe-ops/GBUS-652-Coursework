@@ -1,0 +1,71 @@
+{
+  "title": "Fort GBUS counter-drone equipment health status",
+  "note": "Draft 1. Entirely fictional. Times are local (Eastern), same format as events.csv. Equipment IDs match inputs/site.md and events.csv.",
+  "baseline": "All equipment is OPERATIONAL unless an entry below covers that equipment at that time.",
+  "status_values": {
+    "operational": "Use normally.",
+    "degraded": "Usable, but with lower confidence or reduced ability. See 'effect'.",
+    "down": "Not available. Do not use its data; do not recommend it.",
+    "unknown": "Lost communication with it. Treat with caution; do not rely on it."
+  },
+  "equipment": {
+    "sensors": ["S-RF", "S-RAD", "S-ACO", "S-GIM", "S-WAC"],
+    "defeat_options": ["D-JAM", "D-INT", "D-LAS", "D-GUN"]
+  },
+  "entries": [
+    {
+      "id": "H-01",
+      "equipment": "S-WAC",
+      "status": "degraded",
+      "from": "2026-11-30 08:00:00",
+      "to": "2026-11-30 09:30:00",
+      "reason": "Lens heater fault; frost on the window.",
+      "effect": "Reduced detection range until cleared."
+    },
+    {
+      "id": "H-02",
+      "equipment": "D-LAS",
+      "status": "down",
+      "from": "2026-12-01 05:00:00",
+      "to": "2026-12-01 16:00:00",
+      "reason": "Scheduled maintenance: gimbal drive replacement.",
+      "effect": "Laser not available."
+    },
+    {
+      "id": "H-03",
+      "equipment": "S-ACO",
+      "status": "degraded",
+      "from": "2026-12-03 06:00:00",
+      "to": "2026-12-03 14:00:00",
+      "reason": "Two acoustic nodes offline (storm damage to cabling overnight).",
+      "effect": "Position fixes unreliable; errors of several hundred meters possible."
+    },
+    {
+      "id": "H-04",
+      "equipment": "D-INT",
+      "status": "down",
+      "from": "2026-12-04 08:00:00",
+      "to": "2026-12-04 11:00:00",
+      "reason": "Battery charger fault on the interceptor pad.",
+      "effect": "Interceptor not available. Restored at 11:00."
+    },
+    {
+      "id": "H-05",
+      "equipment": "S-GIM",
+      "status": "unknown",
+      "from": "2026-12-05 09:00:00",
+      "to": "2026-12-05 09:20:00",
+      "reason": "Network switch reboot; lost communication with the camera.",
+      "effect": "No camera data or control during the outage."
+    },
+    {
+      "id": "H-06",
+      "equipment": "D-JAM",
+      "status": "down",
+      "from": "2026-12-05 15:31:00",
+      "to": "2026-12-05 18:00:00",
+      "reason": "Amplifier over-temperature fault; automatic shutdown.",
+      "effect": "Jammer not available. Fault occurred during an active event."
+    }
+  ]
+}

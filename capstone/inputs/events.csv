@@ -1,0 +1,376 @@
+Event ID,Timestamp,Sensor ID,Sensor Modality,Track ID,Detection (Y/N),X (m),Y (m),Altitude (m),Position error (m),Heading (deg),Speed (m/s),Bearing (deg),Elevation angle (deg),Confidence (0-1),Radar size class,Drone class,Visual ID (Y/N),Camera channel,Blade spin seen,Payload seen,Control link present,Protocol family,Remote ID,Pilot located (Y/N),Pilot X (m),Pilot Y (m),Pilot position error (m),Sensor note
+01,2026-11-30 10:15:00,S-RF,RF,T-1,Y,-1689,177,57,150,89,15.0,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1315,-226,80,
+01,2026-11-30 10:15:00,S-RAD,Radar,T-1,Y,-1754,96,157,20,88,14.1,283,4.2,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:15:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Not yet cued
+01,2026-11-30 10:15:00,S-WAC,Wide Area Camera,T-1,Y,-1754,116,134,100,88,14.9,283,3.1,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:15:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+01,2026-11-30 10:15:20,S-RF,RF,T-1,Y,-1648,-43,189,150,202,15.3,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1283,-207,80,
+01,2026-11-30 10:15:20,S-RAD,Radar,T-1,Y,-1614,-107,159,20,207,17.0,277,4.7,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:15:20,S-GIM,Camera,T-1,Y,-1594,-102,139,30,207,15.6,276,4.8,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-WAC; quadcopter
+01,2026-11-30 10:15:20,S-WAC,Wide Area Camera,T-1,Y,-1630,49,207,100,204,15.6,282,5.4,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:15:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+01,2026-11-30 10:15:40,S-RF,RF,T-1,Y,-1939,-154,190,150,322,15.6,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1318,-200,80,
+01,2026-11-30 10:15:40,S-RAD,Radar,T-1,Y,-1853,-151,161,20,322,16.3,275,4.2,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:15:40,S-GIM,Camera,T-1,Y,-1838,-142,163,30,323,14.7,274,5.0,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-WAC; quadcopter
+01,2026-11-30 10:15:40,S-WAC,Wide Area Camera,T-1,Y,-1891,-126,226,100,319,15.3,276,5.3,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:15:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+01,2026-11-30 10:16:00,S-RF,RF,T-1,Y,-1726,182,113,150,73,15.4,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1308,-325,80,
+01,2026-11-30 10:16:00,S-RAD,Radar,T-1,Y,-1801,118,148,20,72,14.3,283,3.8,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:16:00,S-GIM,Camera,T-1,Y,-1784,97,162,30,75,14.8,282,5.0,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-WAC; quadcopter
+01,2026-11-30 10:16:00,S-WAC,Wide Area Camera,T-1,Y,-1799,14,176,100,72,15.5,280,4.2,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:16:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+01,2026-11-30 10:16:20,S-RF,RF,T-1,Y,-1685,-36,82,150,186,14.1,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1312,-230,80,
+01,2026-11-30 10:16:20,S-RAD,Radar,T-1,Y,-1587,-68,157,20,187,15.0,278,4.7,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:16:20,S-GIM,Camera,T-1,Y,-1596,-50,135,30,190,14.3,278,4.7,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-WAC; quadcopter
+01,2026-11-30 10:16:20,S-WAC,Wide Area Camera,T-1,Y,-1633,-55,167,100,191,14.4,279,4.3,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:16:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+01,2026-11-30 10:16:40,S-RF,RF,T-1,Y,-1813,-295,187,150,302,15.2,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1256,-184,80,
+01,2026-11-30 10:16:40,S-RAD,Radar,T-1,Y,-1821,-193,154,20,300,15.2,273,4.0,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:16:40,S-GIM,Camera,T-1,Y,-1828,-142,142,30,306,13.4,274,4.3,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-WAC; quadcopter
+01,2026-11-30 10:16:40,S-WAC,Wide Area Camera,T-1,Y,-1932,-162,131,100,300,15.7,275,2.8,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:16:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+01,2026-11-30 10:17:00,S-RF,RF,T-1,Y,-1724,201,135,150,61,15.5,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1299,-247,80,
+01,2026-11-30 10:17:00,S-RAD,Radar,T-1,Y,-1818,76,159,20,55,14.7,282,4.1,0.8,Small,,,,,,,,,,,,,
+01,2026-11-30 10:17:00,S-GIM,Camera,T-1,Y,-1827,62,167,30,56,14.8,281,5.1,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-WAC; quadcopter
+01,2026-11-30 10:17:00,S-WAC,Wide Area Camera,T-1,Y,-1796,54,109,100,61,13.5,281,2.4,0.6,,,,,,,,,,,,,,
+01,2026-11-30 10:17:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint; surf and wind noise
+02,2026-11-30 16:30:00,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:30:00,S-RAD,Radar,T-1,Y,-1602,107,74,20,91,12.1,284,1.7,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:30:00,S-GIM,Camera,,N,,,,,,,,,,,,,High-speed,,,,,,,,,,Not yet cued
+02,2026-11-30 16:30:00,S-WAC,Wide Area Camera,T-1,Y,-1529,6,60,100,90,8.6,281,1.2,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:30:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+02,2026-11-30 16:30:20,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:30:20,S-RAD,Radar,T-1,Y,-1486,-1,81,20,188,10.9,281,2.1,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:30:20,S-GIM,Camera,,N,,,,,,,,,,,,,High-speed,,,,,,,,,,Not yet cued
+02,2026-11-30 16:30:20,S-WAC,Wide Area Camera,T-1,Y,-1512,-108,25,100,188,10.5,278,0.1,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:30:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+02,2026-11-30 16:30:40,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:30:40,S-RAD,Radar,T-1,Y,-1620,-115,72,20,281,10.7,277,1.7,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:30:40,S-GIM,Camera,T-1,Y,-1627,-104,69,30,283,9.3,276,1.9,0.85,,,Y,High-speed,N,N,,,,,,,,"Cued by S-RAD; flapping wings, no rotors; flock of ~6 gulls"
+02,2026-11-30 16:30:40,S-WAC,Wide Area Camera,T-1,Y,-1586,-98,50,100,283,8.7,278,0.9,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:30:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+02,2026-11-30 16:31:00,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:31:00,S-RAD,Radar,T-1,Y,-1719,25,75,20,17,9.8,281,1.6,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:31:00,S-GIM,Camera,T-1,Y,-1710,28,88,30,13,10.5,280,2.5,0.85,,,Y,High-speed,N,N,,,,,,,,"Cued by S-RAD; flapping wings, no rotors; flock of ~6 gulls"
+02,2026-11-30 16:31:00,S-WAC,Wide Area Camera,T-1,Y,-1724,39,29,100,17,11.1,281,0.2,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:31:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+02,2026-11-30 16:31:20,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:31:20,S-RAD,Radar,T-1,Y,-1573,102,83,20,111,12.0,284,2.1,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:31:20,S-GIM,Camera,T-1,Y,-1579,112,76,30,109,10.0,285,2.3,0.85,,,Y,High-speed,N,N,,,,,,,,"Cued by S-RAD; flapping wings, no rotors; flock of ~6 gulls"
+02,2026-11-30 16:31:20,S-WAC,Wide Area Camera,T-1,Y,-1543,151,72,100,109,9.0,285,1.6,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:31:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+02,2026-11-30 16:31:40,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:31:40,S-RAD,Radar,T-1,Y,-1495,-43,76,20,213,10.3,280,1.9,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:31:40,S-GIM,Camera,T-1,Y,-1486,-80,69,30,212,11.2,278,2.2,0.85,,,Y,High-speed,N,N,,,,,,,,"Cued by S-RAD; flapping wings, no rotors; flock of ~6 gulls"
+02,2026-11-30 16:31:40,S-WAC,Wide Area Camera,T-1,Y,-1556,-79,121,100,213,9.8,278,3.1,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:31:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+02,2026-11-30 16:32:00,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,No RF emissions detected
+02,2026-11-30 16:32:00,S-RAD,Radar,T-1,Y,-1669,-91,69,20,306,10.0,277,1.5,0.4,Small,,,,,,,,,,,,,Intermittent returns; multiple small scatterers
+02,2026-11-30 16:32:00,S-GIM,Camera,T-1,Y,-1685,-94,69,30,307,9.0,276,1.9,0.85,,,Y,High-speed,N,N,,,,,,,,"Cued by S-RAD; flapping wings, no rotors; flock of ~6 gulls"
+02,2026-11-30 16:32:00,S-WAC,Wide Area Camera,T-1,Y,-1661,-157,89,100,307,9.8,276,2.0,0.5,,,,,,,,,,,,,,Several small objects; low sun glare
+02,2026-11-30 16:32:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No rotor signature
+03,2026-12-01 06:42:00,S-RF,RF,T-1,Y,909,3632,325,150,168,30.1,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3213,-1238,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:42:00,S-RAD,Radar,T-1,Y,1014,3688,298,20,167,30.4,14,3.8,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:42:00,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:42:00,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:42:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+03,2026-12-01 06:42:20,S-RF,RF,T-1,Y,1130,3191,316,150,163,31.3,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3220,-1239,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:42:20,S-RAD,Radar,T-1,Y,1140,3124,306,20,163,30.8,18,4.5,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:42:20,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:42:20,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:42:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+03,2026-12-01 06:42:40,S-RF,RF,T-1,Y,1290,2570,239,150,169,30.1,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3291,-1236,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:42:40,S-RAD,Radar,T-1,Y,1291,2534,309,20,166,30.3,24,5.2,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:42:40,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:42:40,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:42:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+03,2026-12-01 06:43:00,S-RF,RF,T-1,Y,1401,1913,282,150,164,30.4,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3213,-1220,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:43:00,S-RAD,Radar,T-1,Y,1404,1952,309,20,165,30.7,32,6.1,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:43:00,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:43:00,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:43:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+03,2026-12-01 06:43:20,S-RF,RF,T-1,Y,1456,1349,324,150,164,31.1,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3176,-1212,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:43:20,S-RAD,Radar,T-1,Y,1547,1348,308,20,166,30.2,43,7.1,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:43:20,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:43:20,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:43:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+03,2026-12-01 06:43:40,S-RF,RF,T-1,Y,1645,826,312,150,166,30.3,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3172,-1192,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:43:40,S-RAD,Radar,T-1,Y,1680,773,307,20,160,29.6,57,8.0,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:43:40,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:43:40,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:43:40,S-ACO,Acoustic,T-1,Y,1696,728,316,60,173,31.4,,,0.45,,Group 2 FW,,,,,,,,,,,,Edge of array footprint; fixed-wing engine signature
+03,2026-12-01 06:44:00,S-RF,RF,T-1,Y,2019,264,365,150,165,30.7,,,0.75,,Group 2 FW,,,,,Y,Unknown-B (encrypted),None detected,Y,3201,-1154,80,"Pilot estimate is off base, in Harborview"
+03,2026-12-01 06:44:00,S-RAD,Radar,T-1,Y,1830,196,304,20,169,31.1,75,8.4,0.85,Medium,,,,,,,,,,,,,
+03,2026-12-01 06:44:00,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Cued by S-RAD; no image: fog
+03,2026-12-01 06:44:00,S-WAC,Wide Area Camera,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: fog
+03,2026-12-01 06:44:00,S-ACO,Acoustic,T-1,Y,1822,214,300,60,163,30.6,,,0.45,,Group 2 FW,,,,,,,,,,,,Edge of array footprint; fixed-wing engine signature
+04,2026-12-01 14:05:00,S-RF,RF,T-1,Y,-1347,275,403,150,94,19.8,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1119,-2432,80,Pilot estimate at base airstrip
+04,2026-12-01 14:05:00,S-RAD,Radar,T-1,Y,-1500,281,467,20,91,19.4,291,15.3,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:05:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Not yet cued
+04,2026-12-01 14:05:00,S-WAC,Wide Area Camera,T-1,Y,-1388,351,458,100,87,20.4,293,13.5,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:05:00,S-ACO,Acoustic,T-1,Y,-1485,256,441,60,95,21.0,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+04,2026-12-01 14:05:20,S-RF,RF,T-1,Y,-1172,178,423,150,95,20.0,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1101,-2511,80,Pilot estimate at base airstrip
+04,2026-12-01 14:05:20,S-RAD,Radar,T-1,Y,-1095,288,459,20,93,20.7,298,19.2,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:05:20,S-GIM,Camera,T-1,Y,-1074,307,460,30,95,19.8,302,23.0,0.9,,Group 2 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; blue markings; inspection camera payload
+04,2026-12-01 14:05:20,S-WAC,Wide Area Camera,T-1,Y,-1085,391,483,100,91,20.7,298,16.4,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:05:20,S-ACO,Acoustic,T-1,Y,-1095,251,444,60,87,20.5,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+04,2026-12-01 14:05:40,S-RF,RF,T-1,Y,-679,207,436,150,89,18.3,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1112,-2441,80,Pilot estimate at base airstrip
+04,2026-12-01 14:05:40,S-RAD,Radar,T-1,Y,-703,321,460,20,91,20.4,311,24.9,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:05:40,S-GIM,Camera,T-1,Y,-699,308,453,30,86,21.9,318,30.1,0.9,,Group 2 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; blue markings; inspection camera payload
+04,2026-12-01 14:05:40,S-WAC,Wide Area Camera,T-1,Y,-684,261,427,100,92,20.2,302,19.4,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:05:40,S-ACO,Acoustic,T-1,Y,-666,282,430,60,86,20.9,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+04,2026-12-01 14:06:00,S-RF,RF,T-1,Y,-362,319,428,150,92,20.3,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1168,-2514,80,Pilot estimate at base airstrip
+04,2026-12-01 14:06:00,S-RAD,Radar,T-1,Y,-313,304,459,20,91,19.1,333,32.6,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:06:00,S-GIM,Camera,T-1,Y,-278,289,482,30,90,19.9,352,40.3,0.9,,Group 2 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; blue markings; inspection camera payload
+04,2026-12-01 14:06:00,S-WAC,Wide Area Camera,T-1,Y,-344,341,463,100,87,19.8,317,25.1,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:06:00,S-ACO,Acoustic,T-1,Y,-287,305,442,60,86,21.7,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+04,2026-12-01 14:06:20,S-RF,RF,T-1,Y,79,260,543,150,91,20.7,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1035,-2511,80,Pilot estimate at base airstrip
+04,2026-12-01 14:06:20,S-RAD,Radar,T-1,Y,104,310,452,20,86,19.8,10,34.6,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:06:20,S-GIM,Camera,T-1,Y,93,291,464,30,91,21.0,28,35.8,0.9,,Group 2 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; blue markings; inspection camera payload
+04,2026-12-01 14:06:20,S-WAC,Wide Area Camera,T-1,Y,58,253,422,100,86,20.9,338,31.7,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:06:20,S-ACO,Acoustic,T-1,Y,91,289,432,60,91,19.6,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+04,2026-12-01 14:06:40,S-RF,RF,T-1,Y,568,206,404,150,90,20.5,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1095,-2468,80,Pilot estimate at base airstrip
+04,2026-12-01 14:06:40,S-RAD,Radar,T-1,Y,513,285,461,20,92,20.7,41,29.2,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:06:40,S-GIM,Camera,T-1,Y,505,277,462,30,88,20.5,53,26.7,0.9,,Group 2 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; blue markings; inspection camera payload
+04,2026-12-01 14:06:40,S-WAC,Wide Area Camera,T-1,Y,429,314,529,100,91,21.0,11,37.0,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:06:40,S-ACO,Acoustic,T-1,Y,482,273,515,60,84,20.2,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+04,2026-12-01 14:07:00,S-RF,RF,T-1,Y,816,237,435,150,92,19.7,,,0.95,,Group 2 RW,,,,,Y,Blue-Mil (authorized),BLUE-FGB-07 (broadcasting),Y,1004,-2518,80,Pilot estimate at base airstrip
+04,2026-12-01 14:07:00,S-RAD,Radar,T-1,Y,879,299,456,20,83,19.8,56,22.0,0.9,Medium,,,,,,,,,,,,,
+04,2026-12-01 14:07:00,S-GIM,Camera,T-1,Y,875,302,460,30,91,20.7,63,20.0,0.9,,Group 2 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; blue markings; inspection camera payload
+04,2026-12-01 14:07:00,S-WAC,Wide Area Camera,T-1,Y,931,340,422,100,93,21.3,42,23.2,0.7,,,,,,,,,,,,,,
+04,2026-12-01 14:07:00,S-ACO,Acoustic,T-1,Y,887,288,456,60,87,20.6,,,0.55,,Group 2 RW,,,,,,,,,,,,Just offshore of array footprint
+05,2026-12-02 11:30:00,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:30:00,S-RAD,Radar,T-1,Y,-1199,987,114,20,145,11.5,317,2.9,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:30:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Not yet cued
+05,2026-12-02 11:30:00,S-WAC,Wide Area Camera,T-1,Y,-1199,1001,42,100,145,11.3,312,0.6,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:30:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+05,2026-12-02 11:30:20,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:30:20,S-RAD,Radar,T-1,Y,-1059,797,116,20,146,12.0,316,3.4,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:30:20,S-GIM,Camera,T-1,Y,-1070,790,125,30,144,11.6,320,4.4,0.9,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter; unknown object slung underneath
+05,2026-12-02 11:30:20,S-WAC,Wide Area Camera,T-1,Y,-1061,907,119,100,141,12.3,313,3.1,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:30:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+05,2026-12-02 11:30:40,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:30:40,S-RAD,Radar,T-1,Y,-925,608,129,20,144,12.6,314,4.6,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:30:40,S-GIM,Camera,T-1,Y,-906,577,124,30,142,11.6,320,5.5,0.9,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter; unknown object slung underneath
+05,2026-12-02 11:30:40,S-WAC,Wide Area Camera,T-1,Y,-801,627,55,100,148,11.6,312,1.4,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:30:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: out of range
+05,2026-12-02 11:31:00,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:31:00,S-RAD,Radar,T-1,Y,-783,400,121,20,142,12.6,312,5.2,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:31:00,S-GIM,Camera,T-1,Y,-803,397,131,30,150,11.7,317,7.1,0.9,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter; unknown object slung underneath
+05,2026-12-02 11:31:00,S-WAC,Wide Area Camera,T-1,Y,-670,418,117,100,144,12.1,308,4.5,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:31:00,S-ACO,Acoustic,T-1,Y,-767,391,89,60,144,12.1,,,0.6,,Group 1 RW,,,,,,,,,,,,Rotor signature; entering array footprint
+05,2026-12-02 11:31:20,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:31:20,S-RAD,Radar,T-1,Y,-648,204,129,20,148,12.5,308,7.2,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:31:20,S-GIM,Camera,T-1,Y,-638,238,126,30,149,12.2,318,9.2,0.9,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter; unknown object slung underneath
+05,2026-12-02 11:31:20,S-WAC,Wide Area Camera,T-1,Y,-740,200,136,100,152,11.4,298,5.6,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:31:20,S-ACO,Acoustic,T-1,Y,-680,273,123,60,140,11.0,,,0.6,,Group 1 RW,,,,,,,,,,,,Rotor signature; entering array footprint
+05,2026-12-02 11:31:40,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:31:40,S-RAD,Radar,T-1,Y,-506,16,123,20,140,13.8,302,9.3,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:31:40,S-GIM,Camera,T-1,Y,-503,25,121,30,145,11.9,312,13.9,0.9,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter; unknown object slung underneath
+05,2026-12-02 11:31:40,S-WAC,Wide Area Camera,T-1,Y,-576,-96,76,100,146,12.4,286,3.5,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:31:40,S-ACO,Acoustic,T-1,Y,-514,31,138,60,146,12.0,,,0.6,,Group 1 RW,,,,,,,,,,,,Rotor signature; entering array footprint
+05,2026-12-02 11:32:00,S-RF,RF,,N,,,,,,,,,,,,,,,,,,,,,,,"No RF emissions detected: no control link, no Remote ID"
+05,2026-12-02 11:32:00,S-RAD,Radar,T-1,Y,-434,-217,126,20,164,12.1,281,12.9,0.75,Small,,,,,,,,,,,,,
+05,2026-12-02 11:32:00,S-GIM,Camera,T-1,Y,-441,-225,120,30,165,11.3,276,22.4,0.9,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter; unknown object slung underneath
+05,2026-12-02 11:32:00,S-WAC,Wide Area Camera,T-1,Y,-394,-250,188,100,164,12.0,278,13.5,0.6,,,,,,,,,,,,,,
+05,2026-12-02 11:32:00,S-ACO,Acoustic,T-1,Y,-418,-245,113,60,166,12.1,,,0.6,,Group 1 RW,,,,,,,,,,,,Rotor signature; entering array footprint
+06,2026-12-02 21:10:00,S-RF,RF,T-1,Y,-1576,-1599,124,150,97,8.4,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1459,-3095,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:10:00,S-RAD,Radar,T-1,Y,-1496,-1635,95,20,92,7.8,228,2.0,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:10:00,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Not yet cued
+06,2026-12-02 21:10:00,S-WAC,Wide Area Camera,T-1,Y,-1505,-1655,30,100,90,7.3,234,0.2,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:10:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+06,2026-12-02 21:10:20,S-RF,RF,T-1,Y,-1244,-1830,27,150,130,7.9,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1429,-3103,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:10:20,S-RAD,Radar,T-1,Y,-1354,-1718,88,20,137,9.9,224,1.8,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:10:20,S-GIM,Camera,T-1,Y,-1332,-1713,103,30,135,8.1,218,2.6,0.8,,Group 1 RW,Y,IR,Y,Unknown,,,,,,,,Cued by S-RF; quadcopter hovering over housing
+06,2026-12-02 21:10:20,S-WAC,Wide Area Camera,T-1,Y,-1333,-1745,69,100,136,8.4,230,1.3,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:10:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+06,2026-12-02 21:10:40,S-RF,RF,T-1,Y,-1416,-1807,70,150,180,9.0,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1372,-3110,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:10:40,S-RAD,Radar,T-1,Y,-1287,-1869,84,20,182,10.2,219,1.7,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:10:40,S-GIM,Camera,T-1,Y,-1303,-1866,84,30,185,7.1,214,1.9,0.8,,Group 1 RW,Y,IR,Y,Unknown,,,,,,,,Cued by S-RF; quadcopter hovering over housing
+06,2026-12-02 21:10:40,S-WAC,Wide Area Camera,T-1,Y,-1340,-1882,127,100,186,10.4,227,2.7,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:10:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+06,2026-12-02 21:11:00,S-RF,RF,T-1,Y,-1483,-2017,122,150,225,8.0,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1462,-3069,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:11:00,S-RAD,Radar,T-1,Y,-1370,-2004,85,20,225,8.4,219,1.6,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:11:00,S-GIM,Camera,T-1,Y,-1384,-2010,74,30,233,8.9,214,1.5,0.8,,Group 1 RW,Y,IR,Y,Unknown,,,,,,,,Cued by S-RF; quadcopter hovering over housing
+06,2026-12-02 21:11:00,S-WAC,Wide Area Camera,T-1,Y,-1406,-1984,158,100,223,6.7,226,3.3,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:11:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+06,2026-12-02 21:11:20,S-RF,RF,T-1,Y,-1429,-2000,207,150,276,7.8,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1446,-3097,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:11:20,S-RAD,Radar,T-1,Y,-1522,-2060,91,20,273,6.4,221,1.6,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:11:20,S-GIM,Camera,T-1,Y,-1516,-2060,81,30,274,6.7,216,1.6,0.8,,Group 1 RW,Y,IR,Y,Unknown,,,,,,,,Cued by S-RF; quadcopter hovering over housing
+06,2026-12-02 21:11:20,S-WAC,Wide Area Camera,T-1,Y,-1505,-2169,134,100,273,9.1,225,2.5,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:11:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+06,2026-12-02 21:11:40,S-RF,RF,T-1,Y,-1582,-1994,135,150,316,7.8,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1452,-3111,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:11:40,S-RAD,Radar,T-1,Y,-1646,-1984,89,20,318,8.3,224,1.6,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:11:40,S-GIM,Camera,T-1,Y,-1635,-1997,105,30,316,8.7,219,2.2,0.8,,Group 1 RW,Y,IR,Y,Unknown,,,,,,,,Cued by S-RF; quadcopter hovering over housing
+06,2026-12-02 21:11:40,S-WAC,Wide Area Camera,T-1,Y,-1725,-2046,100,100,316,7.1,230,1.7,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:11:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+06,2026-12-02 21:12:00,S-RF,RF,T-1,Y,-1728,-1766,8,150,2,8.8,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1472,-3059,80,"Pilot estimate on the public road, off base"
+06,2026-12-02 21:12:00,S-RAD,Radar,T-1,Y,-1697,-1844,83,20,4,9.1,228,1.5,0.65,Small,,,,,,,,,,,,,Low altitude over buildings; ground clutter
+06,2026-12-02 21:12:00,S-GIM,Camera,T-1,Y,-1690,-1829,99,30,359,7.8,223,2.1,0.8,,Group 1 RW,Y,IR,Y,Unknown,,,,,,,,Cued by S-RF; quadcopter hovering over housing
+06,2026-12-02 21:12:00,S-WAC,Wide Area Camera,T-1,Y,-1687,-1782,192,100,9,8.8,234,4.0,0.45,,,,,,,,,,,,,,Night; IR detection only
+06,2026-12-02 21:12:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,No detection: target outside array footprint
+07,2026-12-03 08:20:00,S-RF,RF,T-1,Y,-1759,423,139,150,88,10.4,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1822,-64,60,Pilot estimate on the base beach
+07,2026-12-03 08:20:00,S-RAD,Radar,T-1,Y,-1648,520,60,20,94,10.3,296,1.1,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:20:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Cued to S-ACO position; nothing found
+07,2026-12-03 08:20:00,S-WAC,Wide Area Camera,T-1,Y,-1696,487,21,100,94,11.5,293,0.0,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:20:00,S-ACO,Acoustic,T-1,Y,-1407,516,64,60,91,10.3,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+07,2026-12-03 08:20:20,S-RF,RF,T-1,Y,-1355,356,-72,150,151,10.3,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1797,-66,60,Pilot estimate on the base beach
+07,2026-12-03 08:20:20,S-RAD,Radar,T-1,Y,-1490,428,69,20,153,12.0,296,1.5,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:20:20,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Cued to S-ACO position; nothing found
+07,2026-12-03 08:20:20,S-WAC,Wide Area Camera,T-1,Y,-1517,432,5,100,151,10.9,293,-0.4,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:20:20,S-ACO,Acoustic,T-1,Y,-1261,370,71,60,153,10.5,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+07,2026-12-03 08:20:40,S-RF,RF,T-1,Y,-1585,190,14,150,221,9.6,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1837,-100,60,Pilot estimate on the base beach
+07,2026-12-03 08:20:40,S-RAD,Radar,T-1,Y,-1502,252,65,20,217,10.5,290,1.4,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:20:40,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Cued to S-ACO position; nothing found
+07,2026-12-03 08:20:40,S-WAC,Wide Area Camera,T-1,Y,-1451,250,98,100,217,10.0,289,2.4,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:20:40,S-ACO,Acoustic,T-1,Y,-1227,197,68,60,219,8.6,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+07,2026-12-03 08:21:00,S-RF,RF,T-1,Y,-1721,110,101,150,279,9.5,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1795,-39,60,Pilot estimate on the base beach
+07,2026-12-03 08:21:00,S-RAD,Radar,T-1,Y,-1700,169,55,20,282,9.8,285,1.0,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:21:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Cued to S-ACO position; nothing found
+07,2026-12-03 08:21:00,S-WAC,Wide Area Camera,T-1,Y,-1674,145,56,100,279,9.4,284,1.0,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:21:00,S-ACO,Acoustic,T-1,Y,-1373,167,53,60,278,10.1,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+07,2026-12-03 08:21:20,S-RF,RF,T-1,Y,-2033,173,122,150,345,8.8,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1829,-86,60,Pilot estimate on the base beach
+07,2026-12-03 08:21:20,S-RAD,Radar,T-1,Y,-1824,301,55,20,345,9.8,288,0.9,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:21:20,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Cued to S-ACO position; nothing found
+07,2026-12-03 08:21:20,S-WAC,Wide Area Camera,T-1,Y,-1837,301,42,100,345,8.9,287,0.6,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:21:20,S-ACO,Acoustic,T-1,Y,-1525,320,80,60,345,9.7,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+07,2026-12-03 08:21:40,S-RF,RF,T-1,Y,-1838,508,-67,150,51,9.3,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1822,-48,60,Pilot estimate on the base beach
+07,2026-12-03 08:21:40,S-RAD,Radar,T-1,Y,-1765,490,66,20,46,8.0,294,1.2,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:21:40,S-GIM,Camera,T-1,Y,-1755,485,47,30,49,8.9,295,0.9,0.85,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Re-cued by S-RAD; quadcopter over water off the beach
+07,2026-12-03 08:21:40,S-WAC,Wide Area Camera,T-1,Y,-1782,504,115,100,50,9.9,292,2.4,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:21:40,S-ACO,Acoustic,T-1,Y,-1485,478,64,60,48,10.5,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+07,2026-12-03 08:22:00,S-RF,RF,T-1,Y,-1729,611,107,150,114,7.8,,,0.8,,Group 1 RW,,,,,Y,Hobby-A,None detected,Y,-1822,-12,60,Pilot estimate on the base beach
+07,2026-12-03 08:22:00,S-RAD,Radar,T-1,Y,-1588,523,63,20,108,11.7,297,1.2,0.7,Small,,,,,,,,,,,,,Moderate sea clutter
+07,2026-12-03 08:22:00,S-GIM,Camera,T-1,Y,-1605,531,75,30,111,10.8,299,2.0,0.85,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Re-cued by S-RAD; quadcopter over water off the beach
+07,2026-12-03 08:22:00,S-WAC,Wide Area Camera,T-1,Y,-1612,550,-14,100,114,11.3,295,-0.9,0.55,,,,,,,,,,,,,,
+07,2026-12-03 08:22:00,S-ACO,Acoustic,T-1,Y,-1276,489,67,60,112,9.7,,,0.35,,Group 1 RW,,,,,,,,,,,,DEGRADED: two nodes offline; position unreliable
+08,2026-12-03 16:50:00,S-RF,RF,T-1,Y,-270,-236,374,150,91,8.7,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:50:00,S-RAD,Radar,T-1,Y,-298,-259,455,20,91,9.7,278,55.0,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:50:00,S-GIM,Camera,,N,,,,,,,,,,,,,IR,,,,,,,,,,Not yet cued
+08,2026-12-03 16:50:00,S-WAC,Wide Area Camera,T-1,Y,-338,-213,445,100,92,8.5,282,33.1,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:50:00,S-ACO,Acoustic,T-1,Y,-303,-252,430,60,91,10.3,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+08,2026-12-03 16:50:20,S-RF,RF,T-1,Y,-87,-447,497,150,167,10.2,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:50:20,S-RAD,Radar,T-1,Y,-156,-350,439,20,170,9.5,252,68.4,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:50:20,S-GIM,Camera,T-1,Y,-134,-361,461,30,161,9.5,149,73.7,0.6,,Group 2 RW,Y,IR,Y,Y,,,,,,,,"Cued by S-RAD; thermal crossover, low IR contrast; hexacopter"
+08,2026-12-03 16:50:20,S-WAC,Wide Area Camera,T-1,Y,-135,-360,422,100,166,10.7,269,42.7,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:50:20,S-ACO,Acoustic,T-1,Y,-177,-388,435,60,165,10.3,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+08,2026-12-03 16:50:40,S-RF,RF,T-1,Y,-202,-571,516,150,240,10.9,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:50:40,S-RAD,Radar,T-1,Y,-227,-540,449,20,236,11.9,223,52.1,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:50:40,S-GIM,Camera,T-1,Y,-205,-531,442,30,242,7.9,181,56.4,0.6,,Group 2 RW,Y,IR,Y,Y,,,,,,,,"Cued by S-RAD; thermal crossover, low IR contrast; hexacopter"
+08,2026-12-03 16:50:40,S-WAC,Wide Area Camera,T-1,Y,-310,-560,499,100,239,10.5,251,36.6,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:50:40,S-ACO,Acoustic,T-1,Y,-229,-546,445,60,247,12.6,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+08,2026-12-03 16:51:00,S-RF,RF,T-1,Y,-422,-466,442,150,323,8.5,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:51:00,S-RAD,Radar,T-1,Y,-406,-520,463,20,318,8.8,242,43.5,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:51:00,S-GIM,Camera,T-1,Y,-396,-505,448,30,322,10.2,218,53.1,0.6,,Group 2 RW,Y,IR,Y,Y,,,,,,,,"Cued by S-RAD; thermal crossover, low IR contrast; hexacopter"
+08,2026-12-03 16:51:00,S-WAC,Wide Area Camera,T-1,Y,-385,-428,406,100,320,9.8,263,29.2,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:51:00,S-ACO,Acoustic,T-1,Y,-364,-445,486,60,322,9.7,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+08,2026-12-03 16:51:20,S-RF,RF,T-1,Y,-583,-151,502,150,38,9.9,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:51:20,S-RAD,Radar,T-1,Y,-418,-305,446,20,31,10.2,269,45.2,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:51:20,S-GIM,Camera,T-1,Y,-376,-281,459,30,34,10.8,260,67.9,0.6,,Group 2 RW,Y,IR,Y,Y,,,,,,,,"Cued by S-RAD; thermal crossover, low IR contrast; hexacopter"
+08,2026-12-03 16:51:20,S-WAC,Wide Area Camera,T-1,Y,-470,-304,419,100,42,9.5,273,27.4,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:51:20,S-ACO,Acoustic,T-1,Y,-468,-289,474,60,33,11.0,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+08,2026-12-03 16:51:40,S-RF,RF,T-1,Y,-359,-144,350,150,119,10.7,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:51:40,S-RAD,Radar,T-1,Y,-261,-262,447,20,116,10.8,278,58.0,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:51:40,S-GIM,Camera,T-1,Y,-196,-255,442,30,111,9.4,141,89.2,0.6,,Group 2 RW,Y,IR,Y,Y,,,,,,,,"Cued by S-RAD; thermal crossover, low IR contrast; hexacopter"
+08,2026-12-03 16:51:40,S-WAC,Wide Area Camera,T-1,Y,-297,-289,487,100,116,11.4,276,37.9,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:51:40,S-ACO,Acoustic,T-1,Y,-284,-256,478,60,110,8.5,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+08,2026-12-03 16:52:00,S-RF,RF,T-1,Y,-78,-353,419,150,189,11.5,,,0.75,,Group 2 RW,,,,,Y,Unknown-C,None detected,N,,,,Link detected; pilot position not resolved
+08,2026-12-03 16:52:00,S-RAD,Radar,T-1,Y,-161,-432,455,20,186,11.3,231,64.1,0.85,Medium,,,,,,,,,,,,,High elevation target
+08,2026-12-03 16:52:00,S-GIM,Camera,T-1,Y,-149,-413,469,30,187,11.6,163,69.2,0.6,,Group 2 RW,Y,IR,Y,Y,,,,,,,,"Cued by S-RAD; thermal crossover, low IR contrast; hexacopter"
+08,2026-12-03 16:52:00,S-WAC,Wide Area Camera,T-1,Y,-109,-388,368,100,185,10.6,265,40.3,0.5,,,,,,,,,,,,,,Dusk; low contrast
+08,2026-12-03 16:52:00,S-ACO,Acoustic,T-1,Y,-81,-438,453,60,187,9.6,,,0.7,,Group 2 RW,,,,,,,,,,,,Inside array footprint; high altitude
+09,2026-12-04 12:00:00,S-RF,RF,T-1,Y,1326,2783,206,150,93,16.1,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1316,6298,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:00:00,S-RAD,Radar,T-1,Y,1195,2792,151,20,90,14.7,21,2.2,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:00:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Not yet cued
+09,2026-12-04 12:00:00,S-WAC,Wide Area Camera,T-1,Y,1236,2787,115,100,90,15.4,17,1.7,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:00:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+09,2026-12-04 12:00:20,S-RF,RF,T-1,Y,1377,2574,195,150,151,13.1,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1609,6383,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:00:20,S-RAD,Radar,T-1,Y,1454,2656,153,20,145,15.7,26,2.2,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:00:20,S-GIM,Camera,T-1,Y,1455,2628,155,30,149,16.0,30,2.3,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,"Cued by S-RAD; quadcopter with camera, facing the base"
+09,2026-12-04 12:00:20,S-WAC,Wide Area Camera,T-1,Y,1436,2643,115,100,143,15.9,21,1.7,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:00:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+09,2026-12-04 12:00:40,S-RF,RF,T-1,Y,1532,2410,164,150,202,15.8,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1485,5965,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:00:40,S-RAD,Radar,T-1,Y,1480,2375,145,20,202,15.3,29,2.3,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:00:40,S-GIM,Camera,T-1,Y,1467,2403,150,30,204,16.2,32,2.4,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,"Cued by S-RAD; quadcopter with camera, facing the base"
+09,2026-12-04 12:00:40,S-WAC,Wide Area Camera,T-1,Y,1416,2414,172,100,205,14.7,22,2.9,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:00:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+09,2026-12-04 12:01:00,S-RF,RF,T-1,Y,1332,2350,197,150,263,13.2,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1461,6408,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:01:00,S-RAD,Radar,T-1,Y,1235,2216,155,20,264,17.5,26,2.7,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:01:00,S-GIM,Camera,T-1,Y,1245,2189,150,30,264,16.5,31,2.6,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,"Cued by S-RAD; quadcopter with camera, facing the base"
+09,2026-12-04 12:01:00,S-WAC,Wide Area Camera,T-1,Y,1215,2267,142,100,260,15.7,19,2.5,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:01:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+09,2026-12-04 12:01:20,S-RF,RF,T-1,Y,911,2240,98,150,321,14.4,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1298,6375,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:01:20,S-RAD,Radar,T-1,Y,991,2304,150,20,320,17.2,21,2.6,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:01:20,S-GIM,Camera,T-1,Y,966,2297,161,30,322,14.5,25,2.9,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,"Cued by S-RAD; quadcopter with camera, facing the base"
+09,2026-12-04 12:01:20,S-WAC,Wide Area Camera,T-1,Y,955,2341,169,100,323,15.7,14,3.1,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:01:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+09,2026-12-04 12:01:40,S-RF,RF,T-1,Y,1025,2493,174,150,20,14.7,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1649,6428,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:01:40,S-RAD,Radar,T-1,Y,914,2596,146,20,19,13.9,18,2.3,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:01:40,S-GIM,Camera,T-1,Y,927,2578,149,30,16,16.4,22,2.4,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,"Cued by S-RAD; quadcopter with camera, facing the base"
+09,2026-12-04 12:01:40,S-WAC,Wide Area Camera,T-1,Y,943,2597,106,100,11,15.0,12,1.6,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:01:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+09,2026-12-04 12:02:00,S-RF,RF,T-1,Y,1218,2822,122,150,71,15.5,,,0.7,,Group 1 RW,,,,,Y,Hobby-LR (long range),None detected,Y,1305,6410,300,Long-range pilot estimate: on a vessel beyond the border
+09,2026-12-04 12:02:00,S-RAD,Radar,T-1,Y,1128,2776,140,20,72,13.5,20,2.0,0.7,Small,,,,,,,,,,,,,Sea clutter; vessel traffic in shipping lane to the north
+09,2026-12-04 12:02:00,S-GIM,Camera,T-1,Y,1116,2784,164,30,74,14.8,23,2.5,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,"Cued by S-RAD; quadcopter with camera, facing the base"
+09,2026-12-04 12:02:00,S-WAC,Wide Area Camera,T-1,Y,1121,2885,172,100,75,13.8,14,2.6,0.55,,,,,,,,,,,,,,
+09,2026-12-04 12:02:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, out of range"
+10,2026-12-05 15:30:00,S-RF,RF,T-1,Y,766,1936,124,150,92,11.6,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1262,26,80,Pilot estimate at the marina
+10,2026-12-05 15:30:00,S-RF,RF,T-2,Y,3334,2500,118,150,205,17.7,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:30:00,S-RAD,Radar,T-1,Y,795,2047,99,20,96,12.5,19,1.7,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:30:00,S-RAD,Radar,T-2,Y,3312,2591,103,20,205,17.8,49,1.0,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:30:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Camera assigned to T-2; Not yet cued
+10,2026-12-05 15:30:00,S-WAC,Wide Area Camera,T-1,Y,746,2054,124,100,89,13.0,11,2.4,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:30:00,S-WAC,Wide Area Camera,T-2,Y,3308,2615,102,100,198,17.6,45,1.1,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:30:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+10,2026-12-05 15:30:20,S-RF,RF,T-1,Y,1001,2003,163,150,146,12.1,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1324,108,80,Pilot estimate at the marina
+10,2026-12-05 15:30:20,S-RF,RF,T-2,Y,3158,2243,73,150,199,18.2,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:30:20,S-RAD,Radar,T-1,Y,1026,1935,105,20,147,12.5,25,1.9,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:30:20,S-RAD,Radar,T-2,Y,3178,2257,91,20,199,17.3,51,0.9,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:30:20,S-GIM,Camera,T-2,Y,3156,2278,95,30,200,18.6,53,1.0,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter with object slung underneath
+10,2026-12-05 15:30:20,S-WAC,Wide Area Camera,T-1,Y,999,1928,174,100,143,10.5,17,3.7,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:30:20,S-WAC,Wide Area Camera,T-2,Y,3095,2213,107,100,200,19.1,47,1.3,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:30:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+10,2026-12-05 15:30:40,S-RF,RF,T-1,Y,1099,1816,7,150,201,11.0,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1298,31,80,Pilot estimate at the marina
+10,2026-12-05 15:30:40,S-RF,RF,T-2,Y,3036,1876,84,150,204,18.3,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:30:40,S-RAD,Radar,T-1,Y,1030,1704,86,20,198,10.2,27,1.6,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:30:40,S-RAD,Radar,T-2,Y,3044,1927,109,20,203,18.8,54,1.3,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:30:40,S-GIM,Camera,T-2,Y,3052,1943,92,30,202,17.0,56,1.0,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter with object slung underneath
+10,2026-12-05 15:30:40,S-WAC,Wide Area Camera,T-1,Y,1108,1640,77,100,197,13.6,22,1.5,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:30:40,S-WAC,Wide Area Camera,T-2,Y,3027,1917,97,100,205,19.8,50,1.2,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:30:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+10,2026-12-05 15:31:00,S-RF,RF,T-1,Y,999,1510,133,150,255,12.2,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1275,89,80,Pilot estimate at the marina
+10,2026-12-05 15:31:00,S-RF,RF,T-2,Y,3006,1672,52,150,204,17.7,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:31:00,S-RAD,Radar,T-1,Y,849,1551,94,20,254,11.8,25,1.9,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:31:00,S-RAD,Radar,T-2,Y,2907,1576,99,20,199,18.1,57,1.2,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:31:00,S-GIM,Camera,T-1,Y,873,1572,83,30,252,11.3,30,1.7,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Quadcopter with camera filming the race
+10,2026-12-05 15:31:00,S-GIM,Camera,T-2,Y,2919,1589,89,30,203,19.9,59,1.1,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter with object slung underneath
+10,2026-12-05 15:31:00,S-WAC,Wide Area Camera,T-1,Y,878,1575,28,100,254,12.5,17,0.2,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:31:00,S-WAC,Wide Area Camera,T-2,Y,2886,1566,176,100,200,18.6,53,2.8,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:31:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+10,2026-12-05 15:31:20,S-RF,RF,T-1,Y,634,1668,82,150,316,11.6,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1366,-6,80,Pilot estimate at the marina
+10,2026-12-05 15:31:20,S-RF,RF,T-2,Y,2817,1326,129,150,204,18.4,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:31:20,S-RAD,Radar,T-1,Y,637,1609,108,20,307,11.5,18,2.4,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:31:20,S-RAD,Radar,T-2,Y,2790,1255,117,20,199,17.7,61,1.6,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:31:20,S-GIM,Camera,T-1,Y,622,1638,94,30,314,10.7,24,2.1,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Quadcopter with camera filming the race
+10,2026-12-05 15:31:20,S-GIM,Camera,T-2,Y,2814,1271,116,30,198,17.6,63,1.6,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter with object slung underneath
+10,2026-12-05 15:31:20,S-WAC,Wide Area Camera,T-1,Y,658,1617,115,100,310,12.7,10,2.7,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:31:20,S-WAC,Wide Area Camera,T-2,Y,2777,1250,111,100,201,17.7,57,1.8,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:31:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+10,2026-12-05 15:31:40,S-RF,RF,T-1,Y,473,1777,93,150,6,13.6,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1276,-40,80,Pilot estimate at the marina
+10,2026-12-05 15:31:40,S-RF,RF,T-2,Y,2813,969,75,150,198,17.7,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:31:40,S-RAD,Radar,T-1,Y,526,1825,107,20,359,12.8,14,2.1,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:31:40,S-RAD,Radar,T-2,Y,2668,930,104,20,198,18.0,65,1.5,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:31:40,S-GIM,Camera,T-1,Y,529,1828,97,30,4,11.2,19,2.0,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Quadcopter with camera filming the race
+10,2026-12-05 15:31:40,S-GIM,Camera,T-2,Y,2647,920,98,30,200,18.3,68,1.4,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter with object slung underneath
+10,2026-12-05 15:31:40,S-WAC,Wide Area Camera,T-1,Y,490,1840,121,100,4,14.0,5,2.6,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:31:40,S-WAC,Wide Area Camera,T-2,Y,2634,994,101,100,205,16.9,60,1.7,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:31:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+10,2026-12-05 15:32:00,S-RF,RF,T-1,Y,636,2142,100,150,56,11.1,,,0.9,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-4471 (broadcasting),Y,1277,10,80,Pilot estimate at the marina
+10,2026-12-05 15:32:00,S-RF,RF,T-2,Y,2623,604,153,150,206,18.6,,,0.7,,Group 1 RW,,,,,Y,Unknown-B (encrypted),None detected,N,,,,Pilot position not resolved
+10,2026-12-05 15:32:00,S-RAD,Radar,T-1,Y,682,2014,93,20,60,12.2,16,1.6,0.75,Small,,,,,,,,,,,,,Many sailboats in the regatta area
+10,2026-12-05 15:32:00,S-RAD,Radar,T-2,Y,2541,583,122,20,205,18.6,71,2.1,0.8,Small,,,,,,,,,,,,,
+10,2026-12-05 15:32:00,S-GIM,Camera,T-1,Y,670,2005,94,30,62,13.6,21,1.8,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Quadcopter with camera filming the race
+10,2026-12-05 15:32:00,S-GIM,Camera,T-2,Y,2536,575,106,30,199,18.2,73,1.7,0.85,,Group 1 RW,Y,Visible,Y,Y,,,,,,,,Cued by S-RAD; quadcopter with object slung underneath
+10,2026-12-05 15:32:00,S-WAC,Wide Area Camera,T-1,Y,610,2059,80,100,59,12.0,7,1.4,0.6,,,,,,,,,,,,,,
+10,2026-12-05 15:32:00,S-WAC,Wide Area Camera,T-2,Y,2552,636,165,100,206,18.2,66,3.4,0.55,,,,,,,,,,,,,,
+10,2026-12-05 15:32:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
