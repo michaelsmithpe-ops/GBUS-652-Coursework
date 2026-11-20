@@ -232,3 +232,5 @@ capstone/runs/**/pending.json
 capstone/runs/**/answer.json
 capstone/runs/**/answer.json.tmp
 capstone/**/~$*
+# Capstone dry runs (free test runs, no Claude calls) are not part of the record
+capstone/runs/*-dryrun/
