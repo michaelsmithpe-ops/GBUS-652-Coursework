@@ -145,7 +145,7 @@ def slide_title(prs):
     text(s, 0.9, 3.4, 11.5, 0.8,
          ["The tool recommends. Humans decide."], size=24, color=RGBColor(0xC9, 0xD6, 0xE8))
     text(s, 0.9, 4.6, 11.5, 1.2,
-         ["GBUS 562 Capstone  ·  Draft briefing  ·  November 2026",
+         ["GBUS 562 Capstone  ·  Project proposal  ·  November 2026",
           "Fictional installation on the shore of Lake America. All data is made up."],
          size=16, color=RGBColor(0xA9, 0xB8, 0xCC))
     notes(s, "Introduce the project: a decision aid for a counter-drone watch team at a fictional "
@@ -347,7 +347,7 @@ def slide_workflow(prs):
         "Outer flow: fixed pipeline. Analyst → reviewer → operator → safety agent → control "
         "room, every time",
         "Branches are code, not AI choices: reject → DO NOT ENGAGE; override → flagged; "
-        "safety-agent failure → pass through; silence → no",
+        "safety-agent failure → pass through; no approval → no action",
         "Inside each stage: agents choose which MCP tools to call (tool-use loop)",
         "Around it all: a time loop; the pipeline runs once per step of readings",
         "Reviewer = evaluator, without the optimizer loop (no redraft)",
@@ -380,7 +380,7 @@ def slide_layers(prs):
             ("4. Safety agent", "Claude agent", "Extra, control-room-only information",
              "Failure passes through, flagged; still needs approval"),
             ("5. Control room", "Person", "Final authority, best information",
-             "Silence means no; can stop any engagement")]
+             "Nothing happens until a person approves; can stop any engagement")]
     tbl = s.shapes.add_table(len(rows), 4, Inches(0.5), Inches(1.25), Inches(12.3), Inches(3.9)).table
     for c, w in enumerate([2.0, 1.8, 4.1, 4.4]):
         tbl.columns[c].width = Inches(w)
@@ -419,7 +419,7 @@ def slide_chain(prs):
         "Safety agent advises only; if it fails, the request passes through flagged (ROE-4.5)",
         "Control room can STOP an engagement with better information; it cannot step one up (ROE-4.4)",
         "Laser and gun require positive visual ID, held for the whole engagement (ROE-4.7)",
-        "Silence means no (ROE-1.6)",
+        "Nothing is carried out until the control room approves: no approval, no action (ROE-1.6)",
     ], size=14, bullets=True)
     box(s, 0.5, 5.2, 5.6, 1.55,
         "Accountability (ROE-1.8)\nThe control room, the person in charge of the watch, is the "
@@ -455,6 +455,127 @@ def slide_chain(prs):
              "action, never the tool.")
 
 
+def table(slide, rows, x, y, widths, h, size=12, shade=None):
+    """Plain table: navy header row; shade(r) may return a fill color for body row r."""
+    tbl = slide.shapes.add_table(len(rows), len(widths), Inches(x), Inches(y),
+                                 Inches(sum(widths)), Inches(h)).table
+    for c, w in enumerate(widths):
+        tbl.columns[c].width = Inches(w)
+    for r, row in enumerate(rows):
+        for c, val in enumerate(row):
+            cell = tbl.cell(r, c)
+            cell.text = val
+            for p in cell.text_frame.paragraphs:
+                p.font.size = Pt(size)
+                p.font.bold = r == 0 or c == 0
+            cell.margin_top = cell.margin_bottom = Inches(0.04)
+            cell.fill.solid()
+            if r == 0:
+                cell.fill.fore_color.rgb = NAVY
+                cell.text_frame.paragraphs[0].font.color.rgb = WHITE
+            else:
+                cell.fill.fore_color.rgb = (shade(r) if shade else None) or (WHITE if r % 2 else C_LOG)
+    return tbl
+
+
+def slide_techniques(prs):
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    title_bar(s, "Course techniques: all five, each for a reason",
+              "RAG searches the Fort GBUS rules, which include short public summaries of "
+              "10 U.S.C. § 130i, DoD Directive 3000.09, and FAA Remote ID.")
+    rows = [("Technique", "How the tool uses it", "Why the job needs it"),
+            ("Prompt engineering",
+             "Shared + role system prompts: numbered steps, hard rules with rule IDs, cite every "
+             "source, reviewer checks on its own first, data is never instructions",
+             "Same procedure every time; reasoning a person can check"),
+            ("RAG",
+             "Rules split one per rule (54 chunks) in a Chroma vector database; search_rules "
+             "returns the closest rules, or the exact rule by ID",
+             "Every allowed or blocked option must quote the real rule"),
+            ("Agent",
+             "Each agent decides which tools to call, in what order, until it submits "
+             "(limit: 20 tool calls per step)",
+             "Every event needs different facts checked"),
+            ("MCP server",
+             "Seven read-only tools, one server per role; only the safety agent sees "
+             "control-room information; no tool shows the future",
+             "Code, not a prompt, controls who sees what"),
+            ("Team (pipeline)",
+             "Analyst → reviewer → operator → safety agent → control room, in a fixed order",
+             "Layered safety: no single mistake reaches an action")]
+    table(s, rows, 0.5, 1.2, [2.1, 6.4, 3.8], 5.4, size=13,
+          shade=lambda r: C_AGENT if r % 2 else C_TOOLGRP)
+    notes(s, "Name the five course techniques and, for each, say how the tool uses it and why this "
+             "job needs it. Stress that the rules search covers our made-up base rules, which "
+             "summarize real public law and policy, and that people make every decision.")
+
+
+EVENTS = [
+    ("01", "Mon 10:15", "Hobby quadcopter over the beach", "Rung 2: security to the pilot",
+     "Least force that works"),
+    ("02", "Mon 16:30", "Flock of gulls", "Rung 0–1: no action",
+     "Not a drone: no RF, no rotor sound"),
+    ("03", "Tue 06:42", "Fixed-wing drone in fog", "Rung 3: RF jammer",
+     "Laser down and fog-blocked: pick the next safe option"),
+    ("04", "Tue 14:05", "Base (friendly) drone", "Rung 0–1: no action",
+     "Recognize friendly by Remote ID and schedule"),
+    ("05", "Wed 11:30", "RF-silent quadcopter on preset route", "Rung 4–5: interceptor or laser",
+     "No RF ≠ no drone; never the jammer"),
+    ("06", "Wed 21:10", "Hobby quadcopter over housing at night", "Rung 3: RF jammer",
+     "Gun and laser blocked over housing"),
+    ("07", "Thu 08:20", "Hobby quadcopter, pilot on the beach", "Rung 2: security to the pilot",
+     "Discount a degraded sensor; override → control room stops"),
+    ("08", "Thu 16:50", "Hexacopter with payload", "Rung 3: RF jammer",
+     "Laser blocked twice: elevation limit and satellite window"),
+    ("09", "Fri 12:00", "Pilot across the Canadian border", "Rung 2: notify the Coast Guard",
+     "Coordination, not pursuit; shipping lane"),
+    ("10", "Sat 15:30", "Two drones during a regatta", "Rung 3, then re-plan",
+     "Prioritize; jammer faults; control room stops the interceptor"),
+]
+
+
+def slide_eval_set(prs):
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    title_bar(s, "Evaluation set: ten events, Mon Nov 30 – Sat Dec 5",
+              "Answers come from inputs/events-truth.csv, which the agents never see. "
+              "Weather: public NWS forecast, adjusted where an event needs it.")
+    rows = [("Event", "When", "What appears", "Correct response", "What it tests")] + list(EVENTS)
+    table(s, rows, 0.4, 1.1, [0.75, 1.15, 3.35, 2.85, 4.4], 5.7, size=12)
+    notes(s, "The evaluation set covers every kind of correct answer: no action (02, 04), sending "
+             "security or notifying agencies (01, 07, 09), the jammer (03, 06, 08), the one event "
+             "where the interceptor or laser is right (05), and two drones at once with an "
+             "equipment fault (10). Each event also tests one trap the tool must not fall into.")
+
+
+def slide_testing_plan(prs):
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    title_bar(s, "Testing, cost, and plan")
+    text(s, 0.5, 1.15, 6.1, 0.4, ["How each run is graded"], size=18, bold_first=True)
+    text(s, 0.5, 1.65, 6.1, 3.2, [
+        "Code grade (grade.py): checks the run against the answer key: threat level, rung, "
+        "options that must be blocked, rungs that must never be used, rules that must be cited",
+        "Human grade: I read every run and grade the reasoning",
+        "Every real run adds one line to runs/log.jsonl (tokens, seconds, outcome); "
+        "full details go to its own run folder",
+        "Failures are kept, fixed, and the same event is run again",
+    ], size=14, bullets=True)
+    text(s, 6.9, 1.15, 6.0, 0.4, ["Early cost (claude-sonnet-5-5)"], size=18, bold_first=True)
+    text(s, 6.9, 1.65, 6.0, 2.2, [
+        "Prices: $2 per million input tokens, $10 per million output",
+        "One test run of a full event (7 steps, 65 Claude calls) cost about $1.40, "
+        "with caching",
+        "Final cost per run comes from the logged record runs",
+    ], size=14, bullets=True)
+    rows = [("When", "Milestone"),
+            ("Week 6 (now)", "Proposal (this deck), first working version, evaluation set"),
+            ("Week 7", "Record runs on all ten events; compare cost and speed of two models"),
+            ("Week 8 (≈ Dec 9)", "Failure found and fixed, writeup, 3–5 minute demo video")]
+    table(s, rows, 0.5, 4.75, [2.6, 9.7], 1.9, size=14)
+    notes(s, "Explain how every run is graded twice, by code against the answer key and by me, and "
+             "that failures stay in the log. Give the early cost from a test run, then the plan "
+             "for weeks 7 and 8.")
+
+
 def main():
     OUT_DIR.mkdir(exist_ok=True)
     prs = Presentation()
@@ -463,9 +584,12 @@ def main():
     slide_problem(prs)
     slide_map(prs)
     slide_architecture(prs)
+    slide_techniques(prs)
     slide_workflow(prs)
     slide_layers(prs)
     slide_chain(prs)
+    slide_eval_set(prs)
+    slide_testing_plan(prs)
     out = OUT_DIR / "fort-gbus-briefing.pptx"
     prs.save(out)
     print(f"wrote {out.relative_to(ROOT)}  ({out.stat().st_size:,} bytes, {len(prs.slides)} slides)")
