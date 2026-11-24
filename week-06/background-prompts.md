@@ -70,6 +70,9 @@ evaluation prompts I sent today. I did not send it in this form; my actual messa
 It is also saved as `week-06/evaluation-prompt.md`.
 
 ```text
+
+Disclaimer. These are not the main prompts I wrote myself - I pasted the text from the Week -6 applied task into Claude code and used that as the mechanism to instruct Clause code.  However - here below is the essence of the instructions I gave Claude code.
+
 Goal: build an evaluation for my capstone tool, the Fort GBUS Counter-Drone Decision Aid, so I can
 measure how well it handles drone events before I add a guardrail, and again after. Use the tool and
 event data we already have; don't rebuild them.
@@ -147,6 +150,9 @@ guardrail prompts I sent. I did not send it in this form; my actual messages fol
 It is also saved as `week-06/guardrail-prompt.md`.
 
 ```text
+
+Disclaimer. These are not the main prompts I wrote myself - I pasted the text from the Week -6 applied task into Claude code and used that as the mechanism to instruct Clause code.  However - here below is the essence of the instructions I gave Claude code.
+
 Goal: add one guardrail to the Fort GBUS Counter-Drone Decision Aid that enforces, in code and not
 in a prompt, the rule the tool must never break: never escalate beyond what is allowed. Then run
 the evaluation again so I can compare it with eval-1.
