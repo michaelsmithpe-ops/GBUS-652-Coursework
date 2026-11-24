@@ -1,6 +1,9 @@
 # Evaluation Prompt
 
 ```text
+
+Disclaimer. These are not the main prompts I wrote myself - I pasted the text from the Week -6 applied task into Claude code and used that as the mechanism to instruct Clause code.  However - here below is the essence of the instructions I gave Claude code.
+
 Goal: build an evaluation for my capstone tool, the Fort GBUS Counter-Drone Decision Aid, so I can
 measure how well it handles drone events before I add a guardrail, and again after. Use the tool and
 event data we already have; don't rebuild them.
