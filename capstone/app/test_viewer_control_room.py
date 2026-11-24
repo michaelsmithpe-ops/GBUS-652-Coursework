@@ -8,8 +8,9 @@ The operator's answers are written straight to answer.json (the operator page wa
 test_viewer_live.py); the CONTROL ROOM decisions are made with the page's buttons.
   step 6: operator asks for a stronger action (rung 3 jammer)  -> control room: STOP with no
           reason (must refuse, nothing sent), then STOP with a reason
-  step 7: reviewer REJECTs (--dry-reject 7), operator OVERRIDES -> page shows OPERATOR OVERRODE
-          REVIEWER with both reasons side by side -> control room: APPROVE
+  step 7: the guardrail blocks rung 3 (stopped at step 6) and refuses the operator's override
+  then a second dry run, step 7 only: reviewer REJECTs (--dry-reject 7), operator OVERRIDES ->
+          page shows OPERATOR OVERRODE REVIEWER with both reasons side by side -> control room: APPROVE
   also:   NO countdown (no time limit); the safety agent's call in bold next to the buttons;
           Operator view never shows the control-room buttons or safety advice;
           a request with no safety advice is flagged NO SAFETY ADVICE AVAILABLE
@@ -136,7 +137,37 @@ def main() -> None:
         next(x for x in cr.button if x.label == STOP).click().run()
         check(STOP not in labels(cr), "STOP with a reason: sent, buttons gone")
 
-        # ---- step 7: reviewer rejected, operator overrides -> side by side -> APPROVE ----
+        # ---- step 7: the control room stopped rung 3 at step 6, so the escalation guardrail
+        #      blocks rung 3 now and refuses the operator's override (nothing reaches the control room) ----
+        req = pending(run_dir, "operator", 7)
+        check(req["shown"]["blocked_by"] == "guardrail", "step 7: operator sees DO NOT ENGAGE from the GUARDRAIL")
+        answer(run_dir, {"id": req["id"], "decision": "override", "reason": OP_WHY})
+        out, _ = proc.communicate(timeout=120)
+        check(proc.returncode == 0, f"pipeline exited cleanly (code {proc.returncode})")
+        rows = [json.loads(l) for l in (run_dir / "detail.jsonl").read_text(encoding="utf-8").splitlines()]
+        crs = {r["step"]: r["decision"] for r in rows if r["kind"] == "control_room_decision"}
+        ends = {r["step"]: r for r in rows if r["kind"] == "step_end"}
+        check(crs[6]["decision"] == "stop" and crs[6]["reason"] == STOP_WHY and crs[6]["source"] == "web",
+              "log: step 6 web STOP with the typed reason")
+        check(ends[6]["outcome"].startswith("NOT APPROVED (stop)") and ends[6]["final_rung"] == 2,
+              f"log: step 6 outcome {ends[6]['outcome']}")
+        check(7 not in crs and any(r["kind"] == "guardrail_override_refused" and r["step"] == 7 for r in rows),
+              "log: step 7 override refused by the guardrail; nothing sent to the control room")
+        check(not [r for r in rows if r["kind"] == "web_answer_rejected"], "log: no answers rejected by the pipeline")
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+
+    # ---- a fresh run, step 7 only: reviewer rejected, operator overrides -> side by side -> APPROVE ----
+    first = run_dir
+    proc = subprocess.Popen(
+        [sys.executable, str(HERE / "pipeline.py"), "--event", "07", "--steps", "7", "--dry-run",
+         "--web", "--dry-reject", "7"],
+        cwd=str(HERE), env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8")
+    try:
+        run_dir = wait_for(lambda: next((d for d in TMP.iterdir() if d.is_dir() and d != first), None),
+                           "the second run folder")
         req = pending(run_dir, "operator", 7)
         answer(run_dir, {"id": req["id"], "decision": "override", "reason": OP_WHY})
         req = pending(run_dir, "control_room", 7)
@@ -147,19 +178,13 @@ def main() -> None:
               "reviewer's and operator's reasons side by side")
         cr.button(key=f"approve-{req['id']}").click().run()
         check(f"approve-{req['id']}" not in [x.key for x in cr.button], "Approve: sent, buttons gone")
-
         out, _ = proc.communicate(timeout=120)
-        check(proc.returncode == 0, f"pipeline exited cleanly (code {proc.returncode})")
+        check(proc.returncode == 0, f"second pipeline exited cleanly (code {proc.returncode})")
         rows = [json.loads(l) for l in (run_dir / "detail.jsonl").read_text(encoding="utf-8").splitlines()]
         crs = {r["step"]: r["decision"] for r in rows if r["kind"] == "control_room_decision"}
         ends = {r["step"]: r for r in rows if r["kind"] == "step_end"}
-        check(crs[6]["decision"] == "stop" and crs[6]["reason"] == STOP_WHY and crs[6]["source"] == "web",
-              "log: step 6 web STOP with the typed reason")
-        check(ends[6]["outcome"].startswith("NOT APPROVED (stop)") and ends[6]["final_rung"] == 2,
-              f"log: step 6 outcome {ends[6]['outcome']}")
         check(crs[7]["decision"] == "approve" and crs[7]["source"] == "web", "log: step 7 web APPROVE")
         check(ends[7]["outcome"].startswith("APPROVED: rung 3"), f"log: step 7 outcome {ends[7]['outcome']}")
-        check(not [r for r in rows if r["kind"] == "web_answer_rejected"], "log: no answers rejected by the pipeline")
     finally:
         if proc.poll() is None:
             proc.kill()

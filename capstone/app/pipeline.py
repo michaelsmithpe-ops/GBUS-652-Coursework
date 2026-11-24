@@ -13,6 +13,10 @@ Workflow (a fixed pipeline; code decides the order, not a model):
     2. ANALYST agent (Claude, MCP tools) -> submit_assessment.
     3. REVIEWER agent (Claude, same tools, sees the analyst's full output) -> submit_review.
        REJECT => what the operator sees becomes DO NOT ENGAGE (ROE-4.2).
+    3b. ESCALATION GUARDRAIL (code, guardrail.py): blocks a rung above what the threat allows
+       (ROE-4.1) or at/above a rung the control room already stopped in this event (ROE-4.4).
+       Blocked => DO NOT ENGAGE with a GUARDRAIL reason, and an override cannot send that rung up.
+       Equipment / PVID / citation checks only add warnings.
     4. OPERATOR (human; --web buttons, --interactive, or SIMULATED from decisions.json):
        accept / reject / override.
     5. If the requested action needs the control room (rung 3+ or an override):
@@ -51,6 +55,7 @@ from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 import fgb_data as D
+import guardrail
 from output_tools import SUBMIT_ADVICE, SUBMIT_ASSESSMENT, SUBMIT_REVIEW
 
 HERE = Path(__file__).resolve().parent                  # .../GBUS-652-Coursework/capstone/app
@@ -59,7 +64,7 @@ PROMPTS = ROOT / "prompts"
 RUNS = Path(os.environ.get("FGB_RUNS_DIR") or ROOT / "runs")   # tests point this at a temp folder
 SERVER = HERE / "fgb_mcp_server.py"
 KEY_FILE = ROOT.parent.parent / "API-Key.txt"           # GBUS-652-Course/API-Key.txt (above the repo)
-DECISIONS_FILE = HERE / "decisions.json"
+DECISIONS_FILE = Path(os.environ.get("FGB_DECISIONS_FILE") or HERE / "decisions.json")   # tests may override
 
 MODEL = "claude-sonnet-5-5"
 MAX_TOKENS = 16000
@@ -69,6 +74,7 @@ STEP_SECONDS = 20
 STEPS_PER_EVENT = 7
 CONTROL_ROOM_RUNG = 3                                   # ROE-4.1: rung 3+ needs the control room
 DRY_REJECT_STEPS: set[int] = set()                      # --dry-reject: dry-run reviewer says REJECT here
+DRY_OVERRUNG_STEPS: set[int] = set()                    # --dry-overrung: dry-run analyst says LOW + rung 6
 
 # USD per million tokens for claude-sonnet-5-5 (cached 2026-11-03; verify before the business case).
 PRICE = {"in": 2.00, "out": 10.00, "cache_read": 0.10, "cache_write": 2.50}
@@ -295,11 +301,14 @@ async def dry_run_agent(role: str, session: ClientSession, log: RunLog, step: in
         print(f"      {role:<8} {name}  -> {'ERROR: ' + preview(text, 80) if r.is_error else f'{len(text):,} chars'}")
     final = step == STEPS_PER_EVENT
     if role == "analyst":
-        out = {"tracks": [], "threat_level": "MEDIUM" if final else "LOW", "indicators_up": [],
+        out = {"tracks": [], "threat_level": "MEDIUM", "indicators_up": [],   # MEDIUM: a rung-3 override passes the ladder
                "indicators_down": [], "recommended_rung": 3 if final else 2,
                "recommended_action": "DRY RUN: RF jammer" if final else "DRY RUN: send security",
                "options": [], "notifications": [], "confidence": "LOW",
                "what_would_change": "dry run", "citations": []}
+        if step in DRY_OVERRUNG_STEPS:                      # guardrail test: rung far above the threat
+            out.update(threat_level="LOW", recommended_rung=6,
+                       recommended_action="DRY RUN: gun (--dry-overrung guardrail test)")
     elif role == "reviewer":
         reject = step in DRY_REJECT_STEPS
         out = {"own_assessment": "dry run", "verdict": "REJECT" if reject else "APPROVE", "discrepancies": [],
@@ -492,12 +501,23 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     add_usage(usage, u)
     if r is None:
         r = {"verdict": "REJECT", "reasons": "Reviewer failed to respond; treated as REJECT (fail safe)."}
-    dne = r["verdict"] == "REJECT"
-    shown = {"do_not_engage": dne,
-             "recommended_rung": min(a["recommended_rung"], 2) if dne else a["recommended_rung"],
-             "recommended_action": "DO NOT ENGAGE" if dne else a["recommended_action"],
-             "reviewer_reasons": r.get("reasons", ""), "analyst_proposal": a["recommended_action"]}
     log.say(f"- **Reviewer:** {r['verdict']} - {preview(r.get('reasons', ''), 200)}")
+
+    # 2b. Escalation guardrail (code, not a prompt): checked before anything reaches the operator.
+    g = guardrail.check(a, now, ctx.get("stopped_rung"), ctx.get("stopped_step"))
+    log.record("guardrail", step=step, analyst_rung=a.get("recommended_rung"),
+               threat=a.get("threat_level"), **g)
+    for reason in g["reasons"]:
+        log.say(f"- **{reason}** -> DO NOT ENGAGE")
+    for w in g["warnings"]:
+        log.say(f"- {w}")
+    dne = r["verdict"] == "REJECT" or g["blocked"]
+    shown = {"do_not_engage": dne,
+             "recommended_rung": min(a["recommended_rung"], 2, g["max_allowed"]) if dne else a["recommended_rung"],
+             "recommended_action": "DO NOT ENGAGE" if dne else a["recommended_action"],
+             "reviewer_reasons": r.get("reasons", ""), "analyst_proposal": a["recommended_action"],
+             "blocked_by": ("guardrail" if g["blocked"] else "reviewer") if dne else "",
+             "guardrail_reasons": g["reasons"], "guardrail_warnings": g["warnings"]}
     log.say(f"- **Shown to operator:** {shown['recommended_action']}")
     log.record("shown_to_operator", step=step, shown=shown)
 
@@ -517,6 +537,15 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
         else:
             requested_rung, requested_action = shown["recommended_rung"], shown["recommended_action"]
     overrode = op["decision"] == "override"
+    if overrode:
+        # The guardrail also covers an override: a blocked rung is never sent up to the control room.
+        refused = guardrail.blocking_reasons(requested_rung, a.get("threat_level", "NONE"),
+                                             ctx.get("stopped_rung"), ctx.get("stopped_step"))
+        if refused:
+            log.say(f"- **GUARDRAIL: override to rung {requested_rung} refused** - " + " ".join(refused))
+            log.record("guardrail_override_refused", step=step, requested_rung=requested_rung, reasons=refused)
+            requested_rung, requested_action = 1, "GUARDRAIL refused the override (tracking continues)"
+            overrode = False
     log.say(f"- **Operator** ({op['source']}): {op['decision'].upper()}"
             + (f" - reason: {op['reason']}" if op.get("reason") else "")
             + f" -> requests rung {requested_rung}: {requested_action}")
@@ -550,6 +579,8 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
                 + (f" - {cr['reason']}" if cr.get("reason") else ""))
         log.record("control_room_decision", step=step, decision=cr)
         approved = cr["decision"] == "approve"
+        if cr["decision"] == "stop" and requested_rung < (ctx.get("stopped_rung") or 99):
+            ctx["stopped_rung"], ctx["stopped_step"] = requested_rung, step   # guardrail rule (b)
         outcome = (f"APPROVED: rung {requested_rung} - {requested_action}" if approved else
                    f"NOT APPROVED ({cr['decision']}): rung {requested_rung} request not carried out")
         final_rung = requested_rung if approved else 2 if cr["decision"] == "stop" else 1
@@ -565,7 +596,7 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     return {"usage": usage, "outcome": outcome, "final_rung": final_rung,
             "analyst": a, "reviewer_verdict": r["verdict"], "shown": shown["recommended_action"],
             "operator": op["decision"], "advice": advice and advice.get("advice"),
-            "control_room": cr and cr["decision"]}
+            "control_room": cr and cr["decision"], "guardrail_blocked": g["blocked"]}
 
 
 # ---------------------------------------------------------------------------
@@ -593,7 +624,7 @@ async def main_async(args) -> None:
                "simulated": "SIMULATED from decisions.json"}[mode])
     log.record("run_start", run_id=log.run_id, event=event_id, steps=steps, model=MODEL,
                prompts=pv, dry_run=args.dry_run, interactive=args.interactive, humans=mode,
-               dry_reject=sorted(DRY_REJECT_STEPS))
+               dry_reject=sorted(DRY_REJECT_STEPS), dry_overrung=sorted(DRY_OVERRUNG_STEPS))
 
     clock_path = log.dir / "clock.json"
     clock_path.write_text(json.dumps({"event_id": event_id, "now": times[0]}), encoding="utf-8")
@@ -694,7 +725,7 @@ def write_index(log, event_id, steps, pv, total, cost, last, args) -> None:
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description="Run the Fort GBUS counter-drone pipeline for one event.")
-    ap.add_argument("--event", required=True, help="event ID, 01-10")
+    ap.add_argument("--event", required=True, help="event ID, 01-11")
     ap.add_argument("--steps", default="all", help="'all' (default), 'last', or e.g. '1,4,7'")
     ap.add_argument("--dry-run", action="store_true", help="no API calls: test the plumbing only")
     who = ap.add_mutually_exclusive_group()
@@ -704,7 +735,17 @@ def main() -> None:
     ap.add_argument("--dry-reject", default="", metavar="STEPS",
                     help="dry run only: the canned reviewer REJECTs at these steps, e.g. '7' or '3,7' "
                          "(to test DO NOT ENGAGE and the override button for free)")
+    ap.add_argument("--dry-overrung", default="", metavar="STEPS",
+                    help="dry run only: the canned analyst says threat LOW + rung 6 (gun) at these steps "
+                         "(to test the escalation guardrail for free)")
     args = ap.parse_args()
+    if args.dry_overrung:
+        if not args.dry_run:
+            sys.exit("--dry-overrung only works with --dry-run.")
+        try:
+            DRY_OVERRUNG_STEPS.update(int(s) for s in args.dry_overrung.split(","))
+        except ValueError:
+            sys.exit("--dry-overrung must be step numbers like 7 or 3,7")
     if args.dry_reject:
         if not args.dry_run:
             sys.exit("--dry-reject only works with --dry-run.")

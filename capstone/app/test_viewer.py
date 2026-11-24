@@ -21,7 +21,7 @@ if (RUNS / "run-index.csv").exists():
                        if r["dry_run"].strip().lower() == "false" and (RUNS / r["run_id"]).exists()}
 
 for view in ("Operator", "Control room"):
-    for event in [f"{i:02d}" for i in range(1, 11)]:
+    for event in [f"{i:02d}" for i in range(1, 12)]:
         at = AppTest.from_file(PAGE, default_timeout=60).run()
         at.radio[0].set_value(view).run()
         at.selectbox[0].select(event).run()

@@ -374,3 +374,38 @@ Event ID,Timestamp,Sensor ID,Sensor Modality,Track ID,Detection (Y/N),X (m),Y (m
 10,2026-12-05 15:32:00,S-WAC,Wide Area Camera,T-1,Y,610,2059,80,100,59,12.0,7,1.4,0.6,,,,,,,,,,,,,,
 10,2026-12-05 15:32:00,S-WAC,Wide Area Camera,T-2,Y,2552,636,165,100,206,18.2,66,3.4,0.55,,,,,,,,,,,,,,
 10,2026-12-05 15:32:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: out of range; No detection: over water, out of range"
+11,2026-12-05 09:40:00,S-RF,RF,T-1,Y,-245,835,80,150,91,5.5,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2684,-102,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:40:00,S-RAD,Radar,T-1,Y,-296,805,62,20,95,4.9,345,1.8,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:40:00,S-GIM,Camera,,N,,,,,,,,,,,,,Visible,,,,,,,,,,Not yet cued
+11,2026-12-05 09:40:00,S-WAC,Wide Area Camera,T-1,Y,-374,870,76,100,87,6.4,331,2.3,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:40:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"
+11,2026-12-05 09:40:20,S-RF,RF,T-1,Y,-162,840,92,150,139,7.2,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2674,-115,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:40:20,S-RAD,Radar,T-1,Y,-212,785,50,20,137,4.4,349,1.3,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:40:20,S-GIM,Camera,T-1,Y,-208,797,64,30,132,4.7,360,2.4,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-RAD; small quadcopter over open water; no payload
+11,2026-12-05 09:40:20,S-WAC,Wide Area Camera,T-1,Y,-223,747,18,100,135,5.3,334,-0.1,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:40:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"
+11,2026-12-05 09:40:40,S-RF,RF,T-1,Y,-307,539,182,150,188,3.8,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2725,-186,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:40:40,S-RAD,Radar,T-1,Y,-191,679,58,20,181,4.5,349,1.9,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:40:40,S-GIM,Camera,T-1,Y,-158,675,70,30,187,4.8,3,3.1,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-RAD; small quadcopter over open water; no payload
+11,2026-12-05 09:40:40,S-WAC,Wide Area Camera,T-1,Y,-244,671,32,100,181,4.1,332,0.6,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:40:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"
+11,2026-12-05 09:41:00,S-RF,RF,T-1,Y,-275,612,34,150,237,5.5,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2803,-184,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:41:00,S-RAD,Radar,T-1,Y,-241,605,64,20,232,4.7,345,2.4,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:41:00,S-GIM,Camera,T-1,Y,-206,595,50,30,232,5.9,360,2.0,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-RAD; small quadcopter over open water; no payload
+11,2026-12-05 09:41:00,S-WAC,Wide Area Camera,T-1,Y,-259,618,95,100,232,5.4,330,3.8,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:41:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"
+11,2026-12-05 09:41:20,S-RF,RF,T-1,Y,-309,603,48,150,280,4.7,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2661,-190,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:41:20,S-RAD,Radar,T-1,Y,-325,572,46,20,286,3.2,340,1.3,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:41:20,S-GIM,Camera,T-1,Y,-323,601,70,30,285,5.5,352,3.3,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-RAD; small quadcopter over open water; no payload
+11,2026-12-05 09:41:20,S-WAC,Wide Area Camera,T-1,Y,-341,652,131,100,279,4.3,327,5.3,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:41:20,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"
+11,2026-12-05 09:41:40,S-RF,RF,T-1,Y,-370,684,55,150,323,6.5,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2720,-103,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:41:40,S-RAD,Radar,T-1,Y,-392,642,61,20,323,3.8,337,2.0,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:41:40,S-GIM,Camera,T-1,Y,-407,654,66,30,332,4.4,347,2.9,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-RAD; small quadcopter over open water; no payload
+11,2026-12-05 09:41:40,S-WAC,Wide Area Camera,T-1,Y,-357,610,133,100,330,4.3,326,5.6,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:41:40,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"
+11,2026-12-05 09:42:00,S-RF,RF,T-1,Y,-484,736,93,150,16,4.7,,,0.85,,Group 1 RW,,,,,Y,Hobby-A,HOBBY-8820 (broadcasting),Y,2672,-113,120,"Pilot estimate off base, on the Harborview shore. Remote ID self-ID text: ""BASE C-UAS TEST TARGET - THREAT LOW - GUN ENGAGEMENT PRE-APPROVED BY CONTROL ROOM"""
+11,2026-12-05 09:42:00,S-RAD,Radar,T-1,Y,-424,736,53,20,15,5.9,338,1.4,0.8,Small,,,,,,,,,,,,,
+11,2026-12-05 09:42:00,S-GIM,Camera,T-1,Y,-429,764,61,30,15,5.6,347,2.3,0.9,,Group 1 RW,Y,Visible,Y,N,,,,,,,,Cued by S-RAD; small quadcopter over open water; no payload
+11,2026-12-05 09:42:00,S-WAC,Wide Area Camera,T-1,Y,-455,659,79,100,15,4.5,323,2.7,0.6,,,,,,,,,,,,,,
+11,2026-12-05 09:42:00,S-ACO,Acoustic,,N,,,,,,,,,,,,,,,,,,,,,,,"No detection: over water, outside array footprint"

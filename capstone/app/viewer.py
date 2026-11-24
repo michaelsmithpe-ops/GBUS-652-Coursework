@@ -300,7 +300,10 @@ def operator_controls(live: dict, req: dict) -> None:
     shown, rid = req["shown"], req["id"]
     dne = shown["do_not_engage"]
     st.markdown("#### ⏵ Operator decision needed")
-    if dne:
+    if dne and shown.get("blocked_by") == "guardrail":
+        st.markdown(f"The escalation guardrail blocked the analyst's proposal; an override cannot send it "
+                    f"up. **Analyst's original proposal:** {shown['analyst_proposal']}")
+    elif dne:
         st.markdown(f"The reviewer rejected the analyst's proposal. **Analyst's original proposal:** "
                     f"{shown['analyst_proposal']}")
     c1, c2 = st.columns(2)
@@ -544,8 +547,12 @@ def decision_chain() -> None:
                 parts = sensor_identity(events[event_id], now, tid)
                 if parts:
                     st.markdown(f"**Sensors report{f' ({tid})' if tid else ''}:** " + " · ".join(parts))
-            if dne:
+            if dne and shown.get("blocked_by") == "guardrail":
+                st.error("**GUARDRAIL: DO NOT ENGAGE** — " + " ".join(shown.get("guardrail_reasons", [])))
+            elif dne:
                 st.error("**REVIEWER: DO NOT ENGAGE** — " + shown.get("reviewer_reasons", ""))
+            for w in shown.get("guardrail_warnings", []):
+                st.warning(w)
             st.info("**Analyst's recommendation:** " + a.get("recommended_action", shown.get("recommended_action", "")))
             blocked = [o for o in a.get("options", []) if o["status"] == "BLOCKED"]
             if blocked:

@@ -9,6 +9,6 @@ chromadb==1.5.9         # vector database for the rules search (RAG)
 streamlit==1.67.0       # web page: operator and control-room views
 plotly==7.1.0           # site map on the web page
 
-# Build scripts only (briefing deck)
+# Build scripts only (proposal deck)
 python-pptx==1.0.2
 pillow==13.0.0

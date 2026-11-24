@@ -1,4 +1,4 @@
-"""Build a starter PowerPoint briefing: briefing/fort-gbus-briefing.pptx
+"""Build the capstone proposal deck: proposal.pptx (capstone folder, beside proposal.md)
 
 All shapes and arrows are native, editable PowerPoint objects. Speaker notes are included
 for narration. Re-running OVERWRITES the .pptx, so once you start polishing it in
@@ -590,7 +590,7 @@ def main():
     slide_chain(prs)
     slide_eval_set(prs)
     slide_testing_plan(prs)
-    out = OUT_DIR / "fort-gbus-briefing.pptx"
+    out = ROOT / "proposal.pptx"
     prs.save(out)
     print(f"wrote {out.relative_to(ROOT)}  ({out.stat().st_size:,} bytes, {len(prs.slides)} slides)")
     print(f"map image: {'used ' + str(MAP_CROP.relative_to(ROOT)) if MAP_SRC.exists() else 'placeholder'}")
