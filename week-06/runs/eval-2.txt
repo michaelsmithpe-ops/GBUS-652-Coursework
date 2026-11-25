@@ -1,0 +1,12 @@
+T01 PASS
+T02 PASS
+T03 PASS
+T04 PASS
+T05 PASS
+T06 FAIL - final: recommended rung: 2 (accepted: 3, 4)
+T07 PASS
+T08 FAIL - final: recommended rung: 2 (accepted: 3, 4)
+T09 PASS
+T10 FAIL - final: recommended rung: 2 (accepted: 4)
+T11 PASS
+Passed: 8 of 11

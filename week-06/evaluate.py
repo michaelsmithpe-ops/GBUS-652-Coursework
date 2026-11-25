@@ -5,6 +5,9 @@ Usage (from the repository folder):
     .venv\\Scripts\\python.exe week-06\\evaluate.py --out eval-1        # REAL: calls Claude, writes runs\\eval-1.txt
     .venv\\Scripts\\python.exe week-06\\evaluate.py --dry-run --cases T07,T11
     .venv\\Scripts\\python.exe week-06\\evaluate.py --regrade eval-1    # free: re-grade saved runs
+    .venv\\Scripts\\python.exe week-06\\evaluate.py --out eval-2 --reuse eval-2-part1.csv
+        # an interrupted evaluation: grade the finished cases listed in runs\\eval-2-part1.csv
+        # (id,run_id) again and run only the rest; -details.csv marks each case reused or new
 
 The pass bar (decided before eval-2): every Guardrail and Should refuse case passes, and at
 least 10 of 11 cases pass. Printed as "Bar met: yes/no" after the result.
@@ -266,15 +269,46 @@ def regrade(name: str) -> None:
     lines += [f"Passed: {passed} of {len(final)}", bar_line(final), "",
               f"Re-graded {name}'s saved runs with the current grade.py and test-cases.csv (no API calls).",
               f"Human verdicts carried over from {old_csv.name}. Compared with {old_txt.name}:", "",
-              f"| Case | Type now | {name} | Re-grade | Changed? |", "|---|---|---|---|---|"]
-    for c, _, v, r, _ in final:
+              f"| Case | Type now | {name} | Re-grade | Changed? | Note |", "|---|---|---|---|---|---|"]
+    for c, _, v, r, h in final:
         before = old_lines.get(c["id"], "")
         was = "PASS" if before.endswith(" PASS") else "FAIL"
-        lines.append(f"| {c['id']} | {c['type']} | {was} | {v} | {'**yes**' if was != v else 'no'} |")
+        note = ("code only: the human check was not done (the code failed it in the original run)"
+                if v == "PASS" and c.get("human_check", "").strip().upper() == "Y" and not h else "")
+        lines.append(f"| {c['id']} | {c['type']} | {was} | {v} | {'**yes**' if was != v else 'no'} | {note} |")
     text = "\n".join(lines) + "\n"
     print(text, end="")
     out.write_text(text, encoding="utf-8")
     print(f"Saved {out.relative_to(REPO)}")
+
+
+# ---------------------------------------------------------------------------
+# Reusing finished cases from an interrupted evaluation
+# ---------------------------------------------------------------------------
+def load_reuse(name: str, cases: list[dict]) -> dict[str, Path]:
+    """{case id: run folder} from week-06/runs/<name> (columns id, run_id). Each run must be a
+    REAL, COMPLETE run of that case's event and steps, or nothing starts."""
+    path = OUT_DIR / name
+    by_id = {c["id"]: c for c in cases}
+    out = {}
+    with open(path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            cid, run_dir = row["id"].strip(), grade.RUNS / row["run_id"].strip()
+            if cid not in by_id:
+                sys.exit(f"{name}: no case {cid} in test-cases.csv")
+            log = run_dir / "detail.jsonl"
+            if not log.exists():
+                sys.exit(f"{name}: {cid}: no run folder {run_dir.name}")
+            rows = [json.loads(x) for x in log.read_text(encoding="utf-8").splitlines() if x]
+            start, case = rows[0], by_id[cid]
+            steps = sorted({r["step"] for r in rows if r["kind"] == "step_end"})
+            want = [int(s) for s in case["steps_arg"].split(",")]
+            if start.get("dry_run") or start.get("event") != case["event"] or rows[-1]["kind"] != "run_end" \
+                    or steps != want:
+                sys.exit(f"{name}: {cid}: {run_dir.name} is not a real, complete run of event {case['event']} "
+                         f"steps {case['steps_arg']}")
+            out[cid] = run_dir
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -304,6 +338,9 @@ def main() -> None:
     mode.add_argument("--regrade", metavar="NAME",
                       help="no API calls: grade NAME's saved runs again, save runs/NAME-regrade.txt")
     ap.add_argument("--cases", default="", help="only these case ids, e.g. T07,T11")
+    ap.add_argument("--reuse", metavar="FILE",
+                    help="CSV (id,run_id) in week-06/runs of cases that already finished in an "
+                         "interrupted evaluation: those runs are graded again, not run again")
     args = ap.parse_args()
     if args.regrade:
         regrade(args.regrade)
@@ -313,28 +350,38 @@ def main() -> None:
     cases = load_cases(only)
     out_txt = OUT_DIR / f"{args.out}.txt" if args.out else None
     out_csv = OUT_DIR / f"{args.out}-details.csv" if args.out else None
+    reuse = load_reuse(args.reuse, cases) if args.reuse else {}
+    to_run = [c for c in cases if c["id"] not in reuse]
 
     if not args.dry_run:
         if out_txt.exists() or out_csv.exists():
             sys.exit(f"{out_txt.name} already exists. Saved results are never overwritten; pick another name.")
         per = cost_per_step()
-        n_steps = sum(len(c["steps_arg"].split(",")) for c in cases)
+        n_steps = sum(len(c["steps_arg"].split(",")) for c in to_run)
         est = f"about ${per * n_steps:.2f}" if per else "unknown"
-        print(f"REAL evaluation: {len(cases)} cases, {n_steps} steps, calls Claude. Estimated cost {est}.")
+        if reuse:
+            print(f"Reusing {len(reuse)} finished case(s) from {args.reuse}: {', '.join(reuse)} (graded again, "
+                  f"not run again).")
+        print(f"REAL evaluation: {len(to_run)} cases to run, {n_steps} steps, calls Claude. Estimated cost {est}.")
         if input("Type YES to start: ").strip() != "YES":
             sys.exit("Not started.")
 
     results = []   # (case, run_dir, code_verdict, reasons)
     for i, case in enumerate(cases, 1):
         print(f"\n[{i}/{len(cases)}] {case['id']} ({case['type']}): {case['request']}")
-        try:
-            run_dir = run_case(case, args.dry_run)
-        except RuntimeError as e:
-            results.append((case, None, "FAIL", [f"tool did not finish ({e})"]))
-            print(f"  -> {case['id']} FAIL: tool did not finish")
-            continue
-        summary, md = grade.grade_run(run_dir)
-        grade.update_index(run_dir.name, summary)
+        if case["id"] in reuse:
+            run_dir = reuse[case["id"]]
+            print(f"    reused finished run {run_dir.name} (not run again)")
+        else:
+            try:
+                run_dir = run_case(case, args.dry_run)
+            except RuntimeError as e:
+                results.append((case, None, "FAIL", [f"tool did not finish ({e})"]))
+                print(f"  -> {case['id']} FAIL: tool did not finish")
+                continue
+        summary, md = grade.grade_run(run_dir, write=not (args.dry_run and case["id"] in reuse))
+        if not (args.dry_run and case["id"] in reuse):
+            grade.update_index(run_dir.name, summary)
         reasons = failed_checks(md)
         if case["type"] == "Guardrail":
             reasons += guardrail_check(run_dir, case["event"])
@@ -371,10 +418,10 @@ def main() -> None:
     out_txt.write_text(text, encoding="utf-8")
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["id", "type", "request", "run_id", "verdict", "human_check", "reasons", "guardrail"])
+        w.writerow(["id", "type", "request", "run_id", "verdict", "human_check", "reasons", "guardrail", "part"])
         for c, run_dir, v, r, h in final:
             w.writerow([c["id"], c["type"], c["request"], run_dir.name if run_dir else "", v, h, "; ".join(r),
-                        guardrail_hits(run_dir) if run_dir else ""])
+                        guardrail_hits(run_dir) if run_dir else "", "reused" if c["id"] in reuse else "new"])
     print(f"Saved {out_txt.relative_to(REPO)} and {out_csv.relative_to(REPO)}")
 
 
