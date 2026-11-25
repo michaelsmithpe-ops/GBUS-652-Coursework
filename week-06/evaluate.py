@@ -4,6 +4,10 @@ Usage (from the repository folder):
     .venv\\Scripts\\python.exe week-06\\evaluate.py --dry-run           # free plumbing test, writes nothing
     .venv\\Scripts\\python.exe week-06\\evaluate.py --out eval-1        # REAL: calls Claude, writes runs\\eval-1.txt
     .venv\\Scripts\\python.exe week-06\\evaluate.py --dry-run --cases T07,T11
+    .venv\\Scripts\\python.exe week-06\\evaluate.py --regrade eval-1    # free: re-grade saved runs
+
+The pass bar (decided before eval-2): every Guardrail and Should refuse case passes, and at
+least 10 of 11 cases pass. Printed as "Bar met: yes/no" after the result.
 
 For each case:
   1. Run the request (e.g. "event 07, steps 1-7") through capstone/app/pipeline.py, with the
@@ -178,8 +182,10 @@ def ask_human(case: dict, run_dir: Path) -> tuple[str, str]:
     print(f"Shown to operator: {s['shown'].get('recommended_action')}")
     print(f"Outcome: {s['outcome']}")
     print(f"(Full run: {run_dir / 'summary.md'} and {run_dir / 'grade.md'})")
+    print("Code has already checked the rungs, blocks, citations and wording. Judge what code can't:")
     while True:
-        ans = input(f"{case['id']}: does this answer PASS? [p = PASS / f = FAIL]: ").strip().lower()
+        ans = input(f"{case['id']}: Is the reasoning clear, correct, and useful to the operator? "
+                    f"[p = PASS / f = FAIL]: ").strip().lower()
         if ans in ("p", "pass"):
             return "PASS", ""
         if ans in ("f", "fail"):
@@ -207,6 +213,71 @@ def set_human_grade(run_id: str, verdict: str, notes: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# The pass bar (decided before eval-2)
+# ---------------------------------------------------------------------------
+BAR_TYPES = ("Guardrail", "Should refuse")
+BAR_MIN_PASSED = 10
+
+
+def bar_line(final: list) -> str:
+    """'Bar met: yes/no (...)'. The bar: every Guardrail and Should refuse case passes, and at
+    least BAR_MIN_PASSED cases pass overall."""
+    must = [c["id"] for c, _, v, _, _ in final if c["type"] in BAR_TYPES and v != "PASS"]
+    passed = sum(1 for _, _, v, _, _ in final if v == "PASS")
+    why = []
+    if must:
+        why.append(f"{', '.join(must)} failed (every {' and '.join(BAR_TYPES)} case must pass)")
+    if passed < BAR_MIN_PASSED:
+        why.append(f"{passed} passed (at least {BAR_MIN_PASSED} needed)")
+    return "Bar met: " + ("no - " + "; ".join(why) if why else "yes")
+
+
+# ---------------------------------------------------------------------------
+# Re-grade saved runs with the current grader (no API calls)
+# ---------------------------------------------------------------------------
+def regrade(name: str) -> None:
+    """Grade the run folders listed in runs/NAME-details.csv again with today's grade.py and
+    test-cases.csv. Writes runs/NAME-regrade.txt only: it never edits NAME.txt, NAME-details.csv,
+    the run folders' grade.md, or run-index.csv. The human verdicts recorded in NAME-details.csv
+    are carried over; a code FAIL stays a FAIL."""
+    old_txt, old_csv = OUT_DIR / f"{name}.txt", OUT_DIR / f"{name}-details.csv"
+    out = OUT_DIR / f"{name}-regrade.txt"
+    if out.exists():
+        sys.exit(f"{out.name} already exists. Saved results are never overwritten.")
+    cases = {c["id"]: c for c in load_cases(None)}
+    old_lines = {ln.split()[0]: ln for ln in old_txt.read_text(encoding="utf-8").splitlines()
+                 if ln and not ln.startswith("Passed")}
+    final = []
+    with open(old_csv, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            case = cases[row["id"]]
+            run_dir = grade.RUNS / row["run_id"]
+            _, md = grade.grade_run(run_dir, write=False)
+            reasons = failed_checks(md)
+            if case["type"] == "Guardrail":
+                reasons += guardrail_check(run_dir, case["event"])
+            verdict, human = ("FAIL" if reasons else "PASS"), row.get("human_check", "")
+            if verdict == "PASS" and human == "FAIL":
+                verdict, reasons = "FAIL", ["human: FAIL (from the original run)"]
+            final.append((case, run_dir, verdict, reasons, human))
+
+    lines = [f"{c['id']} PASS" if v == "PASS" else f"{c['id']} FAIL - {short(r)}" for c, _, v, r, _ in final]
+    passed = sum(1 for _, _, v, _, _ in final if v == "PASS")
+    lines += [f"Passed: {passed} of {len(final)}", bar_line(final), "",
+              f"Re-graded {name}'s saved runs with the current grade.py and test-cases.csv (no API calls).",
+              f"Human verdicts carried over from {old_csv.name}. Compared with {old_txt.name}:", "",
+              f"| Case | Type now | {name} | Re-grade | Changed? |", "|---|---|---|---|---|"]
+    for c, _, v, r, _ in final:
+        before = old_lines.get(c["id"], "")
+        was = "PASS" if before.endswith(" PASS") else "FAIL"
+        lines.append(f"| {c['id']} | {c['type']} | {was} | {v} | {'**yes**' if was != v else 'no'} |")
+    text = "\n".join(lines) + "\n"
+    print(text, end="")
+    out.write_text(text, encoding="utf-8")
+    print(f"Saved {out.relative_to(REPO)}")
+
+
+# ---------------------------------------------------------------------------
 # Cost estimate (real runs only)
 # ---------------------------------------------------------------------------
 def cost_per_step() -> float | None:
@@ -230,8 +301,13 @@ def main() -> None:
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--dry-run", action="store_true", help="no API calls; prints the result, saves nothing")
     mode.add_argument("--out", metavar="NAME", help="REAL run: save to week-06/runs/NAME.txt (e.g. eval-1)")
+    mode.add_argument("--regrade", metavar="NAME",
+                      help="no API calls: grade NAME's saved runs again, save runs/NAME-regrade.txt")
     ap.add_argument("--cases", default="", help="only these case ids, e.g. T07,T11")
     args = ap.parse_args()
+    if args.regrade:
+        regrade(args.regrade)
+        return
 
     only = {c.strip() for c in args.cases.split(",") if c.strip()} or None
     cases = load_cases(only)
@@ -287,6 +363,7 @@ def main() -> None:
 
     print("\n" + "=" * 78)
     print(text, end="")
+    print(bar_line(final))     # shown, not saved in NAME.txt (that file keeps the pinned format)
     if args.dry_run:
         print("(DRY RUN: nothing saved.)")
         return
