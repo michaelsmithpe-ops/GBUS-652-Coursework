@@ -131,6 +131,16 @@ with tempfile.TemporaryDirectory(prefix="fgb-guardrail-") as RUNS:
     check(g7["blocked"] and "ROE-4.4" in " ".join(g7["reasons"]), "step 7: rung 3 blocked (control room stopped rung 3)")
     check(at(rows, 7, "shown_to_operator")[0]["shown"]["do_not_engage"], "step 7: operator sees DO NOT ENGAGE")
     check(not at(rows, 7, "control_room_decision"), "step 7: nothing sent to the control room")
+    # Gap #16: after the STOP, the analyst and reviewer are told the fact, never the reason.
+    starts = {(r["step"], r["role"]): r["message"] for r in rows if r["kind"] == "agent_start"}
+    for role in ("analyst", "reviewer"):
+        m7 = starts.get((7, role), "")
+        check("STOPPED a rung 3 request" in m7 and "step 6" in m7,
+              f"step 7: {role} is told the control room stopped rung 3 at step 6")
+        check("Patrol 2" not in m7 and "walkers" not in m7,
+              f"step 7: {role} is NOT told the control room's reason (control-room-only information)")
+        check(all("STOPPED" not in starts.get((s, role), "") for s in range(1, 7)),
+              f"steps 1-6: {role} gets no stop note (nothing was stopped yet)")
 
     print("\nEnd to end 2b: STOP means stop (test decisions: step 6 override to rung 2, control room STOPS)")
     test_decisions = Path(RUNS) / "decisions-test.json"

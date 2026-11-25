@@ -473,6 +473,18 @@ def summarize_assessment(a: dict) -> str:
             + (f"\n        blocked: " + "\n                 ".join(preview(b, 110) for b in blocked) if blocked else ""))
 
 
+def stop_note(ctx: dict) -> str:
+    """One line for the analyst and reviewer when the control room has STOPPED a request earlier
+    in this event (ROE-4.4). Only the fact and the rung: never the control room's reason, which
+    may rest on control-room-only information."""
+    rung, at = ctx.get("stopped_rung"), ctx.get("stopped_step")
+    if rung is None:
+        return ""
+    return (f"\n\nControl room decision earlier in this event: at step {at} the control room STOPPED a "
+            f"rung {rung} request (ROE-4.4). For the rest of this event nothing at rung {rung} or higher "
+            f"goes forward. The control room's reason is not shared with you.")
+
+
 async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     log: RunLog = ctx["log"]
     (log.dir / "clock.json").write_text(json.dumps({"event_id": event_id, "now": now}), encoding="utf-8")
@@ -484,7 +496,8 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     # 1. Analyst
     msg = (f"Event {event_id}. Current time: {now} (step {step} of {STEPS_PER_EVENT}; readings arrive "
            f"every {STEP_SECONDS} s). Assess the situation now and recommend a response."
-           + (f"\n\nYour assessment at the previous step was: {jdump(prev)}" if prev else ""))
+           + (f"\n\nYour assessment at the previous step was: {jdump(prev)}" if prev else "")
+           + stop_note(ctx))
     a, a_text, u = await run_agent("analyst", *ctx["agents"]["analyst"], ctx["client"], msg, log, step, ctx["dry"])
     add_usage(usage, u)
     if a is None:
@@ -496,7 +509,8 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     # 2. Reviewer
     msg = (f"Event {event_id}. Current time: {now}. Review the analyst's proposal below.\n\n"
            f"<analyst_proposal>\n{jdump(a)}\n</analyst_proposal>\n\n"
-           f"<analyst_reasoning>\n{a_text or '(none written)'}\n</analyst_reasoning>")
+           f"<analyst_reasoning>\n{a_text or '(none written)'}\n</analyst_reasoning>"
+           + stop_note(ctx))
     r, _, u = await run_agent("reviewer", *ctx["agents"]["reviewer"], ctx["client"], msg, log, step, ctx["dry"])
     add_usage(usage, u)
     if r is None:
