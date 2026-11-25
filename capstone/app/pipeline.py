@@ -504,7 +504,7 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     log.say(f"- **Reviewer:** {r['verdict']} - {preview(r.get('reasons', ''), 200)}")
 
     # 2b. Escalation guardrail (code, not a prompt): checked before anything reaches the operator.
-    g = guardrail.check(a, now, ctx.get("stopped_rung"), ctx.get("stopped_step"))
+    g = guardrail.check(a, now, ctx.get("stopped_rung"), ctx.get("stopped_step"), event_id)
     log.record("guardrail", step=step, analyst_rung=a.get("recommended_rung"),
                threat=a.get("threat_level"), **g)
     for reason in g["reasons"]:
@@ -539,8 +539,13 @@ async def run_step(event_id: str, step: int, now: str, ctx: dict) -> dict:
     overrode = op["decision"] == "override"
     if overrode:
         # The guardrail also covers an override: a blocked rung is never sent up to the control room.
-        refused = guardrail.blocking_reasons(requested_rung, a.get("threat_level", "NONE"),
-                                             ctx.get("stopped_rung"), ctx.get("stopped_step"))
+        try:
+            refused = guardrail.blocking_reasons(requested_rung, a.get("threat_level", "NONE"),
+                                                 ctx.get("stopped_rung"), ctx.get("stopped_step"),
+                                                 a, event_id, now)
+        except Exception:                                   # noqa: BLE001  (Section 5 failed: rules a/b only)
+            refused = guardrail.blocking_reasons(requested_rung, a.get("threat_level", "NONE"),
+                                                 ctx.get("stopped_rung"), ctx.get("stopped_step"))
         if refused:
             log.say(f"- **GUARDRAIL: override to rung {requested_rung} refused** - " + " ".join(refused))
             log.record("guardrail_override_refused", step=step, requested_rung=requested_rung, reasons=refused)

@@ -54,6 +54,47 @@ check(len(w) == 1 and "ROE-9.9" in w[0] and "N-99" in w[0] and "ROE-4.1" not in 
       f"WARN: unknown citations only ({w})")
 
 
+print("\nUnit checks: Section 5 number rules (c), on real event data")
+
+
+def s5(event: str, rung: int, now: str, threat: str = "CRITICAL", tid: str = "T-1",
+       cls: str = "unknown drone") -> str:
+    a = {"threat_level": threat, "recommended_rung": rung,
+         "tracks": [{"track_id": tid, "classification": cls}]}
+    return " ".join(G.section5_reasons(rung, a, event, now))
+
+
+r = s5("05", 3, "2026-12-02 11:32:00")
+check("ROE-5.1" in r, "event 05: jammer blocked, RF-silent drone (ROE-5.1)")
+check(s5("05", 4, "2026-12-02 11:32:00") == "", "event 05: interceptor passes")
+check(s5("05", 5, "2026-12-02 11:30:40") == "", "event 05 step 3: laser passes (over open water)")
+check("ROE-5.7" in s5("05", 5, "2026-12-02 11:32:00"), "event 05 step 7: laser blocked, elevation 71 deg (ROE-5.7)")
+r = s5("05", 6, "2026-12-02 11:32:00")
+check("ROE-5.12" in r and "ROE-5.14" in r and "D-INT" in r, "event 05: gun blocked: sector, and not the last resort")
+check(s5("03", 3, "2026-12-01 06:44:00") == "", "event 03: jammer passes (live link)")
+r = s5("03", 5, "2026-12-01 06:44:00")
+check("visibility 0.8 km" in r and "no current view" in r, "event 03: laser blocked by fog and no camera view (ROE-5.10)")
+r = s5("08", 5, "2026-12-03 16:52:00")
+check("ROE-5.7" in r and "ROE-5.8" in r and "N-09" in r, "event 08: laser blocked: elevation and satellite window N-09")
+check("Z-HOUSE" in s5("06", 6, "2026-12-02 21:12:00"), "event 06: gun blocked, housing behind the target (ROE-5.13)")
+check("Z-HOUSE" in s5("06", 5, "2026-12-02 21:12:00"), "event 06: laser blocked, housing in the beam path (ROE-5.11)")
+check(s5("06", 4, "2026-12-02 21:12:00") == "", "event 06: interceptor passes")
+check(s5("10", 4, "2026-12-05 15:32:00", tid="T-2") == "", "event 10: interceptor against T-2 passes")
+check("N-16" in s5("10", 5, "2026-12-05 15:32:00"), "event 10: laser at T-1 crosses the regatta area N-16 (ROE-5.11)")
+check(s5("05", 3, "2026-12-02 11:32:00", cls="not a drone") == "", "tracks that are not unknown drones are not checked")
+check(s5("05", 2, "2026-12-02 11:32:00") == "", "rungs 0-2 have no Section 5 rules")
+g = G.check({"threat_level": "HIGH", "recommended_rung": 3,
+             "tracks": [{"track_id": "T-1", "classification": "unknown drone"}]}, "2026-12-02 11:32:00", event_id="05")
+check(g["blocked"] and any("ROE-5.1" in x for x in g["reasons"]), "check(..., event_id) blocks with Section 5 reasons")
+check(not G.check({"threat_level": "HIGH", "recommended_rung": 3,
+                   "tracks": [{"track_id": "T-1", "classification": "unknown drone"}]},
+                  "2026-12-02 11:32:00")["blocked"], "without event_id only rules (a) and (b) run")
+g = G.check({"threat_level": "HIGH", "recommended_rung": 3, "tracks": [{"track_id": "T-1",
+             "classification": "unknown drone"}]}, "2026-12-02 11:32:00", event_id="99")
+check(not g["blocked"] and any("could not run" in w for w in g["warnings"]),
+      "if the Section 5 checks fail, the people are warned (no crash, no silent pass)")
+
+
 def dry_run(event: str, *extra: str) -> list[dict]:
     env = {**os.environ, "FGB_RUNS_DIR": RUNS, "PYTHONIOENCODING": "utf-8"}
     p = subprocess.run([sys.executable, str(HERE / "pipeline.py"), "--event", event, "--dry-run", *extra],

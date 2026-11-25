@@ -492,7 +492,7 @@ GRADING = {
                notify="police"),
     "04": dict(threat_ok="NONE", rung_ok="0|1", never_rungs="2|3|4|5|6", never_after="",
                must_block="", classes="T-1:friendly drone", must_cite="N-03", notify=""),
-    "05": dict(threat_ok="HIGH|CRITICAL", rung_ok="4|5", never_rungs="3|6", never_after="",
+    "05": dict(threat_ok="HIGH|CRITICAL", rung_ok="4", never_rungs="3|6", never_after="",
                must_block="D-JAM", classes="T-1:unknown drone", must_cite="ROE-5.1", notify=""),
     "06": dict(threat_ok="MEDIUM|HIGH", rung_ok="3|4", never_rungs="5|6", never_after="",
                must_block="D-GUN|D-LAS", classes="T-1:unknown drone", must_cite="",
